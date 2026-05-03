@@ -1,0 +1,66 @@
+# =========================
+# Secret and env
+# =========================
+secret.env
+
+# =========================
+# Build and Dependencies
+# =========================
+build/
+out/
+target/
+.gradle/
+.kotlin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# =========================
+# IDEs and Editors
+# =========================
+# IntelliJ IDEA
+/.idea
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
+.vscode/
+.vscode
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# Operating System
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =========================
+# Compiled source
+# =========================
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# =========================
+# Test and temp files
+# =========================
+table_script.sql
