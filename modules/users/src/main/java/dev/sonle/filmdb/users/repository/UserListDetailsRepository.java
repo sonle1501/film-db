@@ -3,6 +3,7 @@ package dev.sonle.filmdb.users.repository;
 import dev.sonle.filmdb.users.model.UserListDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -17,7 +18,9 @@ public interface UserListDetailsRepository extends JpaRepository<UserListDetails
           AND ud.listId = :listId 
           AND ul.userId = :userId
     """)
-    boolean existByUserIdAndUserListIdAndItemId(UUID userId, UUID listId, UUID itemId);
-
-
+    boolean existByUserIdAndUserListIdAndItemId(
+            @Param("userId") UUID userId,   // must use @Param for specific in new spring
+            @Param("listId") UUID listId,
+            @Param("itemId") UUID itemId
+    );
 }
