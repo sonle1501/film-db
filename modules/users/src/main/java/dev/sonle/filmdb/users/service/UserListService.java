@@ -178,15 +178,4 @@ public class UserListService {
                 .collect(Collectors.toList());
     }
 
-    public void addItemToList(){
-
-    }
-
-    public void removeItemFromList(){
-
-    }
-
-    public void getList(){
-
-    }
 }

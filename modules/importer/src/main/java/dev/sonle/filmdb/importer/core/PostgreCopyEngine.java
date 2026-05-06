@@ -1,12 +1,10 @@
 package dev.sonle.filmdb.importer.core;
 
-import dev.sonle.filmdb.importer.Importer;
 import org.postgresql.copy.CopyManager;
 import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;

@@ -63,4 +63,5 @@ Thumbs.db
 # =========================
 # Test and temp files
 # =========================
-table_script.sql
+temp/table_script.sql
+temp

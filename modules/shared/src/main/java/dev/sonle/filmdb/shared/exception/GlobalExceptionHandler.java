@@ -28,10 +28,7 @@ public class GlobalExceptionHandler {
         return buildBusinessExceptionResponse(e.getBusinessExceptionCode(), e.getMessage(), request.getRequestURI());
     }
 
-
-    // --------------------------------------------------------
     // SCENARIO 1.1: Business Logic & Custom Exceptions (e.g., Cannot find movie)
-    // --------------------------------------------------------
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ApiErrorResponse> handleAppException(AppException e, HttpServletRequest request) {
         log.error("✖ [SYSTEM EXCEPTION][{}] - {} | Path: {}",
@@ -42,9 +39,7 @@ public class GlobalExceptionHandler {
         return buildResponse(e.getAppExceptionCode(), e.getMessage(), request.getRequestURI());
     }
 
-    // --------------------------------------------------------
     // SCENARIO 1.2: Business Logic & Custom Exceptions and if u wanna trace
-    // --------------------------------------------------------
     @ExceptionHandler(AppExceptionTracing.class)
     public ResponseEntity<ApiErrorResponse> handleAppExceptionTracing(AppExceptionTracing ex, HttpServletRequest request) {
         log.error("""
@@ -60,14 +55,12 @@ public class GlobalExceptionHandler {
         return buildResponse(ex.getAppExceptionCode(), ex.getMessage(), request.getRequestURI());
     }
 
-    // --------------------------------------------------------
     // SCENARIO 2: API & Controller Issues (e.g., Invalid email format in DTO)
-    // --------------------------------------------------------
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
         log.warn("Validation failed for request: {}", request.getRequestURI());
 
-        // Extract all field errors (e.g., "email: must be well-formed")
+        // Extract all field errors
         Map<String, String> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.put(error.getField(), error.getDefaultMessage());
@@ -77,7 +70,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(AppExceptionCode.VALIDATION_FAILED.getStatus().value())
                 .error(AppExceptionCode.VALIDATION_FAILED.getCode())
-                .message("Validation failed: " + errors.toString()) // You could also add a Map to your DTO
+                .message("Validation failed: " + errors.toString())
                 .path(request.getRequestURI())
                 .build();
 
@@ -90,9 +83,7 @@ public class GlobalExceptionHandler {
         return buildResponse(AppExceptionCode.MALFORMED_JSON, AppExceptionCode.MALFORMED_JSON.getDefaultMsg(), request.getRequestURI());
     }
 
-    // --------------------------------------------------------
     // SCENARIO 3: Database Issues (Spring Data JPA / JDBC)
-    // --------------------------------------------------------
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ApiErrorResponse> handleDatabaseException(DataAccessException ex, HttpServletRequest request) {
         // Log the actual SQL error for the developers
@@ -102,9 +93,7 @@ public class GlobalExceptionHandler {
         return buildResponse(AppExceptionCode.DATABASE_ERROR, AppExceptionCode.DATABASE_ERROR.getDefaultMsg(), request.getRequestURI());
     }
 
-    // --------------------------------------------------------
     // SCENARIO 4: General, NPE (Null pointer) & Unknown Exceptions (Catch all)
-    // --------------------------------------------------------
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleAllOtherExceptions(Exception ex, HttpServletRequest request) {
         // Log the full stack trace because this is a bug in the code

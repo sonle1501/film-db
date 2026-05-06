@@ -17,7 +17,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // use this only in development phase
     @Value("${spring.security.jwt.secret-key}")
     private String secretKey;
 
