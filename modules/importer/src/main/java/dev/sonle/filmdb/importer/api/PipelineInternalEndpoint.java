@@ -1,20 +1,22 @@
 package dev.sonle.filmdb.importer.api;
 
-import dev.sonle.filmdb.importer.pipeline.ImportPipeline;
-import dev.sonle.filmdb.shared.internal.ImportPipelineInterface;
+import dev.sonle.filmdb.importer.pipeline.ImdbDatasetPipeline;
+import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PipelineInternalEndpoint implements ImportPipelineInterface {
-    ImportPipeline importPipeline;
-    public PipelineInternalEndpoint(ImportPipeline importPipeline){
-        this.importPipeline = importPipeline;
+public class PipelineInternalEndpoint implements ImdbDatasetPipelineInterface {
+
+    ImdbDatasetPipeline imdbDatasetPipeline;
+
+    public PipelineInternalEndpoint(ImdbDatasetPipeline imdbDatasetPipeline){
+        this.imdbDatasetPipeline = imdbDatasetPipeline;
     }
 
     @Override
-    public void runImportPipeline(){
-        importPipeline.runPipeline();
+    public void runPipeline(){
+        imdbDatasetPipeline.runPipeline();
     }
 
     public ResponseEntity<String> run(){

@@ -10,6 +10,7 @@ public enum AppExceptionCode {
     DATABASE_ERROR("DB", "A database error occurred", HttpStatus.INTERNAL_SERVER_ERROR),
 
     UNAUTHORIZED("AUTH", "Unauthorized access", HttpStatus.UNAUTHORIZED),
+    IMDB_SERVER_EXCEPTION("IMDB SERVER", "Cannot receive the dataset", HttpStatus.NOT_FOUND),
 
     // API & Client Errors (400)
     VALIDATION_FAILED("SYS", "Input validation failed", HttpStatus.BAD_REQUEST),

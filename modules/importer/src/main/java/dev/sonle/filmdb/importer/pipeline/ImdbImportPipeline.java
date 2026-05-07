@@ -1,9 +1,9 @@
 package dev.sonle.filmdb.importer.pipeline;
 
-import dev.sonle.filmdb.importer.service.ImdbWiperService;
 import dev.sonle.filmdb.importer.service.ImdbImportService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
@@ -11,45 +11,34 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-public class ImportPipeline {
-    private static final Logger log = LoggerFactory.getLogger(ImportPipeline.class);
-    
-    private final ImdbWiperService dataWiper;
+@RequiredArgsConstructor
+@Slf4j
+public class ImdbImportPipeline {
+
     private final ImdbImportService imdbImportService;
-    
-    private static final String BASE_DIR = "S:\\Coding\\Projects\\film-db-backup\\assets\\CompressedArtifacts\\";
 
-    public ImportPipeline(ImdbWiperService dataWiper, ImdbImportService imdbImportService) {
-        this.dataWiper = dataWiper;
-        this.imdbImportService = imdbImportService;
-    }
-
-    public void runPipeline() {
+    public void runImportPipeline(String baseDir) {
         log.info("Starting Import Pipeline...");
-        
-        // step1: Wipe out data
-        dataWiper.wipeData();
-        
-        // step2: Import data
-        executeAllImports();
-        
-        log.info("Import Pipeline finished successfully.");
+        executeImportedTasks(baseDir);
+
+        log.info("Import Pipeline finished");
     }
 
-    public void executeAllImports() {
+
+    public void executeImportedTasks(String baseDir) {
         log.info("Starting parallel import tasks...");
-        
-        String moviePath = BASE_DIR + "title.basics.tsv.gz";
-        String personPath = BASE_DIR + "name.basics.tsv.gz";
-        String alternativePath = BASE_DIR + "title.akas.tsv.gz";
-        String crewPath = BASE_DIR + "title.crew.tsv.gz";
-        String episodePath = BASE_DIR + "title.episode.tsv.gz";
-        String principalPath = BASE_DIR + "title.principals.tsv.gz";
-        String ratingPath = BASE_DIR + "title.ratings.tsv.gz";
+
+        String moviePath = baseDir + DatasetInfo.MOVIE.getFileName();
+        String personPath = baseDir + DatasetInfo.PERSON.getFileName();
+        String alternativePath = baseDir + DatasetInfo.ALTERNATIVE.getFileName();
+        String crewPath = baseDir + DatasetInfo.CREW.getFileName();
+        String episodePath = baseDir + DatasetInfo.EPISODE.getFileName();
+        String principalPath = baseDir + DatasetInfo.PRINCIPAL.getFileName();
+        String ratingPath = baseDir + DatasetInfo.RATING.getFileName();
 
         int nTasks = 7;
         ExecutorService executor = Executors.newFixedThreadPool(nTasks);
-        
+
         try {
             CompletableFuture<Void> movieTask = CompletableFuture.runAsync(() -> imdbImportService.importMovies(moviePath), executor);
             CompletableFuture<Void> personTask = CompletableFuture.runAsync(() -> imdbImportService.importPersons(personPath), executor);
@@ -58,13 +47,13 @@ public class ImportPipeline {
             CompletableFuture<Void> episodeTask = CompletableFuture.runAsync(() -> imdbImportService.importMovieEpisodes(episodePath), executor);
             CompletableFuture<Void> principalTask = CompletableFuture.runAsync(() -> imdbImportService.importMoviePrincipals(principalPath), executor);
             CompletableFuture<Void> ratingTask = CompletableFuture.runAsync(() -> imdbImportService.importMovieRatings(ratingPath), executor);
-            
+
             CompletableFuture.allOf(
-                    movieTask, personTask, alternativeTask, 
+                    movieTask, personTask, alternativeTask,
                     crewTask, episodeTask, principalTask, ratingTask
             ).join();
-            
-            log.info("All parallel import tasks completed.");
+
+            log.info("All parallel imported tasks completed.");
         } finally {
             executor.shutdown();
         }

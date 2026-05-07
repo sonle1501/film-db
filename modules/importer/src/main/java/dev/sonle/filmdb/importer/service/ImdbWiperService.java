@@ -32,8 +32,8 @@ public class ImdbWiperService {
                 "imdb.movie_rating;";
         
         try (Connection conn = dataSource.getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+             Statement st = conn.createStatement()) {
+            st.execute(sql);
             log.info("Successfully wiped all data from imdb schema.");
         } catch (SQLException e) {
             log.error("SQL Exception: Failed to wipe imdb schema data", e);

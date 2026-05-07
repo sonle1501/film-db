@@ -1,7 +1,6 @@
 package dev.sonle.filmdb.admin.controller;
 
-import dev.sonle.filmdb.shared.internal.ImportPipelineInterface;
-import org.springframework.beans.factory.annotation.Qualifier;
+import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class ImportController {
-    ImportPipelineInterface importPipeline;
-    public ImportController(ImportPipelineInterface importPipelineInterface){
-        this.importPipeline = importPipelineInterface;
+    ImdbDatasetPipelineInterface pipeline;
+    public ImportController(ImdbDatasetPipelineInterface imdbDatasetPipelineInterface){
+        this.pipeline = imdbDatasetPipelineInterface;
     }
 
     @GetMapping("import-pipeline")
     public ResponseEntity<String> adminRunImport(){
-        importPipeline.runImportPipeline();
-        return ResponseEntity.ok("import all oke");
+        pipeline.runPipeline();
+        return ResponseEntity.ok("IMDB pipeline has finished");
     }
 
     @GetMapping("/world")
