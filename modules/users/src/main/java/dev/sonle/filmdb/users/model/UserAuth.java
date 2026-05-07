@@ -33,6 +33,9 @@ public class UserAuth implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role; // Enum: USER, ADMIN
 
+    @Enumerated(EnumType.STRING)
+    private UserState userState; // enum ACTIVE, BANNED, PENDING
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

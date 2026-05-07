@@ -34,6 +34,9 @@ import java.util.UUID;
     @Column(name = "display_name", length = 100)
     private String displayName;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Column(name = "date_created", updatable = false) //DB update
     private OffsetDateTime dateCreated;
 

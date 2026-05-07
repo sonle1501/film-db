@@ -3,7 +3,7 @@
 -- actors, directors, etc.
 CREATE TABLE imdb.person (
                              person_id VARCHAR(15) PRIMARY KEY, -- Renamed from nconst
-                             primary_name TEXT NOT NULL,
+                             primary_name TEXT,
                              birth_year INTEGER,
                              death_year INTEGER,
                              primary_profession TEXT[],
