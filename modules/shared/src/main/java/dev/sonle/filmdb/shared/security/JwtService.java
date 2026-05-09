@@ -20,7 +20,7 @@ public class JwtService {
     @Value("${spring.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${spring.security.jwt.expiration}") // 10 mins default
+    @Value("${spring.security.jwt.expiration}") // 100 mins
     private long jwtExpiration;
 
     public String extractUsername(String token) {

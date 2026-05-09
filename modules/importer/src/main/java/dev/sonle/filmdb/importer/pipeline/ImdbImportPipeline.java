@@ -25,7 +25,7 @@ public class ImdbImportPipeline {
     }
 
 
-    public void executeImportedTasks(String baseDir) {
+    private void executeImportedTasks(String baseDir) {
         log.info("Starting parallel import tasks...");
 
         String moviePath = baseDir + DatasetInfo.MOVIE.getFileName();
