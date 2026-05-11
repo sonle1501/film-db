@@ -1,5 +1,7 @@
 package dev.sonle.filmdb.users.service;
 
+import dev.sonle.filmdb.shared.event.AdminRejectedEvent;
+import dev.sonle.filmdb.shared.event.RegisterAdminEvent;
 import dev.sonle.filmdb.shared.exception.*;
 import dev.sonle.filmdb.shared.security.JwtService;
 
@@ -7,11 +9,10 @@ import dev.sonle.filmdb.users.dto.AuthTokensDto;
 import dev.sonle.filmdb.users.dto.restdto.ChangeUsernameRequestDto;
 import dev.sonle.filmdb.users.dto.restdto.LoginRequestDto;
 import dev.sonle.filmdb.users.dto.restdto.RegisterRequestDto;
-import dev.sonle.filmdb.users.model.RefreshToken;
-import dev.sonle.filmdb.users.model.Role;
-import dev.sonle.filmdb.users.model.UserAuth;
+import dev.sonle.filmdb.users.model.*;
 import dev.sonle.filmdb.users.repository.UserAuthRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,8 @@ public class AuthService {
     private final UserValidator userValidator;
     private final UserProfileService userProfileService;
     private final RefreshTokenService refreshTokenService;
+    private final ApplicationEventPublisher eventPublisher;
+
 
     @Transactional
     public AuthTokensDto register(RegisterRequestDto request) {
@@ -50,6 +55,26 @@ public class AuthService {
         String jwtToken = jwtService.generateToken(userAuth);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userAuth.getUserId());
         
+        return new AuthTokensDto(jwtToken, refreshToken.getToken());
+    }
+
+    @Transactional
+    public AuthTokensDto registerAdmin(RegisterRequestDto request) {
+        userValidator.validateUsernameAndPassword(request.username(), request.password());
+        UserAuth userAuth = UserAuth.builder()
+                .username(request.username())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
+                .userState(UserState.ADMIN_PENDING)
+                .build();
+
+        userAuthRepository.save(userAuth);
+        userProfileService.syncUserProfile(userAuth);
+        String jwtToken = jwtService.generateToken(userAuth);
+
+        UUID userId = userAuth.getUserId();
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userId);
+        eventPublisher.publishEvent(new RegisterAdminEvent(userId));
         return new AuthTokensDto(jwtToken, refreshToken.getToken());
     }
 
@@ -96,6 +121,22 @@ public class AuthService {
         userAuthRepository.save(userAuth);
 
         userProfileService.updateUsername(userAuth.getUserId(), request.newUsername());
+    }
+
+    public void setUserState(UUID userId, String st) {
+        UserState state = UserState.fromString(st);
+        UserAuth userAuth = userAuthRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.REJECT_REQUEST, "Cannot find the user: " + userId));
+        userAuth.setUserState(state);
+        userAuthRepository.save(userAuth);
+    }
+
+    public void setUserRole(UUID userId, String role) {
+        Role userRole = Role.fromString(role);
+        UserAuth userAuth = userAuthRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.REJECT_REQUEST, "Cannot find the user: " + userId));
+        userAuth.setRole(userRole);
+        userAuthRepository.save(userAuth);
     }
 
     public HttpHeaders createCookieHeader(String refreshToken, long maxAge) {

@@ -34,7 +34,7 @@ public class UserAuth implements UserDetails {
     private Role role; // Enum: USER, ADMIN
 
     @Enumerated(EnumType.STRING)
-    private UserState userState; // enum ACTIVE, BANNED, PENDING
+    private UserState userState; // enum ACTIVE, BANNED, ADMIN_PENDING
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

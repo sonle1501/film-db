@@ -13,14 +13,11 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/admin/users")
+@RequestMapping("api/admin/userlist")
 public class AdminUserListController {
 
     private final UserListInterface userListInterface;
 
-//    public AdminUserListController(UserListInterface userListInterface){
-//        this.userListInterface = userListInterface;
-//    }
 
     @GetMapping("/all-lists")
     public ResponseEntity<List<UserListInterface.UserListProjection>> getAllUserList(){
@@ -30,10 +27,5 @@ public class AdminUserListController {
     @GetMapping("/{userId}/lists")
     public ResponseEntity<List<UserListInterface.UserListProjection>> getUserListsByUserId(@PathVariable UUID userId) {
         return ResponseEntity.ok(userListInterface.getUserLists(userId));
-    }
-
-    @GetMapping("/user-profiles")
-    public ResponseEntity<List<UserListInterface.UserProfileProjection>> getAllUserProfiles() {
-        return ResponseEntity.ok(userListInterface.getAllUserProfiles());
     }
 }

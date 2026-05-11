@@ -17,7 +17,8 @@ public enum BusinessExceptionCode {
     ITEM_NOT_FOUND("USER domain" ,"LIST_ITEM_NOT_FOUND", HttpStatus.NOT_FOUND),
     ITEM_NOT_VALID("USER domain" ,"LIST_ITEM_NOT_VALID", HttpStatus.NOT_FOUND),
     INVALID_INPUT("USER domain", "INVALID_INPUT", HttpStatus.CONFLICT),
-    UNAUTHORIZED_ACCESS("USER domain", "Access denied", HttpStatus.FORBIDDEN);
+    UNAUTHORIZED_ACCESS("USER domain", "Access denied", HttpStatus.FORBIDDEN),
+    REJECT_REQUEST("ADMIN domain", "The request is rejected", HttpStatus.FORBIDDEN);
 
     private final String code;
     private final String defaultMsg;

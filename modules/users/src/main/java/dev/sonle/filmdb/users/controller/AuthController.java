@@ -51,6 +51,19 @@ public class AuthController {
     }
 
     /**
+     * POST /api/auth/register
+     * Expects JSON format: { "username": "son", "password": "password123" }
+     */
+    @PostMapping("/register/admin")
+    public ResponseEntity<TokenResponseDto> registerAdmin(
+            @RequestBody RegisterRequestDto request
+    ) {
+        AuthTokensDto tokens = authService.registerAdmin(request);
+        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), refreshTokenDurationMs);
+        return ResponseEntity.ok().headers(headers).body(new TokenResponseDto(tokens.accessToken()));
+    }
+
+    /**
      * POST /api/auth/login
      * Expects JSON: { "username": "son", "password": "password123" }
      */
