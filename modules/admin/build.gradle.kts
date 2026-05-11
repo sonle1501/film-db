@@ -8,4 +8,5 @@ dependencies {
     // external
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
+    compileOnly(libs.spring.boot.starter.data.jpa)
 }
