@@ -22,6 +22,12 @@ public class MovieController {
         return ResponseEntity.ok(movie);
     }
 
+    @GetMapping("/full/{film-id}")
+    public ResponseEntity<MovieFullInfoDto> getMovieFullInfo(@PathVariable("film-id") String filmId){
+        MovieFullInfoDto movie = movieQueryService.getMovieFullInfo(filmId);
+        return ResponseEntity.ok(movie);
+    }
+
     @GetMapping("/rating/{film-id}/")
     public ResponseEntity<MovieRatingInfoDto> getMovieRatingInfo(@PathVariable("film-id") String filmId){
         MovieRatingInfoDto movie = movieQueryService.getMovieRatingInfo(filmId);
@@ -36,13 +42,13 @@ public class MovieController {
 
 
     @GetMapping("/{film-id}/people")
-    public ResponseEntity<List<dev.sonle.filmdb.imdb.dto.MoviePersonInfoDto>> getMoviePeople(@PathVariable("film-id") String filmId){
+    public ResponseEntity<List<MoviePersonInfoDto>> getMoviePeople(@PathVariable("film-id") String filmId){
         List<MoviePersonInfoDto> people = movieQueryService.getMoviePeople(filmId);
         return ResponseEntity.ok(people);
     }
 
     @GetMapping("/{film-id}/crew")
-    public ResponseEntity<dev.sonle.filmdb.imdb.dto.MovieCrewInfoDto> getMovieCrewInfo(@PathVariable("film-id") String filmId){
+    public ResponseEntity<MovieCrewInfoDto> getMovieCrewInfo(@PathVariable("film-id") String filmId){
         MovieCrewInfoDto movieCrewInfoDto = movieQueryService.getMovieCrewInfo(filmId);
         return ResponseEntity.ok(movieCrewInfoDto);
     }
