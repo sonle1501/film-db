@@ -4,6 +4,7 @@ import dev.sonle.filmdb.imdb.dto.*;
 import dev.sonle.filmdb.imdb.model.Movie;
 import dev.sonle.filmdb.imdb.model.MovieAlternative;
 import dev.sonle.filmdb.imdb.model.MovieCrew;
+import dev.sonle.filmdb.imdb.model.MovieRating;
 import dev.sonle.filmdb.imdb.repository.MovieAlternativeRepository;
 import dev.sonle.filmdb.imdb.repository.MovieRepository;
 import dev.sonle.filmdb.shared.exception.AppException;
@@ -26,6 +27,7 @@ public class MovieQueryService {
     private final dev.sonle.filmdb.imdb.repository.MoviePrincipalRepository moviePrincipalRepository;
     private final dev.sonle.filmdb.imdb.repository.MovieCrewRepository movieCrewRepository;
     private final dev.sonle.filmdb.imdb.repository.PersonRepository personRepository;
+    private final dev.sonle.filmdb.imdb.repository.MovieRatingRepository movieRatingRepository;
 
     public MovieBasicInfoDto getMovieBasicInfo(String movieId){
         return movieRepository.findById(movieId)
@@ -43,6 +45,14 @@ public class MovieQueryService {
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.MOVIE_NOT_FOUND, String.format("Cannot found movie with id %s", movieId)));
         List<MovieAlternative> alternatives = movieAlternativeRepository.findAlternativesByMovieId(movieId);
         return MovieSupplementInfoDto.from(movie, alternatives);
+    }
+
+    public MovieFullInfoDto getMovieFullInfo(String movieId){
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.MOVIE_NOT_FOUND, String.format("Cannot found movie with id %s", movieId)));
+        MovieRating rating = movieRatingRepository.findById(movieId).orElse(null);
+        List<MovieAlternative> alternatives = movieAlternativeRepository.findAlternativesByMovieId(movieId);
+        return MovieFullInfoDto.from(movie, rating, alternatives);
     }
 
     public List<MoviePersonInfoDto> getMoviePeople(String movieId) {

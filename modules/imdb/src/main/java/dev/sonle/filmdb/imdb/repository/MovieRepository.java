@@ -136,4 +136,42 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
       AND m.titleType = 'tvSeries'
     """)
     List<MovieBasicInfoDto> findTvSeriesByName(@Param("name") String name);
+
+    @Query("""
+    SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
+        m.movieId,
+        m.primaryTitle,
+        m.originalTitle,
+        m.isAdult,
+        m.startYear,
+        m.runtimeMinutes,
+        m.genres,
+        r.averageRating,
+        r.numVotes
+     )
+    FROM Movie m
+    INNER JOIN MovieRating r ON m.movieId = r.movieId
+    WHERE m.titleType = :type AND r.numVotes > :minVotes
+    ORDER BY r.averageRating DESC
+    """)
+    List<MovieRatingInfoDto> findTopRatedByTypeAndMinVotes(@Param("type") String type, @Param("minVotes") int minVotes, Pageable pageable);
+
+    @Query("""
+    SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
+        m.movieId,
+        m.primaryTitle,
+        m.originalTitle,
+        m.isAdult,
+        m.startYear,
+        m.runtimeMinutes,
+        m.genres,
+        r.averageRating,
+        r.numVotes
+     )
+    FROM Movie m
+    INNER JOIN MovieRating r ON m.movieId = r.movieId
+    WHERE m.titleType = :type
+    ORDER BY r.numVotes DESC
+    """)
+    List<MovieRatingInfoDto> findMostPopularByType(@Param("type") String type, Pageable pageable);
 }

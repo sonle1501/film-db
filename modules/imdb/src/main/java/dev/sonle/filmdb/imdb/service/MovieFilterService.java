@@ -68,4 +68,16 @@ public class MovieFilterService {
     public List<MovieBasicInfoDto> getListMovieRecent(int year) {
         return movieRepository.findRecentMovies(year);
     }
+
+    public List<MovieRatingInfoDto> getTopRatedMovies() {
+        return movieRepository.findTopRatedByTypeAndMinVotes("movie", 100000, PageRequest.of(0, 250));
+    }
+
+    public List<MovieRatingInfoDto> getTopRatedTvSeries() {
+        return movieRepository.findTopRatedByTypeAndMinVotes("tvSeries", 50000, PageRequest.of(0, 100));
+    }
+
+    public List<MovieRatingInfoDto> getMostPopularMovies() {
+        return movieRepository.findMostPopularByType("movie", PageRequest.of(0, 250));
+    }
 }
