@@ -60,4 +60,19 @@ public class MovieListController {
     public ResponseEntity<List<MovieBasicInfoDto>> getListMovieRecent(@RequestParam(name = "year") int year){
         return ResponseEntity.ok(movieFilterService.getListMovieRecent(year));
     }
+
+    @GetMapping("/top-rated-movies")
+    public ResponseEntity<List<MovieRatingInfoDto>> getTopRatedMovies(){
+        return ResponseEntity.ok(movieFilterService.getTopRatedMovies());
+    }
+
+    @GetMapping("/top-rated-tvseries")
+    public ResponseEntity<List<MovieRatingInfoDto>> getTopRatedTvSeries(){
+        return ResponseEntity.ok(movieFilterService.getTopRatedTvSeries());
+    }
+
+    @GetMapping("/popular-movies")
+    public ResponseEntity<List<MovieRatingInfoDto>> getMostPopularMovies(){
+        return ResponseEntity.ok(movieFilterService.getMostPopularMovies());
+    }
 }
