@@ -15,15 +15,18 @@ public interface UserListInterface {
             OffsetDateTime dateCreated
     ) {}
 
-    record UserProfileProjection(
+    record UserInfoProjection(
             UUID userId,
             String displayName,
             String username,
             OffsetDateTime dateCreated,
-            String bio
+            String bio,
+            String role,
+            String userState
     ) {}
 
-    public List<UserListProjection> getUserLists();
-    public List<UserListProjection> getUserLists(UUID userId);
-    public List<UserProfileProjection> getAllUserProfiles();
+    List<UserListProjection> getUserLists();
+    List<UserListProjection> getUserLists(UUID userId);
+    List<UserInfoProjection> getAllUserInfos();
+    UserInfoProjection getUserInfo(UUID userId);
 }

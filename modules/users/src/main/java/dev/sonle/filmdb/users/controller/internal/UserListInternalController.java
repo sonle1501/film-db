@@ -2,7 +2,7 @@ package dev.sonle.filmdb.users.controller.internal;
 
 import dev.sonle.filmdb.shared.internal.UserListInterface;
 import dev.sonle.filmdb.users.dto.UserListDto;
-import dev.sonle.filmdb.users.dto.UserProfileDto;
+import dev.sonle.filmdb.users.dto.UserInfoDto;
 import dev.sonle.filmdb.users.service.UserListService;
 import dev.sonle.filmdb.users.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
@@ -49,15 +49,30 @@ public class UserListInternalController implements UserListInterface {
     }
 
     @Override
-    public List<UserProfileProjection> getAllUserProfiles() {
-        List<UserProfileDto> userProfileDtos = userProfileService.getAllUserProfiles();
-        return userProfileDtos.stream()
-                .map(dto -> new UserProfileProjection(
+    public List<UserInfoProjection> getAllUserInfos() {
+        List<UserInfoDto> userInfoDtos = userProfileService.getAllUserInfos();
+        return userInfoDtos.stream()
+                .map(dto -> new UserInfoProjection(
                         dto.userId(),
                         dto.displayName(),
                         dto.username(),
                         dto.dateCreated(),
-                        dto.bio()))
+                        dto.bio(),
+                        dto.role(),
+                        dto.userState()))
                 .toList();
+    }
+
+    @Override
+    public UserInfoProjection getUserInfo(UUID userId) {
+        UserInfoDto dto = userProfileService.getUserInfoById(userId);
+        return new UserInfoProjection(
+                dto.userId(),
+                dto.displayName(),
+                dto.username(),
+                dto.dateCreated(),
+                dto.bio(),
+                dto.role(),
+                dto.userState());
     }
 }

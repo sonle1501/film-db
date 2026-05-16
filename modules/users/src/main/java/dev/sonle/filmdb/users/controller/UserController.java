@@ -1,6 +1,6 @@
 package dev.sonle.filmdb.users.controller;
 
-import dev.sonle.filmdb.users.dto.UserProfileDto;
+import dev.sonle.filmdb.users.dto.UserInfoDto;
 import dev.sonle.filmdb.users.dto.restdto.ChangeUsernameRequestDto;
 import dev.sonle.filmdb.users.dto.restdto.UserProfileMetadataUpdateDto;
 import dev.sonle.filmdb.users.model.UserAuth;
@@ -19,9 +19,9 @@ public class UserController {
     private final AuthService authService;
 
     @GetMapping()
-    public ResponseEntity<UserProfileDto> getUserProfile(@RequestParam("username") String username, @AuthenticationPrincipal UserAuth userAuth){
-        UserProfileDto userProfileDto = userProfileService.getUserProfile(userAuth.getUserId(), username);
-        return ResponseEntity.ok(userProfileDto);
+    public ResponseEntity<UserInfoDto> getUserProfile(@RequestParam("username") String username, @AuthenticationPrincipal UserAuth userAuth){
+        UserInfoDto userInfoDto = userProfileService.getUserInfo(userAuth.getUserId(), username);
+        return ResponseEntity.ok(userInfoDto);
     }
 
     @PatchMapping()

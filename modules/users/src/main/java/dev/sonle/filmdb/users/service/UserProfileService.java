@@ -4,7 +4,7 @@ import dev.sonle.filmdb.shared.exception.AppException;
 import dev.sonle.filmdb.shared.exception.AppExceptionCode;
 import dev.sonle.filmdb.shared.exception.BusinessException;
 import dev.sonle.filmdb.shared.exception.BusinessExceptionCode;
-import dev.sonle.filmdb.users.dto.UserProfileDto;
+import dev.sonle.filmdb.users.dto.UserInfoDto;
 import dev.sonle.filmdb.users.dto.restdto.UserProfileMetadataUpdateDto;
 import dev.sonle.filmdb.users.model.UserAuth;
 import dev.sonle.filmdb.users.model.UserProfile;
@@ -24,16 +24,23 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
 
     @Transactional(readOnly = true)
-    public List<UserProfileDto> getAllUserProfiles() {
+    public List<UserInfoDto> getAllUserInfos() {
         return userProfileRepository.findAll().stream()
-                .map(UserProfileDto::from)
+                .map(UserInfoDto::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public UserProfileDto getUserProfile(UUID userId, String username){
+    public UserInfoDto getUserInfo(UUID userId, String username){
         return userProfileRepository.getUserProfileByUserIdAndUsername(userId, username)
-                .map(UserProfileDto::from)
+                .map(UserInfoDto::from)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.USER_NOT_FOUND, "Cannot found UserProfile"));
+    }
+
+    @Transactional
+    public UserInfoDto getUserInfoById(UUID userId){
+        return userProfileRepository.getUserProfileByUserId(userId)
+                .map(UserInfoDto::from)
                 .orElseThrow(() -> new BusinessException(BusinessExceptionCode.USER_NOT_FOUND, "Cannot found UserProfile"));
     }
 

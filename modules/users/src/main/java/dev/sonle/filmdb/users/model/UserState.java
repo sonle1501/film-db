@@ -8,5 +8,12 @@ import java.util.Arrays;
 public enum UserState {
     ACTIVE,
     BANNED,
-    PENDING;
+    ADMIN_PENDING;
+
+    public static UserState fromString(String state){
+        UserState res = Arrays.stream(UserState.values())
+                .filter(value -> value.toString().equalsIgnoreCase(state.trim()))
+                .findFirst().orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_INPUT, "cannot find the state: " + state));
+        return res;
+    }
 }
