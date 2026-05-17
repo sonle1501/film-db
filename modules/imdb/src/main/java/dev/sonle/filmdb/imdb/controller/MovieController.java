@@ -28,18 +28,17 @@ public class MovieController {
         return ResponseEntity.ok(movie);
     }
 
-    @GetMapping("/rating/{film-id}/")
+    @GetMapping("/rating/{film-id}")
     public ResponseEntity<MovieRatingInfoDto> getMovieRatingInfo(@PathVariable("film-id") String filmId){
         MovieRatingInfoDto movie = movieQueryService.getMovieRatingInfo(filmId);
         return ResponseEntity.ok(movie);
     }
 
-    @GetMapping("/alternative/{film-id}/")
+    @GetMapping("/alternative/{film-id}")
     public ResponseEntity<MovieSupplementInfoDto> getMovieSupplementInfo(@PathVariable("film-id") String filmId){
         MovieSupplementInfoDto movie = movieQueryService.getMovieSupplementInfoDto(filmId);
         return ResponseEntity.ok(movie);
     }
-
 
     @GetMapping("/{film-id}/people")
     public ResponseEntity<List<MoviePersonInfoDto>> getMoviePeople(@PathVariable("film-id") String filmId){

@@ -48,15 +48,15 @@ public class MovieFilterService {
         List<MovieBasicInfoDto> movies = movieRepository.findByLocalizedName(name);
         List<String> movieIds = movies.stream().map(MovieBasicInfoDto::movieId).toList();
 
-        Map<String, List<MovieAlternative>> alternativesMap = movieIds.isEmpty() 
-                ? Collections.emptyMap() 
+        Map<String, List<MovieAlternative>> alternativesMap = movieIds.isEmpty()
+                ? Collections.emptyMap()
                 : movieAlternativeRepository.findAlternativesByMovieIdIn(movieIds).stream()
                         .collect(Collectors.groupingBy(MovieAlternative::getMovieId));
 
         return movies.stream()
                 .map(m -> {
                     List<MovieAlternative> alternatives = alternativesMap.getOrDefault(m.movieId(), List.of());
-                    return MovieSupplementInfoDto.from(m, alternatives);
+                    return MovieSupplementInfoDto.from(m.movieId(), alternatives);
                 })
                 .toList();
     }

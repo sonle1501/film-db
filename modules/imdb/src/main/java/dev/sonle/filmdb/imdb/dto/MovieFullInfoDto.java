@@ -16,24 +16,20 @@ public record MovieFullInfoDto(
         List<String> genres,
         java.math.BigDecimal averageRating,
         Integer numVotes,
-        List<MovieSupplementInfoDto.LocalizedTitle> localizedTitles
+        List<MoviePersonInfoDto> persons
 ) {
-    public static MovieFullInfoDto from(Movie m, MovieRating r, List<MovieAlternative> alternatives) {
-        List<MovieSupplementInfoDto.LocalizedTitle> localized = alternatives != null ? alternatives.stream()
-                .map(a -> new MovieSupplementInfoDto.LocalizedTitle(a.getTitle(), a.getLanguage()))
-                .toList() : List.of();
-
+    public static MovieFullInfoDto from(MovieRatingInfoDto m, List<MoviePersonInfoDto> persons) {
         return new MovieFullInfoDto(
-                m.getMovieId(),
-                m.getPrimaryTitle(),
-                m.getOriginalTitle(),
-                m.getIsAdult(),
-                m.getStartYear(),
-                m.getRuntimeMinutes(),
-                m.getGenres(),
-                r != null ? r.getAverageRating() : null,
-                r != null ? r.getNumVotes() : null,
-                localized
+                m.movieId(),
+                m.primaryTitle(),
+                m.originalTitle(),
+                m.isAdult(),
+                m.startYear(),
+                m.runtimeMinutes(),
+                m.genres(),
+                m.averageRating(),
+                m.numVotes(),
+                persons
         );
     }
 }

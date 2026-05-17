@@ -41,18 +41,14 @@ public class MovieQueryService {
     }
 
     public MovieSupplementInfoDto getMovieSupplementInfoDto(String movieId){
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.MOVIE_NOT_FOUND, String.format("Cannot found movie with id %s", movieId)));
         List<MovieAlternative> alternatives = movieAlternativeRepository.findAlternativesByMovieId(movieId);
-        return MovieSupplementInfoDto.from(movie, alternatives);
+        return MovieSupplementInfoDto.from(movieId, alternatives);
     }
 
     public MovieFullInfoDto getMovieFullInfo(String movieId){
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.MOVIE_NOT_FOUND, String.format("Cannot found movie with id %s", movieId)));
-        MovieRating rating = movieRatingRepository.findById(movieId).orElse(null);
-        List<MovieAlternative> alternatives = movieAlternativeRepository.findAlternativesByMovieId(movieId);
-        return MovieFullInfoDto.from(movie, rating, alternatives);
+        MovieRatingInfoDto movieRatingInfoDto = getMovieRatingInfo(movieId);
+        List<MoviePersonInfoDto> moviePersonInfoDtos = getMoviePeople(movieId);
+        return MovieFullInfoDto.from(movieRatingInfoDto, moviePersonInfoDtos);
     }
 
     public List<MoviePersonInfoDto> getMoviePeople(String movieId) {
