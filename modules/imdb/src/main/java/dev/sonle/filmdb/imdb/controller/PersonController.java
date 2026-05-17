@@ -28,13 +28,13 @@ public class PersonController {
         return ResponseEntity.ok(person);
     }
     @GetMapping("/{person-id}/details")
-    public ResponseEntity<dev.sonle.filmdb.imdb.dto.PersonDetailsDto> getPersonDetails(@PathVariable("person-id") String personId){
+    public ResponseEntity<PersonDetailsDto> getPersonDetails(@PathVariable("person-id") String personId){
         PersonDetailsDto personDetailsDto = personQueryService.getPersonDetails(personId);
         return ResponseEntity.ok(personDetailsDto);
     }
 
     @GetMapping("/{person-id}/career")
-    public ResponseEntity<java.util.List<dev.sonle.filmdb.imdb.dto.MovieBasicInfoDto>> getPersonCareer(@PathVariable("person-id") String personId){
+    public ResponseEntity<List<MovieBasicInfoDto>> getPersonCareer(@PathVariable("person-id") String personId){
         List<MovieBasicInfoDto> career = personQueryService.getPersonCareer(personId);
         return ResponseEntity.ok(career);
     }
