@@ -5,6 +5,7 @@ import dev.sonle.filmdb.users.dto.restdto.*;
 import dev.sonle.filmdb.users.service.UserListService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import dev.sonle.filmdb.shared.exception.BusinessException;
@@ -48,10 +49,9 @@ public class UserListController {
         return ResponseEntity.ok("no content");
     }
 
-    @PreAuthorize("@listSecurityEvaluator.isOwner(#userRequest.listId(), authentication.principal.userId)")
     @PatchMapping("")
-    ResponseEntity<String> updateUserListMetadata(@RequestBody ListMetadataForPatchUpdateDto userRequest) {
-        userListService.updateUserListMetadata(userRequest);
+    ResponseEntity<String> updateUserListMetadata(@RequestBody ListMetadataForPatchUpdateDto userRequest, @AuthenticationPrincipal UserAuth userAuth) {
+        userListService.updateUserListMetadata(userRequest, userAuth.getUserId());
         return ResponseEntity.ok("no content");
     }
 
@@ -81,7 +81,7 @@ public class UserListController {
 
     @PreAuthorize("@listSecurityEvaluator.isOwner(#listId, authentication.principal.userId)")
     @DeleteMapping("/{list-id}")
-    ResponseEntity<String> deleteListById(@PathVariable("list-id") UUID listId) {
+    ResponseEntity<String> deleteListById(@P("listId") @PathVariable("list-id") UUID listId) {
         userListService.removeList(listId);
         return ResponseEntity.ok("no content");
     }
