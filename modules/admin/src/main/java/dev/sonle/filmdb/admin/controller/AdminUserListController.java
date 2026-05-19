@@ -24,8 +24,8 @@ public class AdminUserListController {
         return ResponseEntity.ok(userListInterface.getUserLists());
     }
 
-    @GetMapping("/{userId}/lists")
-    public ResponseEntity<List<UserListInterface.UserListProjection>> getUserListsByUserId(@PathVariable UUID userId) {
+    @GetMapping("/{user-id}/lists")
+    public ResponseEntity<List<UserListInterface.UserListProjection>> getUserListsByUserId(@PathVariable("user-id") UUID userId) {
         return ResponseEntity.ok(userListInterface.getUserLists(userId));
     }
 }
