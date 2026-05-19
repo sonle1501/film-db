@@ -45,6 +45,13 @@ public class UserListDetailsService {
     }
 
     @Transactional
+    public List<ListItemDto> getAllItems(UUID userId, UUID listId) {
+        UserList userList = userListRepository.findByUserIdAndListId(userId, listId).orElseThrow(()-> new BusinessException(BusinessExceptionCode.INVALID_INPUT));
+        List<UserListDetails> items = userListDetailsRepository.findAllByUserIdAndListId(userId, listId);
+        return items.stream().map(ListItemDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
     public void createItem(UUID userId, UUID listId, ItemMetadataForCreateDto itemMetadata){
         UserList userList = userListRepository.findByUserIdAndListId(userId,listId).orElseThrow(() -> new BusinessException(BusinessExceptionCode.INVALID_INPUT));
         ItemState itemState = ItemState.fromString(itemMetadata.state());
