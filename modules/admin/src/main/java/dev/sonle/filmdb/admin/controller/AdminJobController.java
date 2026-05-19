@@ -1,5 +1,6 @@
 package dev.sonle.filmdb.admin.controller;
 
+import dev.sonle.filmdb.admin.dto.PendingRequestDto;
 import dev.sonle.filmdb.admin.service.AdminJobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class AdminJobController {
     private final AdminJobService adminJobService;
 
     @GetMapping("/pending-tasks")
-    public ResponseEntity<java.util.List<dev.sonle.filmdb.admin.dto.PendingRequestDto>> getPendingTasks() {
+    public ResponseEntity<java.util.List<PendingRequestDto>> getPendingTasks() {
         return ResponseEntity.ok(adminJobService.getPendingRequestList());
     }
 
