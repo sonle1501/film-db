@@ -112,8 +112,9 @@ public class UserListService {
 
 
     @Transactional
-    public void updateUserListMetadata(ListMetadataForPatchUpdateDto patchDto){
-        UserList userList = userListRepository.findById(patchDto.listId())
+    public void updateUserListMetadata(ListMetadataForPatchUpdateDto patchDto, UUID userId){
+
+        UserList userList = userListRepository.findByUserIdAndListId(userId, patchDto.listId())
                 .orElseThrow(()-> new BusinessException(BusinessExceptionCode.INVALID_INPUT, "Invalid field or value, cannot updated list"));
 
         if (patchDto.nameList() != null && !patchDto.nameList().isBlank()){
