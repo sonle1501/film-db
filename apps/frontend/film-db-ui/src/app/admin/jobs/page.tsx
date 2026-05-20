@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api-client';
 import { PendingRequestDto } from '@/types/admin';
+import { toast } from 'react-hot-toast';
 
 export default function AdminJobsPage() {
   const queryClient = useQueryClient();
@@ -14,15 +15,35 @@ export default function AdminJobsPage() {
 
   const approveMutation = useMutation({
     mutationFn: (userId: string) => adminApi.approveAdmin(userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-pending-tasks'] });
+    onSuccess: (_, userId) => {
+      toast.success('Admin request approved successfully!');
+      queryClient.setQueryData<PendingRequestDto[]>(['admin-pending-tasks'], (old) => {
+        if (!old) return old;
+        return old.map((job) =>
+          job.targetEntityId === userId ? { ...job, state: 'APPROVED' } : job
+        );
+      });
+    },
+    onError: (err) => {
+      toast.error('Failed to approve admin request.');
+      console.error(err);
     },
   });
 
   const rejectMutation = useMutation({
     mutationFn: (userId: string) => adminApi.rejectAdmin(userId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-pending-tasks'] });
+    onSuccess: (_, userId) => {
+      toast.success('Admin request rejected successfully!');
+      queryClient.setQueryData<PendingRequestDto[]>(['admin-pending-tasks'], (old) => {
+        if (!old) return old;
+        return old.map((job) =>
+          job.targetEntityId === userId ? { ...job, state: 'REJECTED' } : job
+        );
+      });
+    },
+    onError: (err) => {
+      toast.error('Failed to reject admin request.');
+      console.error(err);
     },
   });
 
@@ -76,17 +97,25 @@ export default function AdminJobsPage() {
                       {job.targetEntityId}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full border ${
+                        job.state === 'PENDING'
+                          ? 'bg-yellow-400/10 text-yellow-400 border-yellow-400/20'
+                          : job.state === 'APPROVED'
+                          ? 'bg-green-400/10 text-green-400 border-green-400/20'
+                          : job.state === 'REJECTED'
+                          ? 'bg-red-400/10 text-red-400 border-red-400/20'
+                          : 'bg-gray-400/10 text-gray-400 border-gray-400/20'
+                      }`}>
                         {job.state}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {job.actionType === 'ADMIN_APPROVAL' ? (
+                      {job.actionType === 'ADMIN_APPROVAL' && job.state === 'PENDING' ? (
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => approveMutation.mutate(job.targetEntityId)}
                             disabled={approveMutation.isPending || rejectMutation.isPending}
-                            className="text-green-400 hover:text-green-300 disabled:opacity-50 transition-colors"
+                            className="text-green-400 hover:text-green-300 disabled:opacity-50 transition-colors cursor-pointer"
                           >
                             Approve
                           </button>
@@ -94,7 +123,7 @@ export default function AdminJobsPage() {
                           <button
                             onClick={() => rejectMutation.mutate(job.targetEntityId)}
                             disabled={approveMutation.isPending || rejectMutation.isPending}
-                            className="text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors"
+                            className="text-red-400 hover:text-red-300 disabled:opacity-50 transition-colors cursor-pointer"
                           >
                             Reject
                           </button>
