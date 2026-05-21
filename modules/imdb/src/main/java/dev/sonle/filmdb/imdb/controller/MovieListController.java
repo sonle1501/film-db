@@ -3,6 +3,8 @@ package dev.sonle.filmdb.imdb.controller;
 import dev.sonle.filmdb.imdb.dto.MovieBasicInfoDto;
 import dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto;
 import dev.sonle.filmdb.imdb.dto.MovieSupplementInfoDto;
+import dev.sonle.filmdb.imdb.dto.MovieFilterRequestDto;
+import dev.sonle.filmdb.imdb.dto.MovieFilterSortRequestDto;
 import dev.sonle.filmdb.imdb.service.MovieFilterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.data.domain.Page;
 
@@ -74,5 +78,37 @@ public class MovieListController {
     @GetMapping("/popular-movies")
     public ResponseEntity<List<MovieRatingInfoDto>> getMostPopularMovies(){
         return ResponseEntity.ok(movieFilterService.getMostPopularMovies());
+    }
+
+    @PatchMapping("/filter")
+    public ResponseEntity<Page<MovieRatingInfoDto>> filterMovies(
+            @RequestBody MovieFilterRequestDto filterRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieFilterService.filterMovies(filterRequest, page, size));
+    }
+
+    @PatchMapping("/filter-year")
+    public ResponseEntity<Page<MovieRatingInfoDto>> filterMoviesExactYear(
+            @RequestBody MovieFilterRequestDto filterRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieFilterService.filterMoviesExactYear(filterRequest, page, size));
+    }
+
+    @PatchMapping("/filter/sort")
+    public ResponseEntity<Page<MovieRatingInfoDto>> filterAndSortMovies(
+            @RequestBody MovieFilterSortRequestDto filterSortRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieFilterService.filterAndSortMovies(filterSortRequest, page, size));
+    }
+
+    @PatchMapping("/filter-year/sort")
+    public ResponseEntity<Page<MovieRatingInfoDto>> filterAndSortMoviesExactYear(
+            @RequestBody MovieFilterSortRequestDto filterSortRequest,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieFilterService.filterAndSortMoviesExactYear(filterSortRequest, page, size));
     }
 }

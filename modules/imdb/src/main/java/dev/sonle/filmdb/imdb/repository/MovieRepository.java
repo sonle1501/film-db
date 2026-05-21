@@ -174,4 +174,58 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     ORDER BY r.numVotes DESC
     """)
     List<MovieRatingInfoDto> findMostPopularByType(@Param("type") String type, Pageable pageable);
+
+    @Query("""
+    SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
+        m.movieId,
+        m.primaryTitle,
+        m.originalTitle,
+        m.isAdult,
+        m.startYear,
+        m.runtimeMinutes,
+        m.genres,
+        r.averageRating,
+        r.numVotes
+    )
+    FROM Movie m
+    INNER JOIN MovieRating r ON m.movieId = r.movieId
+    WHERE (:startYear IS NULL OR m.startYear >= :startYear)
+      AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
+      AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
+      AND (:titleType IS NULL OR m.titleType = :titleType)
+    """)
+    Page<MovieRatingInfoDto> filterMovies(
+        @Param("startYear") Integer startYear,
+        @Param("averageRating") java.math.BigDecimal averageRating,
+        @Param("numVotes") Integer numVotes,
+        @Param("titleType") String titleType,
+        Pageable pageable
+    );
+
+    @Query("""
+    SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
+        m.movieId,
+        m.primaryTitle,
+        m.originalTitle,
+        m.isAdult,
+        m.startYear,
+        m.runtimeMinutes,
+        m.genres,
+        r.averageRating,
+        r.numVotes
+    )
+    FROM Movie m
+    INNER JOIN MovieRating r ON m.movieId = r.movieId
+    WHERE (:startYear IS NULL OR m.startYear = :startYear)
+      AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
+      AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
+      AND (:titleType IS NULL OR m.titleType = :titleType)
+    """)
+    Page<MovieRatingInfoDto> filterMoviesExactYear(
+        @Param("startYear") Integer startYear,
+        @Param("averageRating") java.math.BigDecimal averageRating,
+        @Param("numVotes") Integer numVotes,
+        @Param("titleType") String titleType,
+        Pageable pageable
+    );
 }
