@@ -425,6 +425,26 @@
         }
       }
     },
+    "/api/v1/user/profile/request-admin": {
+      "post": {
+        "tags": [
+          "user-controller"
+        ],
+        "operationId": "requestAdminRole",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/register": {
       "post": {
         "tags": [
@@ -671,6 +691,110 @@
               "*/*": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imdb/listfilm/filter": {
+      "patch": {
+        "tags": [
+          "movie-list-controller"
+        ],
+        "operationId": "filterMovies",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieFilterRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieRatingInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imdb/listfilm/filter-year": {
+      "patch": {
+        "tags": [
+          "movie-list-controller"
+        ],
+        "operationId": "filterMoviesExactYear",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieFilterRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieRatingInfoDto"
                 }
               }
             }
@@ -1770,13 +1894,23 @@
         }
       }
     },
-    "/api/admin/userlist/{userId}/lists": {
+    "/api/admin/userlist/{user-id}/lists": {
       "get": {
         "tags": [
           "admin-user-list-controller"
         ],
         "operationId": "getUserListsByUserId",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "user-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -2010,6 +2144,149 @@
           }
         }
       },
+      "MovieFilterRequestDto": {
+        "type": "object",
+        "properties": {
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "averageRating": {
+            "type": "number"
+          },
+          "numVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titleType": {
+            "type": "string"
+          }
+        }
+      },
+      "MovieRatingInfoDto": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "string"
+          },
+          "primaryTitle": {
+            "type": "string"
+          },
+          "originalTitle": {
+            "type": "string"
+          },
+          "isAdult": {
+            "type": "boolean"
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "runtimeMinutes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "averageRating": {
+            "type": "number"
+          },
+          "numVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageMovieRatingInfoDto": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieRatingInfoDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "unpaged": {
+            "type": "boolean"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
       "UserListDto": {
         "type": "object",
         "properties": {
@@ -2225,44 +2502,6 @@
           }
         }
       },
-      "MovieRatingInfoDto": {
-        "type": "object",
-        "properties": {
-          "movieId": {
-            "type": "string"
-          },
-          "primaryTitle": {
-            "type": "string"
-          },
-          "originalTitle": {
-            "type": "string"
-          },
-          "isAdult": {
-            "type": "boolean"
-          },
-          "startYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "runtimeMinutes": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "genres": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "averageRating": {
-            "type": "number"
-          },
-          "numVotes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        }
-      },
       "LocalizedTitle": {
         "type": "object",
         "properties": {
@@ -2333,46 +2572,6 @@
             "$ref": "#/components/schemas/PageableObject"
           },
           "empty": {
-            "type": "boolean"
-          }
-        }
-      },
-      "PageableObject": {
-        "type": "object",
-        "properties": {
-          "offset": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "paged": {
-            "type": "boolean"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unpaged": {
-            "type": "boolean"
-          }
-        }
-      },
-      "SortObject": {
-        "type": "object",
-        "properties": {
-          "empty": {
-            "type": "boolean"
-          },
-          "sorted": {
-            "type": "boolean"
-          },
-          "unsorted": {
             "type": "boolean"
           }
         }
