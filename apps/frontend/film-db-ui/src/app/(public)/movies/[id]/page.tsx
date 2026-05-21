@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Star, Clock, Calendar, Users } from "lucide-react";
 import { MovieSupplementaryInfoSection } from "./MovieSupplementaryInfoSection";
 import { MovieContextMenuWrapper } from "@/components/features/movies/MovieContextMenuWrapper";
+import { SeasonsAndEpisodes } from "@/components/features/movies/SeasonsAndEpisodes";
 import Link from "next/link";
 
 async function getMovie(id: string): Promise<FullMovieInfo | null> {
@@ -15,6 +16,16 @@ async function getMovie(id: string): Promise<FullMovieInfo | null> {
     return null;
   }
 }
+
+async function getSeasonsCount(id: string): Promise<number> {
+  try {
+    const data = await fetchApi(`/api/v1/imdb/tvseries/${encodeURIComponent(id)}/seasons`);
+    return typeof data === 'number' ? data : 0;
+  } catch (error) {
+    return 0;
+  }
+}
+
 
 export default async function MovieDetailsPage({
   params,
@@ -38,6 +49,8 @@ export default async function MovieDetailsPage({
       </div>
     );
   }
+
+  const seasonsCount = await getSeasonsCount(id);
 
   // Use unsplash placeholder or default poster image
   const posterUrl = "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=800&q=80";
@@ -157,6 +170,11 @@ export default async function MovieDetailsPage({
                     </div>
                   </div>
                 </section>
+              )}
+
+              {/* Seasons & Episodes */}
+              {seasonsCount > 0 && (
+                <SeasonsAndEpisodes movieId={movie.movieId} seasonsCount={seasonsCount} />
               )}
               
               <MovieSupplementaryInfoSection movieId={movie.movieId} />

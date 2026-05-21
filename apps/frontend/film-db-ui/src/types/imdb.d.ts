@@ -64,3 +64,15 @@ export interface MovieSupplementaryInfo {
   movieId: string;
   localizedTitles: LocalizedTitle[];
 }
+
+export interface EpisodeInfoDto {
+  episodeId: string;
+  parentMovieId: string;
+  seasonNumber: number;
+  episodeNumber: number;
+  primaryTitle: string;
+  originalTitle: string;
+  startYear: number;
+  runtimeMinutes: number;
+}
+

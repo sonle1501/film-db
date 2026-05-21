@@ -118,6 +118,52 @@ export const movieApi = {
   getPopularMovies: async () => {
     const res = await apiClient.get('/api/v1/imdb/listfilm/popular-movies');
     return res.data;
+  },
+  filterMovies: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null }, page = 0, size = 10) => {
+    const res = await apiClient.patch('/api/v1/imdb/listfilm/filter', filters, {
+      params: { page, size }
+    });
+    return res.data;
+  },
+  filterMoviesExactYear: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null }, page = 0, size = 10) => {
+    const res = await apiClient.patch('/api/v1/imdb/listfilm/filter-year', filters, {
+      params: { page, size }
+    });
+    return res.data;
+  },
+  filterAndSortMovies: async (
+    filters: { 
+      startYear?: number | null; 
+      averageRating?: number | null; 
+      numVotes?: number | null; 
+      titleType?: string | null;
+      sortBy: string;
+      sortDirection: string;
+    }, 
+    page = 0, 
+    size = 10
+  ) => {
+    const res = await apiClient.patch('/api/v1/imdb/listfilm/filter/sort', filters, {
+      params: { page, size }
+    });
+    return res.data;
+  },
+  filterAndSortMoviesExactYear: async (
+    filters: { 
+      startYear?: number | null; 
+      averageRating?: number | null; 
+      numVotes?: number | null; 
+      titleType?: string | null;
+      sortBy: string;
+      sortDirection: string;
+    }, 
+    page = 0, 
+    size = 10
+  ) => {
+    const res = await apiClient.patch('/api/v1/imdb/listfilm/filter-year/sort', filters, {
+      params: { page, size }
+    });
+    return res.data;
   }
 };
 
@@ -208,4 +254,18 @@ export const adminApi = {
     return res.data;
   }
 };
+
+export const tvSeriesApi = {
+  getSeasons: async (filmId: string): Promise<number> => {
+    const res = await apiClient.get(`/api/v1/imdb/tvseries/${encodeURIComponent(filmId)}/seasons`);
+    return res.data;
+  },
+  getEpisodes: async (filmId: string, season: number): Promise<EpisodeInfoDto[]> => {
+    const res = await apiClient.get(`/api/v1/imdb/tvseries/${encodeURIComponent(filmId)}/episodes`, {
+      params: { season }
+    });
+    return res.data;
+  }
+};
+
 

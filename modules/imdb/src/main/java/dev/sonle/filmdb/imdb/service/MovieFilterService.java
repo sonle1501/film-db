@@ -3,6 +3,10 @@ package dev.sonle.filmdb.imdb.service;
 import dev.sonle.filmdb.imdb.dto.MovieBasicInfoDto;
 import dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto;
 import dev.sonle.filmdb.imdb.dto.MovieSupplementInfoDto;
+import dev.sonle.filmdb.imdb.dto.MovieFilterRequestDto;
+import dev.sonle.filmdb.imdb.dto.MovieFilterSortRequestDto;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import dev.sonle.filmdb.imdb.model.Movie;
 import dev.sonle.filmdb.imdb.repository.MovieRepository;
 import dev.sonle.filmdb.imdb.repository.MovieAlternativeRepository;
@@ -79,5 +83,74 @@ public class MovieFilterService {
 
     public List<MovieRatingInfoDto> getMostPopularMovies() {
         return movieRepository.findMostPopularByType("movie", PageRequest.of(0, 250));
+    }
+
+    public Page<MovieRatingInfoDto> filterMovies(MovieFilterRequestDto filterRequest, int page, int size) {
+        int maxSize = 10;
+        int actualSize = Math.min(size, maxSize);
+        return movieRepository.filterMovies(
+                filterRequest.startYear(),
+                filterRequest.averageRating(),
+                filterRequest.numVotes(),
+                filterRequest.titleType(),
+                PageRequest.of(page, actualSize)
+        );
+    }
+
+    public Page<MovieRatingInfoDto> filterMoviesExactYear(MovieFilterRequestDto filterRequest, int page, int size) {
+        int maxSize = 10;
+        int actualSize = Math.min(size, maxSize);
+        return movieRepository.filterMoviesExactYear(
+                filterRequest.startYear(),
+                filterRequest.averageRating(),
+                filterRequest.numVotes(),
+                filterRequest.titleType(),
+                PageRequest.of(page, actualSize)
+        );
+    }
+
+    public Page<MovieRatingInfoDto> filterAndSortMovies(MovieFilterSortRequestDto request, int page, int size) {
+        int maxSize = 10;
+        int actualSize = Math.min(size, maxSize);
+        Pageable pageable = createSortedPageable(page, actualSize, request.sortBy(), request.sortDirection());
+        
+        return movieRepository.filterMovies(
+                request.startYear(),
+                request.averageRating(),
+                request.numVotes(),
+                request.titleType(),
+                pageable
+        );
+    }
+
+    public Page<MovieRatingInfoDto> filterAndSortMoviesExactYear(MovieFilterSortRequestDto request, int page, int size) {
+        int maxSize = 10;
+        int actualSize = Math.min(size, maxSize);
+        Pageable pageable = createSortedPageable(page, actualSize, request.sortBy(), request.sortDirection());
+
+        return movieRepository.filterMoviesExactYear(
+                request.startYear(),
+                request.averageRating(),
+                request.numVotes(),
+                request.titleType(),
+                pageable
+        );
+    }
+
+    private Pageable createSortedPageable(int page, int size, String sortBy, String direction) {
+        Sort sort = Sort.unsorted();
+        if (sortBy != null && !sortBy.trim().isEmpty()) {
+            Sort.Direction dir = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+            String field = switch (sortBy) {
+                case "averageRating" -> "r.averageRating";
+                case "numVotes" -> "r.numVotes";
+                case "startYear" -> "m.startYear";
+                default -> null;
+            };
+            if (field != null) {
+                sort = Sort.by(dir, field);
+            }
+        }
+        return PageRequest.of(page, size, sort);
     }
 }
