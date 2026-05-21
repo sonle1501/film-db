@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useProfile, useUpdateUsername, useUpdateProfile } from '@/hooks/useProfile';
+import { useProfile, useUpdateUsername, useUpdateProfile, useRequestAdmin } from '@/hooks/useProfile';
 import { useLists } from '@/hooks/useLists';
 import Link from 'next/link';
 import { Modal } from '@/components/ui/Modal';
+import { toast } from 'react-hot-toast';
 
 // --- Types ---
 type ProfileFormData = {
@@ -27,10 +28,12 @@ export default function ProfilePage() {
 
   const updateUsernameMutation = useUpdateUsername();
   const updateProfileMutation = useUpdateProfile(user?.username);
+  const requestAdminMutation = useRequestAdmin(user?.username);
 
-  // Modal States
+  // Modal & Error States
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
 
   // Form Hooks
   const { register: registerProfile, handleSubmit: handleProfileSubmit, reset: resetProfile } = useForm<ProfileFormData>();
@@ -80,6 +83,23 @@ export default function ProfilePage() {
     }
   };
 
+  const handleRequestAdmin = async () => {
+    try {
+      setRequestError(null);
+      await requestAdminMutation.mutateAsync();
+      toast.success('Admin request submitted successfully!');
+    } catch (err: any) {
+      console.error(err);
+      // Determine if rejection error or standard error
+      const serverMsg = err.response?.data?.message || err.message;
+      const displayError = serverMsg?.includes('rejected') || serverMsg?.includes('already')
+        ? 'An admin rejected your request.'
+        : 'An admin rejected your request.'; // Fallback as requested
+      setRequestError(displayError);
+      toast.error(displayError);
+    }
+  };
+
   if (!user) {
     return (
       <div className="text-white p-8 text-center">
@@ -108,6 +128,35 @@ export default function ProfilePage() {
           >
             Change Username
           </button>
+          {profile && profile.role !== 'ADMIN' && (
+            profile.userState === 'ADMIN_PENDING' ? (
+              <button 
+                disabled
+                className="px-4 py-2 bg-yellow-500/10 text-yellow-400 font-medium border border-yellow-500/20 rounded-md flex items-center gap-2 cursor-not-allowed opacity-80"
+              >
+                <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.6)]"></span>
+                Request Pending
+              </button>
+            ) : (
+              <button 
+                onClick={handleRequestAdmin}
+                disabled={requestAdminMutation.isPending}
+                className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium rounded-md hover:from-amber-600 hover:to-orange-700 transition-all duration-300 shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
+              >
+                {requestAdminMutation.isPending ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Submitting...
+                  </>
+                ) : (
+                  'Request Admin'
+                )}
+              </button>
+            )
+          )}
         </div>
       </div>
 
@@ -168,6 +217,18 @@ export default function ProfilePage() {
                 <p className="bg-white/5 p-4 rounded-lg italic text-gray-300 border border-white/5">
                   "{profile.bio}"
                 </p>
+              </div>
+            )}
+            {profile.userState === 'ADMIN_PENDING' && (
+              <div className="col-span-1 md:col-span-2 mt-4 bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 p-4 rounded-xl flex items-center gap-3 backdrop-blur-sm">
+                <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_8px_rgba(234,179,8,0.6)]"></span>
+                <span className="text-sm font-medium">Your request for admin privileges is pending approval by an administrator.</span>
+              </div>
+            )}
+            {requestError && (
+              <div className="col-span-1 md:col-span-2 mt-4 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl flex items-center gap-3 backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+                <span className="text-sm font-medium">{requestError}</span>
               </div>
             )}
           </div>

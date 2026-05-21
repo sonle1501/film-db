@@ -35,4 +35,10 @@ public class UserController {
         authService.changeUsername(userRequest);
         return ResponseEntity.ok("no content");
     }
+
+    @PostMapping("/request-admin")
+    public ResponseEntity<String> requestAdminRole(@AuthenticationPrincipal UserAuth userAuth){
+        authService.requestAdminRole(userAuth.getUserId());
+        return ResponseEntity.ok("no content");
+    }
 }

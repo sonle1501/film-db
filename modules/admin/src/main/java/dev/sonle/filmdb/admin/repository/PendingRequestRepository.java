@@ -14,4 +14,6 @@ public interface PendingRequestRepository extends JpaRepository<PendingRequest, 
     boolean existsByTargetEntityIdAndActionTypeAndState(String targetEntityId, AdminActionType actionType, PendingRequestState state);
     
     Optional<PendingRequest> findByTargetEntityIdAndActionTypeAndState(String targetEntityId, AdminActionType actionType, PendingRequestState state);
+    
+    long countByInitiatorAndActionType(UUID initiator, AdminActionType actionType);
 }

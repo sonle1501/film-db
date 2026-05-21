@@ -24,6 +24,12 @@ public class AdminRequestService {
     @EventListener
     public void queueApprovalAdminRequest(RegisterAdminEvent event) {
         UUID userId = event.userId();
+        long count = pendingRequestRepository.countByInitiatorAndActionType(userId, AdminActionType.ADMIN_APPROVAL);
+        if (count >= 2) {
+            throw new BusinessException(BusinessExceptionCode.REJECT_REQUEST,
+                    "Admin request rejected: User has already submitted admin approval request 2 or more times.");
+        }
+
         boolean alreadyQueued = pendingRequestRepository.existsByTargetEntityIdAndActionTypeAndState(
                 userId.toString(),
                 AdminActionType.ADMIN_APPROVAL,

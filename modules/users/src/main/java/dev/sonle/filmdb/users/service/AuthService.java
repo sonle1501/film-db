@@ -79,6 +79,21 @@ public class AuthService {
     }
 
     @Transactional
+    public void requestAdminRole(UUID userId) {
+        UserAuth userAuth = userAuthRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(BusinessExceptionCode.USER_NOT_FOUND, "User not found"));
+
+        if (userAuth.getRole() == Role.ADMIN) {
+            throw new BusinessException(BusinessExceptionCode.REJECT_REQUEST, "User is already an admin");
+        }
+
+        userAuth.setUserState(UserState.ADMIN_PENDING);
+        userAuthRepository.save(userAuth);
+
+        eventPublisher.publishEvent(new RegisterAdminEvent(userId));
+    }
+
+    @Transactional
     public AuthTokensDto login(LoginRequestDto request) {
         try{
             authenticationManager.authenticate(
