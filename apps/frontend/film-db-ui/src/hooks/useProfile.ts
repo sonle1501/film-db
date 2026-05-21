@@ -27,3 +27,15 @@ export const useUpdateProfile = (username: string | undefined) => {
     }
   });
 };
+
+export const useRequestAdmin = (username: string | undefined) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: userApi.requestAdmin,
+    onSuccess: () => {
+      if (username) {
+        queryClient.invalidateQueries({ queryKey: ['userProfile', username] });
+      }
+    }
+  });
+};

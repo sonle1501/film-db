@@ -175,6 +175,10 @@ export const userApi = {
   updateProfile: async (data: any) => {
     const res = await apiClient.patch('/api/v1/user/profile', data);
     return res.data;
+  },
+  requestAdmin: async () => {
+    const res = await apiClient.post('/api/v1/user/profile/request-admin');
+    return res.data;
   }
 };
 
