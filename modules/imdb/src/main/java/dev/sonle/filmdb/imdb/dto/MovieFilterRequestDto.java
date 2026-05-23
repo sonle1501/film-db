@@ -6,5 +6,6 @@ public record MovieFilterRequestDto(
     Integer startYear,
     BigDecimal averageRating,
     Integer numVotes,
-    String titleType
+    String titleType,
+    String genre
 ) {}

@@ -8,5 +8,6 @@ public record MovieFilterSortRequestDto(
     Integer numVotes,
     String titleType,
     String sortBy,
-    String sortDirection
+    String sortDirection,
+    String genre
 ) {}

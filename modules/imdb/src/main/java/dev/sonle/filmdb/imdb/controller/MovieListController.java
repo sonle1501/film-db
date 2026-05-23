@@ -50,6 +50,14 @@ public class MovieListController {
         return ResponseEntity.ok(movieFilterService.getListMovieFilterByNameAndGenre(name, genre));
     }
 
+    @GetMapping("/by-genre")
+    public ResponseEntity<Page<MovieBasicInfoDto>> getListMovieByGenre(
+            @RequestParam("genre") String genre,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        return ResponseEntity.ok(movieFilterService.getListMovieByGenre(genre, page, size));
+    }
+
     @GetMapping("/localized")
     public ResponseEntity<List<MovieSupplementInfoDto>> getListMovieUseLocalizedName(@RequestParam("name") String name){
         return ResponseEntity.ok(movieFilterService.getListMovieUseLocalizedName(name));

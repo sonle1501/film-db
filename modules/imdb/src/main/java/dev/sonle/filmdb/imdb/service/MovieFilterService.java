@@ -93,6 +93,7 @@ public class MovieFilterService {
                 filterRequest.averageRating(),
                 filterRequest.numVotes(),
                 filterRequest.titleType(),
+                filterRequest.genre(),
                 PageRequest.of(page, actualSize)
         );
     }
@@ -105,6 +106,7 @@ public class MovieFilterService {
                 filterRequest.averageRating(),
                 filterRequest.numVotes(),
                 filterRequest.titleType(),
+                filterRequest.genre(),
                 PageRequest.of(page, actualSize)
         );
     }
@@ -119,6 +121,7 @@ public class MovieFilterService {
                 request.averageRating(),
                 request.numVotes(),
                 request.titleType(),
+                request.genre(),
                 pageable
         );
     }
@@ -133,8 +136,16 @@ public class MovieFilterService {
                 request.averageRating(),
                 request.numVotes(),
                 request.titleType(),
+                request.genre(),
                 pageable
         );
+    }
+
+    public Page<MovieBasicInfoDto> getListMovieByGenre(String genre, int page, int size) {
+        int maxSize = 20;
+        int actualSize = Math.min(size, maxSize);
+        return movieRepository.findByGenre(genre, PageRequest.of(page, actualSize))
+                .map(MovieBasicInfoDto::from);
     }
 
     private Pageable createSortedPageable(int page, int size, String sortBy, String direction) {
