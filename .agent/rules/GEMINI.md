@@ -44,7 +44,7 @@ There is a reference folder at `@reference`, contains all things and knowledge t
 + `@.agent/reference/backend-apis` : APIs provided by backend
 
 # Skills
-There are skills about frontend, nextjs-react, tailwind and web design in the `@.agent/skills/` folder. You can use these if need
+There are skills about frontend, tailwind and web design in the `@.agent/skills/` folder. You can use these if need
 
 # Language
 When user's prompt is NOT in English:
@@ -68,10 +68,3 @@ Read `ARCHITECTURE.md` to understand the structure of `@.agent/` root folder
 - `@.agent/workflows : workflow trigger
 - `@.agent/reference : reference knowledge
 - `@.agent/output : generated output
-
-
-
-
-
-
-

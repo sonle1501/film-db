@@ -7,7 +7,6 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 # Frontend Design System
 
 > **Philosophy:** Every pixel has purpose. Restraint is luxury. User psychology drives decisions.
-> **Core Principle:** THINK, don't memorize. ASK, don't assume.
 
 ---
 
@@ -29,32 +28,7 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 ---
 
-## 1. Constraint Analysis (ALWAYS FIRST)
-
-Before any design work, ANSWER THESE or ASK USER:
-
-| Constraint | Question | Why It Matters |
-|------------|----------|----------------|
-| **Timeline** | How much time? | Determines complexity |
-| **Content** | Ready or placeholder? | Affects layout flexibility |
-| **Brand** | Existing guidelines? | May dictate colors/fonts |
-| **Tech** | What stack? | Affects capabilities |
-| **Audience** | Who exactly? | Drives all visual decisions |
-
-### Audience → Design Approach
-
-| Audience | Think About |
-|----------|-------------|
-| **Gen Z** | Bold, fast, mobile-first, authentic |
-| **Millennials** | Clean, minimal, value-driven |
-| **Gen X** | Familiar, trustworthy, clear |
-| **Boomers** | Readable, high contrast, simple |
-| **B2B** | Professional, data-focused, trust |
-| **Luxury** | Restrained elegance, whitespace |
-
----
-
-## 2. UX Psychology Principles
+## 1. UX Psychology Principles
 
 ### Core Laws (Internalize These)
 
@@ -84,7 +58,7 @@ REFLECTIVE (memory) → After: "I like what this says about me"
 
 ---
 
-## 3. Layout Principles
+## 2. Layout Principles
 
 ### Golden Ratio (φ = 1.618)
 
@@ -119,7 +93,7 @@ All spacing and sizing in multiples of 8:
 
 ---
 
-## 4. Color Principles
+## 3. Color Principles
 
 ### 60-30-10 Rule
 
@@ -144,13 +118,12 @@ All spacing and sizing in multiples of 8:
 1. **What's the industry?** (narrows options)
 2. **What's the emotion?** (picks primary)
 3. **Light or dark mode?** (sets foundation)
-4. **ASK USER** if not specified
 
 For detailed color theory: [color-system.md](color-system.md)
 
 ---
 
-## 5. Typography Principles
+## 4. Typography Principles
 
 ### Scale Selection
 
@@ -181,7 +154,7 @@ For detailed typography: [typography-system.md](typography-system.md)
 
 ---
 
-## 6. Visual Effects Principles
+## 5. Visual Effects Principles
 
 ### Glassmorphism (When Appropriate)
 
@@ -218,7 +191,7 @@ For complete effects guide: [visual-effects.md](visual-effects.md)
 
 ---
 
-## 7. Animation Principles
+## 6. Animation Principles
 
 ### Timing Concept
 
@@ -249,7 +222,7 @@ For animation patterns: [animation-guide.md](animation-guide.md), for advanced: 
 
 ---
 
-## 8. "Wow Factor" Checklist
+## 7. "Wow Factor" Checklist
 
 ### Premium Indicators
 
@@ -277,7 +250,7 @@ For animation patterns: [animation-guide.md](animation-guide.md), for advanced: 
 
 ---
 
-## 9. Anti-Patterns (What NOT to Do)
+## 8. Anti-Patterns (What NOT to Do)
 
 ### ❌ Lazy Design Indicators
 
@@ -296,7 +269,6 @@ For animation patterns: [animation-guide.md](animation-guide.md), for advanced: 
 - **Bento grids for simple landing pages**
 - **Mesh Gradients & Glow Effects**
 - **Same layout structure / Vercel clone**
-- **Not asking user preferences**
 
 ### ❌ Dark Patterns (Unethical)
 
@@ -305,35 +277,6 @@ For animation patterns: [animation-guide.md](animation-guide.md), for advanced: 
 - Forced actions
 - Deceptive UI
 - Confirmshaming
-
----
-
-## 10. Decision Process Summary
-
-```
-For EVERY design task:
-
-1. CONSTRAINTS
-   └── What's the timeline, brand, tech, audience?
-   └── If unclear → ASK
-
-2. CONTENT
-   └── What content exists?
-   └── What's the hierarchy?
-
-3. STYLE DIRECTION
-   └── What's appropriate for context?
-   └── If unclear → ASK (don't default!)
-
-4. EXECUTION
-   └── Apply principles above
-   └── Check against anti-patterns
-
-5. REVIEW
-   └── "Does this serve the user?"
-   └── "Is this different from my defaults?"
-   └── "Would I be proud of this?"
-```
 
 ---
 
@@ -350,36 +293,3 @@ For deeper guidance on specific areas:
 - [ux-psychology.md](ux-psychology.md) - User psychology deep dive
 
 > **Remember:** Design is THINKING, not copying. Every project deserves fresh consideration based on its unique context and users. **Avoid the Modern SaaS Safe Harbor!**
-
-
-## 5. Next.js 16+ Modern Form Patterns
-
-> [!IMPORTANT]
-> For Next.js 16+ projects, use the native `next/form` component instead of standard HTML `<form>` for all GET-based search/filter operations.
-
-### The `<Form>` Component Advantage
-- **Automatic Client Navigation:** Performs client-side transitions on submit.
-- **Progressive Enhancement:** Works even without JavaScript.
-- **URL Sync:** Automatically encodes input values into search params.
-
-### Implementation Example (Search Bar)
-```tsx
-import Form from 'next/form'
-
-export default function SearchBar() {
-  return (
-    <Form action="/search" className="flex gap-2">
-      <input 
-        name="q" 
-        placeholder="Search products..." 
-        className="border p-2"
-      />
-      <button type="submit">Search</button>
-    </Form>
-  )
-}
-```
-
-### When to use `<Form>` vs. standard `<form>`:
-- **Use `next/form`** for: Search, Filtering, Sorting, Pagination (GET requests).
-- **Use standard `<form>`** for: Mutations, Login, Data Entry (POST requests via Server Actions).

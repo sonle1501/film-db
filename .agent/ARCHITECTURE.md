@@ -12,7 +12,6 @@
 │   └── GEMINI.md
 ├── skills/
 │   ├── frontend-design/
-│   ├── nextjs-react-expert/
 │   ├── tailwind-patterns/
 │   └── web-design-guidelines/
 ├── workflows/
