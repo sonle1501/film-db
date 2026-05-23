@@ -1,5 +1,6 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
+import { EpisodeInfoDto } from '@/types/imdb';
 
 // Determine the base URL depending on the environment
 const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -119,13 +120,13 @@ export const movieApi = {
     const res = await apiClient.get('/api/v1/imdb/listfilm/popular-movies');
     return res.data;
   },
-  filterMovies: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null }, page = 0, size = 10) => {
+  filterMovies: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null; genre?: string | null }, page = 0, size = 10) => {
     const res = await apiClient.patch('/api/v1/imdb/listfilm/filter', filters, {
       params: { page, size }
     });
     return res.data;
   },
-  filterMoviesExactYear: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null }, page = 0, size = 10) => {
+  filterMoviesExactYear: async (filters: { startYear?: number | null; averageRating?: number | null; numVotes?: number | null; titleType?: string | null; genre?: string | null }, page = 0, size = 10) => {
     const res = await apiClient.patch('/api/v1/imdb/listfilm/filter-year', filters, {
       params: { page, size }
     });
@@ -137,6 +138,7 @@ export const movieApi = {
       averageRating?: number | null; 
       numVotes?: number | null; 
       titleType?: string | null;
+      genre?: string | null;
       sortBy: string;
       sortDirection: string;
     }, 
@@ -154,6 +156,7 @@ export const movieApi = {
       averageRating?: number | null; 
       numVotes?: number | null; 
       titleType?: string | null;
+      genre?: string | null;
       sortBy: string;
       sortDirection: string;
     }, 
@@ -162,6 +165,16 @@ export const movieApi = {
   ) => {
     const res = await apiClient.patch('/api/v1/imdb/listfilm/filter-year/sort', filters, {
       params: { page, size }
+    });
+    return res.data;
+  },
+  getGenres: async () => {
+    const res = await apiClient.get('/api/v1/imdb/genres');
+    return res.data;
+  },
+  getMoviesByGenre: async (genre: string, page = 0, size = 20) => {
+    const res = await apiClient.get('/api/v1/imdb/listfilm/by-genre', {
+      params: { genre, page, size }
     });
     return res.data;
   }

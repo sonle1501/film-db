@@ -176,29 +176,31 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     List<MovieRatingInfoDto> findMostPopularByType(@Param("type") String type, Pageable pageable);
 
     @Query("""
-    SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
-        m.movieId,
-        m.primaryTitle,
-        m.originalTitle,
-        m.isAdult,
-        m.startYear,
-        m.runtimeMinutes,
-        m.genres,
-        r.averageRating,
-        r.numVotes
-    )
-    FROM Movie m
-    INNER JOIN MovieRating r ON m.movieId = r.movieId
-    WHERE (:startYear IS NULL OR m.startYear >= :startYear)
-      AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
-      AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
-      AND (:titleType IS NULL OR m.titleType = :titleType)
-    """)
+SELECT new dev.sonle.filmdb.imdb.dto.MovieRatingInfoDto(
+    m.movieId,
+    m.primaryTitle,
+    m.originalTitle,
+    m.isAdult,
+    m.startYear,
+    m.runtimeMinutes,
+    m.genres,
+    r.averageRating,
+    r.numVotes
+)
+FROM Movie m
+INNER JOIN MovieRating r ON m.movieId = r.movieId
+WHERE (:startYear IS NULL OR m.startYear >= :startYear)
+  AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
+  AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
+  AND (:titleType IS NULL OR m.titleType = :titleType)
+  AND (:genre IS NULL OR array_contains(m.genres, :genre) = true)
+""")
     Page<MovieRatingInfoDto> filterMovies(
         @Param("startYear") Integer startYear,
         @Param("averageRating") java.math.BigDecimal averageRating,
         @Param("numVotes") Integer numVotes,
         @Param("titleType") String titleType,
+        @Param("genre") String genre,
         Pageable pageable
     );
 
@@ -220,12 +222,32 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
       AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
       AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
       AND (:titleType IS NULL OR m.titleType = :titleType)
+      AND (:genre IS NULL OR array_contains(m.genres, :genre) = true)
     """)
     Page<MovieRatingInfoDto> filterMoviesExactYear(
         @Param("startYear") Integer startYear,
         @Param("averageRating") java.math.BigDecimal averageRating,
         @Param("numVotes") Integer numVotes,
         @Param("titleType") String titleType,
+        @Param("genre") String genre,
         Pageable pageable
     );
+
+    @Query(value = """
+    SELECT *
+    FROM imdb.movie m
+    WHERE :genre = ANY(m.genres)
+    """,
+    countQuery = """
+    SELECT count(*)
+    FROM imdb.movie m
+    WHERE :genre = ANY(m.genres)
+    """,
+    nativeQuery = true)
+    Page<Movie> findByGenre(@Param("genre") String genre, Pageable pageable);
+
+    // suggest : using LATERAL for optimization
+    @Query(value = "SELECT DISTINCT unnest(m.genres) AS genre FROM imdb.movie m WHERE m.genres IS NOT NULL ORDER BY genre ASC", nativeQuery = true)
+    List<String> findAllGenres();
 }
+

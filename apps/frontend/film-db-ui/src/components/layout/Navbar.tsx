@@ -50,6 +50,11 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                 </Link>
               </li>
               <li>
+                <Link href="/movies/genres" className="hover:text-white transition-colors">
+                  Genres
+                </Link>
+              </li>
+              <li>
                 <Link href="/people" className="hover:text-white transition-colors">
                   People
                 </Link>
