@@ -750,6 +750,58 @@
         }
       }
     },
+    "/api/v1/imdb/listfilm/filter/sort": {
+      "patch": {
+        "tags": [
+          "movie-list-controller"
+        ],
+        "operationId": "filterAndSortMovies",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieFilterSortRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieRatingInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/imdb/listfilm/filter-year": {
       "patch": {
         "tags": [
@@ -783,6 +835,58 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/MovieFilterRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieRatingInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imdb/listfilm/filter-year/sort": {
+      "patch": {
+        "tags": [
+          "movie-list-controller"
+        ],
+        "operationId": "filterAndSortMoviesExactYear",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieFilterSortRequestDto"
               }
             }
           },
@@ -1637,6 +1741,79 @@
         }
       }
     },
+    "/api/v1/imdb/listfilm/by-genre": {
+      "get": {
+        "tags": [
+          "movie-list-controller"
+        ],
+        "operationId": "getListMovieByGenre",
+        "parameters": [
+          {
+            "name": "genre",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieBasicInfoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imdb/genres": {
+      "get": {
+        "tags": [
+          "genre-controller"
+        ],
+        "operationId": "getAllGenres",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/imdb/film/{film-id}": {
       "get": {
         "tags": [
@@ -2160,6 +2337,9 @@
           },
           "titleType": {
             "type": "string"
+          },
+          "genre": {
+            "type": "string"
           }
         }
       },
@@ -2257,19 +2437,19 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
-          "unpaged": {
-            "type": "boolean"
-          },
           "paged": {
             "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
           },
           "pageSize": {
             "type": "integer",
             "format": "int32"
           },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
+          "unpaged": {
+            "type": "boolean"
           }
         }
       },
@@ -2284,6 +2464,34 @@
           },
           "unsorted": {
             "type": "boolean"
+          }
+        }
+      },
+      "MovieFilterSortRequestDto": {
+        "type": "object",
+        "properties": {
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "averageRating": {
+            "type": "number"
+          },
+          "numVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titleType": {
+            "type": "string"
+          },
+          "sortBy": {
+            "type": "string"
+          },
+          "sortDirection": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "string"
           }
         }
       },

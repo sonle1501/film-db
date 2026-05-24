@@ -10,6 +10,8 @@
     
 - **Database:** PostgreSQL
 
+More details: see the [Libs](<S:\Coding\Projects\film-db\gradle\libs.versions.toml>)
+
 **Codebase Structure:**
 
 The monolithic application is divided into heavily segregated modules:

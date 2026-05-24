@@ -9,7 +9,7 @@ This file defines how the AI behaves in this workspace.
 **MANDATORY:** You MUST read this file entirely and apply. This is the highest priority rule.
 
 # Project context
-Read the project context at `@.agent/reference/project-context.md`  after doing anything
+Read the project context at [project-context.md](../reference/project-context.md)  after doing anything
 
 # User's intent
 Analyze the user's prompt. If it starts with a `/` (Slash Command), bypass intent recognition and immediately trigger the corresponding workflow in **Table 2**. If it is a natural language prompt, classify it using **Table 1** to determine where assets should be placed and what the output format must be.
@@ -26,9 +26,9 @@ Analyze the user's prompt. If it starts with a `/` (Slash Command), bypass inten
 
 | Slash Command | Workflow Triggered             | Goal                                    |
 | :------------ | :----------------------------- | :-------------------------------------- |
-| `/plan`       | `@.agent/workflows/plan.md`    | Planning, brainstorming and disscusion. |
-| `/code`       | `@.agent/workflows/code.md`    | Executation and implementation          |
-| `/analyze`    | `@.agent/workflows/analyze.md` | Analyzation and revision.               |
+| `/plan`       | [plan.md](../workflows/plan.md)    | Planning, brainstorming and disscusion. |
+| `/code`       | [code.md](../workflows/code.md)    | Executation and implementation          |
+| `/analyze`    | [analyze.md](../workflows/analyze.md) | Analyzation and revision.               |
 
 ### Execution Rules for Table 2:
 1. **Strict Adherence:** When a slash command is used, do not deviate from the workflow. 
@@ -38,10 +38,11 @@ If a prompt is highly ambiguous and cannot be confidently mapped to Table 1 or T
 
 # Reference folder
 There is a reference folder at `@reference`, contains all things and knowledge that you need to reference
-+ `@.agent/reference/project-context.md` : the project's context
-+ `@.agent/reference/backend-summary` : summary the backend
-+ `@.agent/reference/codebase-structure` : overview of the project structure
-+ `@.agent/reference/backend-apis` : APIs provided by backend
++ [project-context.md](../reference/project-context.md) : the project's context
++ [backend-summary.md](../reference/backend-summary.md) : summary the backend
++ [frontend-summary.md](../reference/frontend-summary.md) : summary the frontend
++ [codebase-structure.md](../reference/codebase-structure.md) : overview of the project structure
++ [backend-apis.md](../reference/backend-apis.md) : APIs provided by backend
 
 # Skills
 There are skills about frontend, tailwind and web design in the `@.agent/skills/` folder. You can use these if need
@@ -54,17 +55,17 @@ When user's prompt is NOT in English:
 3. **Code comments/variables** remain in English
 
 # File Dependency Awareness
-If you need to see the overview of project structure, see the `@.agent/reference/codebase-structure`
+If you need to see the overview of project structure, see [codebase-structure.md](../reference/codebase-structure.md)
 
 ## System Map Read
 
-Read `ARCHITECTURE.md` to understand the structure of `@.agent/` root folder
+Read [ARCHITECTURE.md](../ARCHITECTURE.md) to understand the structure of `@.agent/` root folder
 
 **Path Awareness:**
 
-- `@.agent` : root agent folder
-- `@.agent/rules` : main rule
-- `@.agent/skills : skill you need
-- `@.agent/workflows : workflow trigger
-- `@.agent/reference : reference knowledge
-- `@.agent/output : generated output
+- [@.agent](../) : root agent folder
+- [@.agent/rules](./) : main rule
+- [@.agent/skills](../skills) : skill you need
+- [@.agent/workflows](../workflows) : workflow trigger
+- [@.agent/reference](../reference) : reference knowledge
+- [@.agent/output](../output) : generated output

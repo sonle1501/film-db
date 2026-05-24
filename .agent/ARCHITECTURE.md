@@ -6,6 +6,7 @@
 ├── reference/
 │   ├── backend-apis.md
 │   ├── backend-summary.md
+│   ├── frontend-summary.md
 │   ├── codebase-structure.md
 │   └── project-context.md
 ├── rules/

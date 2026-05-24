@@ -1,4 +1,4 @@
-**Project Overview:** This project is the frontend interface for "film-db," a personal project utilizing the IMDB movies dataset. The primary goal is to build a high-quality, rich application that interfaces with a robust backend server. The frontend's role is to provide a simple but aesthetically pleasing UI to represent the backend's capabilities. You can see backend's APIs at `@.agent/reference/backend-apis`
+**Project Overview:** This project is the frontend interface for "film-db," a personal project utilizing the IMDB movies dataset. The primary goal is to build a high-quality, rich application that interfaces with a robust backend server. The frontend's role is to provide a simple but aesthetically pleasing UI to represent the backend's capabilities. You can see backend's APIs at [backend-apis.md](./backend-apis.md)
 
 The tech stack i want to use frontend are nextjs with react and tailwind
 
