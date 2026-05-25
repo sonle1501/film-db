@@ -265,6 +265,20 @@ export const adminApi = {
       params: { userId }
     });
     return res.data;
+  },
+  runImportPipeline: async () => {
+    const res = await apiClient.post('/api/admin/import-pipeline/run');
+    return res.data;
+  },
+  getImportStatus: async (jobId: string) => {
+    const res = await apiClient.get('/api/admin/import-pipeline/status', {
+      params: { jobId }
+    });
+    return res.data;
+  },
+  getImportHistory: async () => {
+    const res = await apiClient.get('/api/admin/import-pipeline/history');
+    return res.data;
   }
 };
 
