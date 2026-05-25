@@ -55,4 +55,14 @@ public class ImportJobHistory {
 
     @Column(name = "triggered_by")
     private UUID triggeredBy;
+
+    @Column(name = "progress")
+    private Double progress;
+
+    @Column(name = "current_stage", length = 50)
+    private String currentStage;
+
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
+    @Column(name = "logs", columnDefinition = "jsonb")
+    private java.util.List<String> logs;
 }
