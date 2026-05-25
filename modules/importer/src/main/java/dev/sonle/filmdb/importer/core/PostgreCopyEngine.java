@@ -1,12 +1,13 @@
 package dev.sonle.filmdb.importer.core;
 
 import org.postgresql.copy.CopyManager;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
 @Component
@@ -15,15 +16,24 @@ public class PostgreCopyEngine {
     public PostgreCopyEngine(){
     }
 
-    public void processCopyOperation(String gzipFilePath, CopyManager copyManager, String sqlCopyCommand, int BATCH_SIZE, PostgreArrayFormatter.ArrayFormatter formatter) throws Exception{
+    public void processCopyOperation(
+            String gzipFilePath,
+            CopyManager copyManager,
+            String sqlCopyCommand,
+            int BATCH_SIZE,
+            PostgreArrayFormatter.ArrayFormatter formatter,
+            Consumer<Double> progressCallback
+    ) throws Exception {
         try (InputStream fileStream = new FileInputStream(gzipFilePath);
-             InputStream gzipStream = new GZIPInputStream(fileStream);
+             CountingInputStream countingStream = new CountingInputStream(fileStream);
+             InputStream gzipStream = new GZIPInputStream(countingStream);
              Reader decoder = new InputStreamReader(gzipStream, StandardCharsets.UTF_8);
              BufferedReader bufferedReader = new BufferedReader(decoder)) {
 
             String line = bufferedReader.readLine(); // Read, check null and skip the header row
             if (line == null) return;
 
+            long totalSize = new File(gzipFilePath).length();
             StringBuilder batchBuffer = new StringBuilder();
             int linesCount = 0;
             int linesInserted = 0;
@@ -45,6 +55,11 @@ public class PostgreCopyEngine {
                     linesInserted += linesCount;
                     log.info("Inserted {} rows...", linesInserted);
 
+                    if (progressCallback != null && totalSize > 0) {
+                        double progress = (double) countingStream.getBytesRead() / totalSize;
+                        progressCallback.accept(progress);
+                    }
+
                     batchBuffer.setLength(0);
                     linesCount = 0;
                 }
@@ -55,8 +70,11 @@ public class PostgreCopyEngine {
                 copyManager.copyIn(sqlCopyCommand, new StringReader(batchBuffer.toString()));
                 linesInserted += linesCount;
                 log.info("Inserted final batch. Total: {} rows.", linesInserted);
+
+                if (progressCallback != null) {
+                    progressCallback.accept(1.0);
+                }
             }
         }
     }
-
 }

@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.function.Consumer;
 
 @Service
 public class ImdbImportService {
@@ -37,12 +38,12 @@ public class ImdbImportService {
         this.postgreArrayFormatter = postgreArrayFormatter;
     }
 
-    private void importData(String gzipFilePath, String sqlCopyCommand, PostgreArrayFormatter.ArrayFormatter formatter, String taskName){
+    private void importData(String gzipFilePath, String sqlCopyCommand, PostgreArrayFormatter.ArrayFormatter formatter, String taskName, java.util.function.Consumer<Double> progressCallback){
         log.info("Starting stream import for {} from: {}", taskName, gzipFilePath);
         try (Connection conn = dataSource.getConnection()) {
             BaseConnection pgConn = conn.unwrap(BaseConnection.class);
             CopyManager copyManager = new CopyManager(pgConn);
-            postgreCopyEngine.processCopyOperation(gzipFilePath, copyManager, sqlCopyCommand, BATCH_SIZE, formatter);
+            postgreCopyEngine.processCopyOperation(gzipFilePath, copyManager, sqlCopyCommand, BATCH_SIZE, formatter, progressCallback);
             log.info("{} import completed successfully!", taskName);
         }
         catch (SQLException e){
@@ -55,39 +56,39 @@ public class ImdbImportService {
         }
     }
 
-    public void importMovies(String gzipFilePath) {
+    public void importMovies(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieDataFormatter(), "Movie");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieDataFormatter(), "Movie", progressCallback);
     }
 
-    public void importPersons(String gzipFilePath) {
+    public void importPersons(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.person_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getPersonDataFormatter(), "Person");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getPersonDataFormatter(), "Person", progressCallback);
     }
 
-    public void importMovieAlternatives(String gzipFilePath) {
+    public void importMovieAlternatives(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_alternative_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieAlternativeFormatter(), "Movie Alternative");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieAlternativeFormatter(), "Movie Alternative", progressCallback);
     }
 
-    public void importMovieCrews(String gzipFilePath) {
+    public void importMovieCrews(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_crew_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieCrewFormatter(), "Movie Crew");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getMovieCrewFormatter(), "Movie Crew", progressCallback);
     }
 
-    public void importMovieEpisodes(String gzipFilePath) {
+    public void importMovieEpisodes(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_episode_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Episode");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Episode", progressCallback);
     }
 
-    public void importMoviePrincipals(String gzipFilePath) {
+    public void importMoviePrincipals(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_principal_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Principal");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Principal", progressCallback);
     }
 
-    public void importMovieRatings(String gzipFilePath) {
+    public void importMovieRatings(String gzipFilePath, Consumer<Double> progressCallback) {
         String sqlCopyCommand = "COPY imdb.movie_rating_staging FROM STDIN WITH (FORMAT text, DELIMITER E'\\t', NULL '\\N', HEADER false)";
-        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Rating");
+        importData(gzipFilePath, sqlCopyCommand, postgreArrayFormatter.getNoneFormatter(), "Movie Rating", progressCallback);
     }
 
     public void swapStagingWithActive() {
