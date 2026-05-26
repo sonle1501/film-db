@@ -5,6 +5,8 @@ import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class PipelineInternalEndpoint implements ImdbDatasetPipelineInterface {
 
@@ -15,8 +17,8 @@ public class PipelineInternalEndpoint implements ImdbDatasetPipelineInterface {
     }
 
     @Override
-    public void runPipeline(){
-        imdbDatasetPipeline.runPipeline();
+    public void runPipeline(UUID jobId){
+        imdbDatasetPipeline.runPipeline(jobId);
     }
 
     public ResponseEntity<String> run(){

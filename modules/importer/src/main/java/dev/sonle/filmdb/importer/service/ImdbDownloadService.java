@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
+import java.util.function.BiConsumer;
 
 @Service
 @Slf4j
@@ -31,7 +33,7 @@ public class ImdbDownloadService {
                 .build();
     }
 
-    public void downloadDataset(Path location, String fileName) {
+    public void downloadDataset(Path location, String fileName, BiConsumer<Long, Long> progressCallback) {
         String url = baseImdbDatasetUrl + fileName;
 
         // temp file to prevent corruption
@@ -40,13 +42,37 @@ public class ImdbDownloadService {
         try {
             log.info("Starting download for {}...", fileName);
             HttpResponse<InputStream> response = makeRequest(url);
+            long contentLength = response.headers().firstValueAsLong("Content-Length").orElse(-1L);
 
-            try (InputStream datasetContent = response.body()) {
-                long bytesCopied = Files.copy(datasetContent, tempLocation, StandardCopyOption.REPLACE_EXISTING);
+            try (InputStream datasetContent = response.body();
+                 OutputStream outputStream = Files.newOutputStream(tempLocation)) {
+                
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                long totalBytesRead = 0;
+                long lastProgressTime = 0;
+                
+                while ((bytesRead = datasetContent.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    
+                    long now = System.currentTimeMillis();
+                    if (now - lastProgressTime > 1000) {
+                        if (progressCallback != null) {
+                            progressCallback.accept(totalBytesRead, contentLength);
+                        }
+                        lastProgressTime = now;
+                    }
+                }
+                
+                if (progressCallback != null) {
+                    progressCallback.accept(totalBytesRead, contentLength);
+                }
 
+                outputStream.close();
                 Files.move(tempLocation, location, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 
-                log.info("Successfully saved {} at {}", convertSize(bytesCopied), location);
+                log.info("Successfully saved {} at {}", convertSize(totalBytesRead), location);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

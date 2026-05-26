@@ -20,6 +20,12 @@ export default function AdminPage() {
             <p className="text-sm text-text-muted-dark">Approve or reject pending administrator requests.</p>
           </div>
         </Link>
+        <Link href="/admin/import" className="block">
+          <div className="h-full p-6 rounded-xl bg-elevated/50 border border-white/5 hover:border-primary-500/50 transition-colors cursor-pointer group">
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-400 transition-colors">IMDB Data Import</h3>
+            <p className="text-sm text-text-muted-dark">Trigger and track the IMDB movies/people import pipeline.</p>
+          </div>
+        </Link>
         <div className="h-full p-6 rounded-xl bg-elevated/50 border border-white/5 hover:border-primary-500/50 transition-colors cursor-pointer group">
           <h3 className="font-semibold text-lg mb-2 group-hover:text-primary-400 transition-colors">System Analytics</h3>
           <p className="text-sm text-text-muted-dark">View system metrics and usage statistics. (Coming soon)</p>

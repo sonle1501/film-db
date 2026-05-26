@@ -1,5 +1,7 @@
 package dev.sonle.filmdb.shared.internal;
 
+import java.util.UUID;
+
 public interface ImdbDatasetPipelineInterface {
-    public void runPipeline();
+    void runPipeline(UUID jobId);
 }
