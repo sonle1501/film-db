@@ -3,6 +3,7 @@ package dev.sonle.filmdb.importer.pipeline;
 import dev.sonle.filmdb.importer.service.ImdbWiperService;
 import dev.sonle.filmdb.importer.service.ImdbImportService;
 import dev.sonle.filmdb.importer.service.ImdbIndexService;
+import dev.sonle.filmdb.shared.event.ImdbDataImportedEvent;
 import dev.sonle.filmdb.shared.event.ImportProgressEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,10 @@ public class ImdbDatasetPipeline {
             eventPublisher.publishEvent(ImportProgressEvent.progress(
                     jobId, "SWAP", 99.0, "Performing atomic swap of staging tables..."));
             importService.swapStagingWithActive();
+
+            // Step 6.5: Publish custom application event indicating the import swap is completed
+            log.info("Publishing ImdbDataImportedEvent for jobId: {}", jobId);
+            eventPublisher.publishEvent(new ImdbDataImportedEvent(jobId));
 
             // Step 7: Finalize
             eventPublisher.publishEvent(ImportProgressEvent.finished(
