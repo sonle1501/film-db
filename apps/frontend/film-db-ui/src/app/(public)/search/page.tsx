@@ -1,67 +1,378 @@
-import { Search, SlidersHorizontal } from "lucide-react";
+"use client";
+
+import { Suspense, useState, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2, Info, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { MovieCard, MovieProps } from "@/components/features/movies/MovieCard";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { searchApi } from "@/lib/api-client";
+import { MovieSearchResultDto } from "@/types/imdb";
+import { AddToListModal } from "@/components/features/movies/AddToListModal";
+import { useAuthStore } from "@/store/useAuthStore";
+import { LiveSearchInput } from "@/components/ui/LiveSearchInput";
 
-const mockSearchResults: MovieProps[] = [
-  { id: "1", title: "Inception", year: 2010, rating: 8.8, imageUrl: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=400&q=80", genre: "Action" },
-  { id: "2", title: "The Matrix", year: 1999, rating: 8.7, imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80", genre: "Sci-Fi" },
-  { id: "3", title: "Blade Runner 2049", year: 2017, rating: 8.0, imageUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=400&q=80", genre: "Sci-Fi" },
-  { id: "4", title: "Arrival", year: 2016, rating: 7.9, imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=400&q=80", genre: "Sci-Fi" },
-];
+function SearchPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user } = useAuthStore();
+  
+  const qParam = searchParams.get("q") || "";
+  const modeParam = (searchParams.get("mode") as "smart" | "vn") || "smart";
+  
+  const [inputValue, setInputValue] = useState(qParam);
+  const [searchMode, setSearchMode] = useState<"smart" | "vn">(modeParam);
+  const [results, setResults] = useState<MovieSearchResultDto[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  
+  // Context Menu & Modal for List Additions
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; movieId: string } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMovieId, setSelectedMovieId] = useState<string>("");
+  
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-export default function SearchPage() {
-  const searchQuery = "Science Fiction"; // This would normally come from URL search params
+  // Sync inputs with URL
+  useEffect(() => {
+    setInputValue(qParam);
+  }, [qParam]);
+
+  useEffect(() => {
+    setSearchMode(modeParam);
+  }, [modeParam]);
+
+  // Fetch results when query, mode or page changes
+  useEffect(() => {
+    fetchResults(qParam, modeParam, currentPage);
+  }, [qParam, modeParam, currentPage]);
+
+  const updateUrl = (q: string, mode: "smart" | "vn") => {
+    const params = new URLSearchParams();
+    if (q.trim()) params.set("q", q.trim());
+    if (mode !== "smart") params.set("mode", mode);
+    router.push(`/search?${params.toString()}`);
+  };
+
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setCurrentPage(0);
+    updateUrl(inputValue, searchMode);
+  };
+
+  const handleModeChange = (mode: "smart" | "vn") => {
+    setSearchMode(mode);
+    setCurrentPage(0);
+    updateUrl(inputValue, mode);
+  };
+
+  const fetchResults = async (q: string, mode: "smart" | "vn", page: number) => {
+    if (!q.trim()) {
+      setResults([]);
+      setTotalPages(0);
+      setTotalElements(0);
+      return;
+    }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      let data;
+      if (mode === "vn") {
+        data = await searchApi.searchVietnamese(q.trim(), page, 10);
+      } else {
+        data = await searchApi.searchSmart(q.trim(), page, 10);
+      }
+
+      if (!controller.signal.aborted) {
+        setResults(data.content || []);
+        setTotalPages(data.totalPages || 0);
+        setTotalElements(data.totalElements || 0);
+      }
+    } catch (err: any) {
+      if (err.name !== "CanceledError" && !controller.signal.aborted) {
+        console.error("Search error:", err);
+        setError(err.response?.data?.message || err.message || "An error occurred during search");
+        setResults([]);
+      }
+    } finally {
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, movieId: string) => {
+    if (!user) return;
+    e.preventDefault();
+    setContextMenu({ x: e.pageX, y: e.pageY, movieId });
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu(null);
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", closeContextMenu);
+    return () => window.removeEventListener("click", closeContextMenu);
+  }, []);
+
+  const mapMovieProps = (movie: MovieSearchResultDto): MovieProps => ({
+    id: movie.movieId,
+    title: movie.primaryTitle || movie.originalTitle || "Unknown Title",
+    year: movie.startYear || new Date().getFullYear(),
+    rating: movie.averageRating || 0,
+    genre: movie.genres && movie.genres.length > 0 ? movie.genres[0] : "Unknown",
+    imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar showSearch={false} />
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          {/* Search Bar Area */}
+          {/* Search Header */}
           <div className="flex flex-col gap-6 mb-10">
             <h1 className="text-3xl font-bold text-white tracking-tight">Search</h1>
             
-            <div className="flex flex-col md:flex-row gap-4 w-full">
-              <div className="relative flex-grow">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  defaultValue={searchQuery}
-                  className="block w-full pl-11 pr-4 py-3 border border-white/10 rounded-xl bg-surface-dark/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                  placeholder="Search for movies, TV shows, or people..."
+              <div className="w-full">
+                <LiveSearchInput
+                  variant="search"
+                  initialValue={qParam}
+                  searchMode={searchMode}
+                  placeholder="Search for movies, TV series, actors..."
+                  onInputChange={(val) => setInputValue(val)}
+                  onSearchSubmit={(q) => {
+                    setCurrentPage(0);
+                    updateUrl(q, searchMode);
+                  }}
                 />
               </div>
               
-              <button className="flex items-center justify-center gap-2 px-6 py-3 bg-surface-dark/80 hover:bg-surface-dark border border-white/10 rounded-xl text-white transition-colors whitespace-nowrap">
-                <SlidersHorizontal className="h-5 w-5" />
-                <span>Filter</span>
-              </button>
+              {/* Search Mode Toggles */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleModeChange("smart")}
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                      searchMode === "smart"
+                        ? "bg-primary-600 border-primary-500 text-white"
+                        : "bg-surface-dark/50 border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    Smart Search
+                  </button>
+                  <button
+                    onClick={() => handleModeChange("vn")}
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                      searchMode === "vn"
+                        ? "bg-primary-600 border-primary-500 text-white"
+                        : "bg-surface-dark/50 border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    Vietnamese Localized
+                  </button>
+                </div>
+                
+                {searchMode === "vn" && (
+                  <div className="flex items-center gap-1.5 text-xs text-text-muted-dark bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-xl">
+                    <Info className="h-3.5 w-3.5 text-blue-400" />
+                    <span>Vietnamese mode matches accents and tones accurately.</span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* Results Metadata and Grid */}
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-200 text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Results Grid */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <h2 className="text-xl font-medium text-white">
-                Results for <span className="font-bold text-primary-400">"{searchQuery}"</span>
-              </h2>
-              <span className="text-sm text-gray-400">
-                Found <span className="text-white font-medium">{mockSearchResults.length}</span> results
-              </span>
-            </div>
+            {qParam.trim() && (
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <h2 className="text-xl font-medium text-white">
+                  Results for <span className="font-bold text-primary-400">"{qParam}"</span>
+                </h2>
+                <span className="text-sm text-gray-400">
+                  Found <span className="text-white font-medium">{totalElements}</span> results
+                </span>
+              </div>
+            )}
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 pt-4">
-              {mockSearchResults.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </div>
+            {isLoading && results.length === 0 ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 text-primary-500 animate-spin" />
+              </div>
+            ) : results.length > 0 ? (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 pt-4">
+                  {results.map((movie) => (
+                    <MovieCard
+                      key={movie.movieId}
+                      movie={mapMovieProps(movie)}
+                      onContextMenu={handleContextMenu}
+                    />
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6 mt-8">
+                    <span className="text-sm text-gray-400">
+                      Showing page {currentPage + 1} of {totalPages} ({totalElements} total results)
+                    </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <button
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 0 || isLoading}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-sm font-semibold rounded-xl transition-all"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                        Previous
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        {(() => {
+                          const pages: (number | string)[] = [];
+                          const delta = 1;
+                          
+                          for (let i = 0; i < totalPages; i++) {
+                            if (
+                              i === 0 ||
+                              i === totalPages - 1 ||
+                              (i >= currentPage - delta && i <= currentPage + delta)
+                            ) {
+                              pages.push(i);
+                            } else if (
+                              (i === 1 && currentPage - delta > 1) ||
+                              (i === totalPages - 2 && currentPage + delta < totalPages - 2)
+                            ) {
+                              pages.push("...");
+                            }
+                          }
+                          
+                          const uniquePages: (number | string)[] = [];
+                          pages.forEach((p, idx) => {
+                            if (p !== "..." || pages[idx - 1] !== "...") {
+                              uniquePages.push(p);
+                            }
+                          });
+                          
+                          return uniquePages.map((pageVal, idx) => {
+                            if (pageVal === "...") {
+                              return (
+                                <span key={`ellipsis-${idx}`} className="px-2 py-2 text-gray-500 select-none text-sm font-semibold">
+                                  ...
+                                </span>
+                              );
+                            }
+                            const pageNum = pageVal as number;
+                            return (
+                              <button
+                                key={pageNum}
+                                onClick={() => setCurrentPage(pageNum)}
+                                disabled={isLoading}
+                                className={`min-w-[36px] h-9 flex items-center justify-center text-sm font-semibold rounded-xl border transition-all ${
+                                  currentPage === pageNum
+                                    ? "bg-primary-600 border-primary-500 text-white"
+                                    : "bg-surface-dark border-white/10 hover:bg-white/5 text-gray-300"
+                                }`}
+                              >
+                                {pageNum + 1}
+                              </button>
+                            );
+                          });
+                        })()}
+                      </div>
+
+                      <button
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage >= totalPages - 1 || isLoading}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-sm font-semibold rounded-xl transition-all"
+                      >
+                        Next
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : qParam.trim() ? (
+              <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+                <Search className="h-12 w-12 mb-4 opacity-20" />
+                <p>No results found for your search query.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+                <Search className="h-12 w-12 mb-4 opacity-20" />
+                <p>Type a name above to search for movies and TV series.</p>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Add to List Dialog / Menu */}
+        {contextMenu && (
+          <div
+            className="absolute z-50 bg-surface-dark border border-white/10 rounded-lg shadow-xl py-2 min-w-[160px]"
+            style={{ top: contextMenu.y, left: contextMenu.x }}
+          >
+            <button
+              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedMovieId(contextMenu.movieId);
+                setIsModalOpen(true);
+                closeContextMenu();
+              }}
+            >
+              Add to List
+            </button>
+          </div>
+        )}
+
+        {isModalOpen && selectedMovieId && (
+          <AddToListModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            movieId={selectedMovieId}
+          />
+        )}
       </main>
       <Footer />
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col min-h-screen">
+        <Navbar showSearch={false} />
+        <main className="flex-grow flex items-center justify-center">
+          <Loader2 className="h-8 w-8 text-primary-500 animate-spin" />
+        </main>
+        <Footer />
+      </div>
+    }>
+      <SearchPageContent />
+    </Suspense>
   );
 }

@@ -1,6 +1,6 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
-import { EpisodeInfoDto } from '@/types/imdb';
+import { EpisodeInfoDto, MovieSearchResultDto, Page } from '@/types/imdb';
 
 // Determine the base URL depending on the environment
 const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
@@ -294,5 +294,33 @@ export const tvSeriesApi = {
     return res.data;
   }
 };
+
+export const searchApi = {
+  searchSmart: async (query: string, page = 0, size = 10): Promise<Page<MovieSearchResultDto>> => {
+    const res = await apiClient.get('/api/v1/search', {
+      params: { query, page, size }
+    });
+    return res.data;
+  },
+  liveSearchSmart: async (query: string, limit = 5): Promise<MovieSearchResultDto[]> => {
+    const res = await apiClient.get('/api/v1/search/live', {
+      params: { query, limit }
+    });
+    return res.data;
+  },
+  searchVietnamese: async (query: string, page = 0, size = 10): Promise<Page<MovieSearchResultDto>> => {
+    const res = await apiClient.get('/api/v1/search/vn', {
+      params: { query, page, size }
+    });
+    return res.data;
+  },
+  liveSearchVietnamese: async (query: string, limit = 5): Promise<MovieSearchResultDto[]> => {
+    const res = await apiClient.get('/api/v1/search/vn/live', {
+      params: { query, limit }
+    });
+    return res.data;
+  }
+};
+
 
 

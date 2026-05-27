@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Play, ArrowRight } from "lucide-react";
+import { LiveSearchInput } from "@/components/ui/LiveSearchInput";
 
 export function HeroSection() {
   return (
@@ -31,6 +32,13 @@ export function HeroSection() {
         <p className="mt-6 max-w-xl text-lg sm:text-xl text-text-muted-dark leading-relaxed">
           Explore the world's most comprehensive movie database. Track what you've watched, save what you want to see, and curate custom lists.
         </p>
+        
+        <div className="mt-8 w-full max-w-xl z-30">
+          <LiveSearchInput
+            variant="hero"
+            placeholder="Search for movies, TV series..."
+          />
+        </div>
         
         <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link
