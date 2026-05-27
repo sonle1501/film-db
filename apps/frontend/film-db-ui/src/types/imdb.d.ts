@@ -76,3 +76,25 @@ export interface EpisodeInfoDto {
   runtimeMinutes: number;
 }
 
+export interface MovieSearchResultDto {
+  movieId: string;
+  primaryTitle: string;
+  originalTitle: string;
+  titleType: string;
+  startYear: number;
+  genres: string[];
+  averageRating: number;
+  numVotes: number;
+  relevanceScore: number;
+}
+
+export interface Page<T> {
+  content: T[];
+  number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+}
+

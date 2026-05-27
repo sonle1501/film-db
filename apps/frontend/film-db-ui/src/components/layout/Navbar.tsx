@@ -1,11 +1,11 @@
 'use client';
 
 import Link from "next/link";
-import { Search, Menu, LogOut, User as UserIcon } from "lucide-react";
-import Form from "next/form";
+import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useRef, useEffect } from "react";
+import { LiveSearchInput } from "@/components/ui/LiveSearchInput";
 
 interface NavbarProps {
   showSearch?: boolean;
@@ -59,6 +59,11 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                   People
                 </Link>
               </li>
+              <li>
+                <Link href="/search" className="hover:text-white transition-colors">
+                  Search
+                </Link>
+              </li>
               {user && (
                 <li>
                   <Link href="/lists" className="hover:text-white transition-colors">
@@ -73,15 +78,7 @@ export function Navbar({ showSearch = true }: NavbarProps) {
         <div className="flex items-center gap-4">
           {showSearch && (
             <div className="hidden sm:block w-64">
-              <Form action="/search" className="relative group">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted-dark group-focus-within:text-primary-500 transition-colors" />
-                <input
-                  type="text"
-                  name="q"
-                  placeholder="Search films, people..."
-                  className="w-full rounded-full bg-elevated/50 border border-white/10 py-2 pl-10 pr-4 text-sm text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 transition-all"
-                />
-              </Form>
+              <LiveSearchInput variant="navbar" placeholder="Search films..." />
             </div>
           )}
           
