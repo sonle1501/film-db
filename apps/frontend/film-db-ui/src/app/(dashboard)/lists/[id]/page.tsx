@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MovieCard, MovieProps } from "@/components/features/movies/MovieCard";
+import { getMoviePosterUrl } from "@/lib/utils";
 import { movieApi } from "@/lib/api-client";
 import { Loader2, Edit2, Trash2 } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -38,7 +39,7 @@ export default function ListDetailsPage() {
               title: data.primaryTitle || "Unknown Title",
               year: data.startYear || new Date().getFullYear(),
               rating: data.averageRating || 0,
-              imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+              imageUrl: getMoviePosterUrl(data.imageUrl),
               genre: (data.genres && data.genres.length > 0) ? data.genres[0] : "Unknown",
             };
           } catch {

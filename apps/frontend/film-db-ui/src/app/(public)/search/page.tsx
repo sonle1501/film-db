@@ -4,6 +4,7 @@ import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Loader2, Info, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { MovieCard, MovieProps } from "@/components/features/movies/MovieCard";
+import { getMoviePosterUrl } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { searchApi } from "@/lib/api-client";
@@ -136,7 +137,7 @@ function SearchPageContent() {
     year: movie.startYear || new Date().getFullYear(),
     rating: movie.averageRating || 0,
     genre: movie.genres && movie.genres.length > 0 ? movie.genres[0] : "Unknown",
-    imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+    imageUrl: getMoviePosterUrl(movie.imageUrl),
   });
 
   return (

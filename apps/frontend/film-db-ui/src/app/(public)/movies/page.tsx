@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Search, Flame, Trophy, Tv, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight, ArrowUpDown } from "lucide-react";
 import { MovieCard, MovieProps } from "@/components/features/movies/MovieCard";
+import { getMoviePosterUrl } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { movieApi } from "@/lib/api-client";
@@ -73,7 +74,7 @@ export default function MoviesPage() {
       title: item.primaryTitle || "Unknown Title",
       year: item.startYear || new Date().getFullYear(),
       rating: item.averageRating || 0,
-      imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+      imageUrl: getMoviePosterUrl(item.imageUrl),
       genre: (item.genres && item.genres.length > 0) ? item.genres[0] : "Unknown",
     }));
   };
@@ -151,7 +152,7 @@ export default function MoviesPage() {
           title: data.primaryTitle || "Unknown Title", 
           year: data.startYear || new Date().getFullYear(),
           rating: data.averageRating || 0, // Fallback if averageRating missing
-          imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+          imageUrl: getMoviePosterUrl(data.imageUrl),
           // Safely extract the first genre from the array
           genre: (data.genres && data.genres.length > 0) ? data.genres[0] : "Unknown", 
         };
