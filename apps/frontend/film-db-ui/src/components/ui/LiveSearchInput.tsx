@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef, useTransition } from "react";
 import { Search, Loader2, Film, Star, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { searchApi } from "@/lib/api-client";
-import { MovieSearchResultDto } from "@/types/imdb";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useLiveSearch } from "@/hooks/useLiveSearch";
+import { getMoviePosterUrl } from "@/lib/utils";
 
 interface LiveSearchInputProps {
   variant?: "navbar" | "hero" | "search";
@@ -15,6 +17,12 @@ interface LiveSearchInputProps {
   onInputChange?: (value: string) => void;
 }
 
+const searchFormSchema = z.object({
+  searchQuery: z.string(),
+});
+
+type SearchFormValues = z.infer<typeof searchFormSchema>;
+
 export function LiveSearchInput({
   variant = "navbar",
   initialValue = "",
@@ -24,18 +32,43 @@ export function LiveSearchInput({
   onInputChange,
 }: LiveSearchInputProps) {
   const router = useRouter();
-  const [query, setQuery] = useState(initialValue);
-  const [results, setResults] = useState<MovieSearchResultDto[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { register, handleSubmit: handleFormSubmit, setValue, watch } = useForm<SearchFormValues>({
+    defaultValues: {
+      searchQuery: initialValue,
+    },
+  });
+
+  const query = watch("searchQuery");
+  const [debouncedQuery, setDebouncedQuery] = useState(initialValue);
+
   // Sync initialValue changes
   useEffect(() => {
-    setQuery(initialValue);
-  }, [initialValue]);
+    setValue("searchQuery", initialValue);
+    setDebouncedQuery(initialValue);
+  }, [initialValue, setValue]);
+
+  // Handle onChange side-effects
+  useEffect(() => {
+    if (onInputChange) {
+      onInputChange(query);
+    }
+  }, [query, onInputChange]);
+
+  // Debounce query input changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query || "");
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [query]);
+
+  // Call the react-query hook
+  const { data: results = [], isLoading } = useLiveSearch(debouncedQuery, searchMode, 5);
 
   // Click outside listener
   useEffect(() => {
@@ -48,69 +81,24 @@ export function LiveSearchInput({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Live search fetch
-  useEffect(() => {
-    if (!query.trim()) {
-      setResults([]);
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    const controller = new AbortController();
-
-    const fetchLiveResults = async () => {
-      try {
-        let data: MovieSearchResultDto[] = [];
-        if (searchMode === "vn") {
-          data = await searchApi.liveSearchVietnamese(query.trim(), 5);
-        } else {
-          data = await searchApi.liveSearchSmart(query.trim(), 5);
-        }
-        
-        // Ensure request wasn't cancelled
-        if (!controller.signal.aborted) {
-          setResults(data);
-          setIsLoading(false);
-        }
-      } catch (err: any) {
-        if (err.name !== "CanceledError" && !controller.signal.aborted) {
-          console.error("Live search failed:", err);
-          setIsLoading(false);
-        }
-      }
-    };
-
-    const delayDebounceFn = setTimeout(() => {
-      fetchLiveResults();
-    }, 300); // 300ms debounce
-
-    return () => {
-      clearTimeout(delayDebounceFn);
-      controller.abort();
-    };
-  }, [query, searchMode]);
-
-  const handleSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!query.trim()) return;
+  const onSubmit = (data: SearchFormValues) => {
+    const trimmed = data.searchQuery.trim();
+    if (!trimmed) return;
     
     setIsOpen(false);
     inputRef.current?.blur();
 
     if (onSearchSubmit) {
-      onSearchSubmit(query.trim());
+      onSearchSubmit(trimmed);
     } else {
       startTransition(() => {
-        router.push(`/search?q=${encodeURIComponent(query.trim())}&mode=${searchMode}`);
+        router.push(`/search?q=${encodeURIComponent(trimmed)}&mode=${searchMode}`);
       });
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    } else if (e.key === "Escape") {
+    if (e.key === "Escape") {
       setIsOpen(false);
     }
   };
@@ -137,26 +125,21 @@ export function LiveSearchInput({
 
   return (
     <div className={containerClass} ref={dropdownRef}>
-      <form onSubmit={handleSubmit} className="relative w-full">
+      <form onSubmit={handleFormSubmit(onSubmit)} className="relative w-full">
         <Search className={`${iconClass} ${isOpen ? "text-primary-500" : ""}`} />
         <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => {
-            const val = e.target.value;
-            setQuery(val);
-            setIsOpen(true);
-            if (onInputChange) {
-              onInputChange(val);
-            }
+          {...register("searchQuery")}
+          ref={(node) => {
+            inputRef.current = node;
+            register("searchQuery").ref(node);
           }}
+          type="text"
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
           className={inputClass}
         />
-        {query.trim() && (
+        {query?.trim() && (
           <button
             type="submit"
             disabled={isPending}
@@ -174,7 +157,7 @@ export function LiveSearchInput({
       </form>
 
       {/* Live Search Dropdown */}
-      {isOpen && (isLoading || results.length > 0 || (query.trim() && !isLoading)) && (
+      {isOpen && (isLoading || results.length > 0 || (query?.trim() && !isLoading)) && (
         <div className="absolute left-0 right-0 z-50 mt-2 origin-top-right rounded-2xl border border-white/10 bg-surface-dark/95 p-2 shadow-2xl backdrop-blur-xl transition-all max-h-[380px] overflow-y-auto">
           {isLoading && results.length === 0 ? (
             <div className="flex items-center justify-center py-6 text-sm text-text-muted-dark gap-2">
@@ -195,8 +178,13 @@ export function LiveSearchInput({
                   }}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-white/5 transition-all group"
                 >
-                  <div className="flex h-10 w-8 items-center justify-center rounded bg-elevated/50 text-text-muted-dark shrink-0">
-                    <Film className="h-4 w-4 group-hover:text-primary-400 transition-colors" />
+                  <div className="relative h-10 w-8 overflow-hidden rounded bg-elevated/50 shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={getMoviePosterUrl(movie.imageUrl)}
+                      alt={movie.primaryTitle || movie.originalTitle}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="truncate text-sm font-medium text-white group-hover:text-primary-400 transition-colors">
@@ -222,7 +210,7 @@ export function LiveSearchInput({
               ))}
               <div className="border-t border-white/5 mt-1 pt-1">
                 <button
-                  onClick={handleSubmit}
+                  onClick={() => onSubmit({ searchQuery: query || "" })}
                   className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-center text-xs font-semibold text-primary-400 hover:text-primary-300 hover:bg-primary-500/5 transition-all"
                 >
                   <span>View all results for "{query}"</span>
@@ -230,7 +218,7 @@ export function LiveSearchInput({
                 </button>
               </div>
             </div>
-          ) : query.trim() ? (
+          ) : query?.trim() ? (
             <div className="py-6 text-center text-sm text-text-muted-dark">
               No results found for "{query}"
             </div>

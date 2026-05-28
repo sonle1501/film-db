@@ -18,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieController {
 
+    private static final String PLACEHOLDER_IMAGE_URL = "https://plus.unsplash.com/premium_vector-1731677734805-f87f4d297dc7?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
     private final MovieQueryService movieQueryService;
     private final TmdbImageService tmdbImageService;
 
@@ -60,6 +62,9 @@ public class MovieController {
     @GetMapping("/{film-id}/image")
     public ResponseEntity<Void> getMovieImage(@PathVariable("film-id") String filmId) {
         String imageUrl = tmdbImageService.resolveImageUrl(filmId);
+        if (imageUrl == null || imageUrl.isBlank()) {
+            imageUrl = PLACEHOLDER_IMAGE_URL;
+        }
         return ResponseEntity.status(HttpStatus.FOUND)
                 .location(URI.create(imageUrl))
                 .build();
