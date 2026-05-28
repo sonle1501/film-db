@@ -8,8 +8,8 @@ import dev.sonle.filmdb.users.model.RefreshToken;
 import dev.sonle.filmdb.users.model.UserAuth;
 import dev.sonle.filmdb.users.repository.RefreshTokenRepository;
 import dev.sonle.filmdb.users.repository.UserAuthRepository;
+import dev.sonle.filmdb.shared.config.SecurityProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    @Value("${application.security.jwt.refresh-expiration:604800000}") // 7 days in ms
-    private long refreshTokenDurationMs;
-
+    private final SecurityProperties securityProperties;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserAuthRepository userAuthRepository;
 
@@ -37,7 +35,7 @@ public class RefreshTokenService {
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .userId(userId)
-                .expiryDate(Instant.now().plusMillis(refreshTokenDurationMs))
+                .expiryDate(Instant.now().plus(securityProperties.jwt().refreshExpiration()))
                 .token(UUID.randomUUID().toString())
                 .build();
 

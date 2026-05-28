@@ -1,11 +1,12 @@
 package dev.sonle.filmdb.importer.service;
 
+import dev.sonle.filmdb.importer.config.ImporterProperties;
 import dev.sonle.filmdb.shared.event.ImportProgressEvent;
 import dev.sonle.filmdb.shared.exception.AppException;
 import dev.sonle.filmdb.shared.exception.AppExceptionCode;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -22,28 +23,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ImdbIndexService {
     private static final Logger log = LoggerFactory.getLogger(ImdbIndexService.class);
     private final DataSource dataSource;
     private final ApplicationEventPublisher eventPublisher;
-
-    @Value("classpath:db/script/drop_staging_indexes.sql")
-    private Resource dropIndexesScript;
-
-    @Value("classpath:db/script/create_staging_indexes.sql")
-    private Resource createIndexesScript;
-
-    public ImdbIndexService(DataSource dataSource, ApplicationEventPublisher eventPublisher) {
-        this.dataSource = dataSource;
-        this.eventPublisher = eventPublisher;
-    }
+    private final ImporterProperties importerProperties;
 
     public void dropStagingIndexes(UUID jobId) {
         log.info("Dropping indexes on imdb staging tables...");
         eventPublisher.publishEvent(ImportProgressEvent.progress(
                 jobId, "PREPARATION", 1.0, "Dropping indexes on staging tables to optimize ingest speed..."));
         try {
-            String sql = readScript(dropIndexesScript);
+            String sql = readScript(importerProperties.scripts().dropStagingIndexes());
             executeSql(sql, "Failed to drop indexes on staging tables");
             log.info("Successfully dropped staging indexes.");
             eventPublisher.publishEvent(ImportProgressEvent.progress(
@@ -58,7 +50,7 @@ public class ImdbIndexService {
     public void createStagingIndexes(UUID jobId) {
         log.info("Recreating indexes on imdb staging tables...");
         try {
-            String sql = readScript(createIndexesScript);
+            String sql = readScript(importerProperties.scripts().createStagingIndexes());
             String[] statements = sql.split(";");
             List<String> activeStatements = new ArrayList<>();
             for (String stmt : statements) {

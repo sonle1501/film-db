@@ -5,9 +5,9 @@ import dev.sonle.filmdb.importer.service.ImdbImportService;
 import dev.sonle.filmdb.importer.service.ImdbIndexService;
 import dev.sonle.filmdb.shared.event.ImdbDataImportedEvent;
 import dev.sonle.filmdb.shared.event.ImportProgressEvent;
+import dev.sonle.filmdb.importer.config.ImporterProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +24,7 @@ public class ImdbDatasetPipeline {
     private final ImdbIndexService indexService;
     private final ImdbImportService importService;
     private final ApplicationEventPublisher eventPublisher;
-
-    @Value("${spring.dataset.location}")
-    private String baseDir;
+    private final ImporterProperties importerProperties;
 
     public void runPipeline(UUID jobId) {
         log.info("Starting IMDB Dataset Pipeline for jobId: {}...", jobId);
@@ -42,10 +40,10 @@ public class ImdbDatasetPipeline {
             indexService.dropStagingIndexes(jobId);
 
             // Step 3: Download data
-            downloadPipeline.runDownloadPipeline(baseDir, jobId);
+            downloadPipeline.runDownloadPipeline(importerProperties.dataset().location(), jobId);
 
             // Step 4: Import Data (into staging tables)
-            importPipeline.runImportPipeline(baseDir, jobId);
+            importPipeline.runImportPipeline(importerProperties.dataset().location(), jobId);
 
             // Step 5: Recreate indexes on the staging tables before swapping
             indexService.createStagingIndexes(jobId);

@@ -10,9 +10,6 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-  dataset:
-    location: dataset/
-
   flyway:
     enabled: true
     schemas: imdb,users
@@ -21,15 +18,17 @@ spring:
     # -on-validation-error: true # deprecated function
     clean-disabled: false
 
+app:
   security:
     jwt:
       secret-key: ${JWT_SECRET}
-      expiration: ${JWT_EXPIRATION}
-    refresh-token: ${REFRESH_TOKEN_EXPIRATION}
-
-app:
+      expiration: ${JWT_EXPIRATION}ms
+      refresh-expiration: ${REFRESH_TOKEN_EXPIRATION}ms
   tmdb:
     bearer-token: ${TMDB_BEARER_TOKEN:}
     image-base-url: https://image.tmdb.org/t/p/w500
+  importer:
+    dataset:
+      location: dataset/
 
 
