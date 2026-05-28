@@ -19,6 +19,8 @@ spring:
     clean-disabled: false
 
 app:
+  api:
+    version: v1
   security:
     jwt:
       secret-key: ${JWT_SECRET}
