@@ -2,11 +2,14 @@ package dev.sonle.filmdb.imdb.controller;
 
 import dev.sonle.filmdb.imdb.dto.*;
 import dev.sonle.filmdb.imdb.service.MovieQueryService;
+import dev.sonle.filmdb.shared.service.TmdbImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -15,6 +18,7 @@ import java.util.List;
 public class MovieController {
 
     private final MovieQueryService movieQueryService;
+    private final TmdbImageService tmdbImageService;
 
     @GetMapping("/{film-id}")
     public ResponseEntity<MovieBasicInfoDto> getMovieBasicInfo(@PathVariable("film-id") String filmId){
@@ -50,6 +54,14 @@ public class MovieController {
     public ResponseEntity<MovieCrewInfoDto> getMovieCrewInfo(@PathVariable("film-id") String filmId){
         MovieCrewInfoDto movieCrewInfoDto = movieQueryService.getMovieCrewInfo(filmId);
         return ResponseEntity.ok(movieCrewInfoDto);
+    }
+
+    @GetMapping("/{film-id}/image")
+    public ResponseEntity<Void> getMovieImage(@PathVariable("film-id") String filmId) {
+        String imageUrl = tmdbImageService.resolveImageUrl(filmId);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(imageUrl))
+                .build();
     }
 
 }

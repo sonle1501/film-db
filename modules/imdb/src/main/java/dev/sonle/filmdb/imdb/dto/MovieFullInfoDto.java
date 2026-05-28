@@ -4,6 +4,8 @@ import dev.sonle.filmdb.imdb.model.Movie;
 import dev.sonle.filmdb.imdb.model.MovieAlternative;
 import dev.sonle.filmdb.imdb.model.MovieRating;
 
+import dev.sonle.filmdb.shared.MovieImageEnabled;
+
 import java.util.List;
 
 public record MovieFullInfoDto(
@@ -17,7 +19,7 @@ public record MovieFullInfoDto(
         java.math.BigDecimal averageRating,
         Integer numVotes,
         List<MoviePersonInfoDto> persons
-) {
+) implements MovieImageEnabled {
     public static MovieFullInfoDto from(MovieRatingInfoDto m, List<MoviePersonInfoDto> persons) {
         return new MovieFullInfoDto(
                 m.movieId(),

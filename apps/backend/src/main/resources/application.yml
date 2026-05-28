@@ -27,3 +27,9 @@ spring:
       expiration: ${JWT_EXPIRATION}
     refresh-token: ${REFRESH_TOKEN_EXPIRATION}
 
+app:
+  tmdb:
+    bearer-token: ${TMDB_BEARER_TOKEN:}
+    image-base-url: https://image.tmdb.org/t/p/w500
+
+

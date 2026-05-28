@@ -1,4 +1,5 @@
 import { fetchApi } from "@/lib/api-server";
+import { getMoviePosterUrl } from "@/lib/utils";
 import { FullMovieInfo } from "@/types/imdb";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -52,8 +53,8 @@ export default async function MovieDetailsPage({
 
   const seasonsCount = await getSeasonsCount(id);
 
-  // Use unsplash placeholder or default poster image
-  const posterUrl = "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=800&q=80";
+  // Resolve TMDB poster image or use fallback
+  const posterUrl = getMoviePosterUrl(movie.imageUrl);
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -6,6 +6,7 @@ export interface MovieBasicInfoDto {
   startYear: number;
   runtimeMinutes: number;
   genres: string[];
+  imageUrl?: string;
 }
 
 export interface PersonInfo {
@@ -58,6 +59,7 @@ export interface FullMovieInfo {
   averageRating: number;
   numVotes: number;
   persons: MoviePersonInfo[];
+  imageUrl?: string;
 }
 
 export interface MovieSupplementaryInfo {
@@ -86,6 +88,7 @@ export interface MovieSearchResultDto {
   averageRating: number;
   numVotes: number;
   relevanceScore: number;
+  imageUrl?: string;
 }
 
 export interface Page<T> {

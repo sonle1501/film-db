@@ -1,5 +1,7 @@
 package dev.sonle.filmdb.search.dto;
 
+import dev.sonle.filmdb.shared.MovieImageEnabled;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -13,4 +15,4 @@ public record MovieSearchResultDto(
     BigDecimal averageRating,
     Integer numVotes,
     Double relevanceScore
-) {}
+) implements MovieImageEnabled {}

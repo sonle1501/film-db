@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Search, SlidersHorizontal, Loader2, ChevronLeft, ChevronRight, ArrowUpDown, Tag, Film } from "lucide-react";
 import { MovieCard, MovieProps } from "@/components/features/movies/MovieCard";
+import { getMoviePosterUrl } from "@/lib/utils";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { movieApi } from "@/lib/api-client";
@@ -61,7 +62,7 @@ export default function GenresPage() {
       title: item.primaryTitle || "Unknown Title",
       year: item.startYear || new Date().getFullYear(),
       rating: item.averageRating || item.rating || 0,
-      imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80",
+      imageUrl: getMoviePosterUrl(item.imageUrl),
       genre: (item.genres && item.genres.length > 0) ? item.genres[0] : "Unknown",
     }));
   };
