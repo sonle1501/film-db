@@ -60,11 +60,6 @@ function SearchPageContent() {
     router.push(`/search?${params.toString()}`);
   };
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    setCurrentPage(0);
-    updateUrl(inputValue, searchMode);
-  };
 
   const handleModeChange = (mode: "smart" | "vn") => {
     setSearchMode(mode);

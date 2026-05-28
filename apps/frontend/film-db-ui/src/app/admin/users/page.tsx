@@ -4,10 +4,31 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api-client';
 import { UserListDto } from '@/types/users';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const adminSearchSchema = z.object({
+  userId: z.string().refine((val) => val.trim() === '' || z.string().uuid().safeParse(val.trim()).success, {
+    message: 'Must be a valid UUID format (e.g. 123e4567-e89b-12d3-a456-426614174000)',
+  }),
+});
+
+type AdminSearchFormValues = z.infer<typeof adminSearchSchema>;
 
 export default function AdminUsersPage() {
-  const [searchUserId, setSearchUserId] = useState('');
   const [submittedUserId, setSubmittedUserId] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AdminSearchFormValues>({
+    resolver: zodResolver(adminSearchSchema),
+    defaultValues: {
+      userId: '',
+    },
+  });
 
   const { data: allLists, isLoading: isLoadingAll, error: errorAll } = useQuery<UserListDto[]>({
     queryKey: ['admin-all-lists'],
@@ -20,10 +41,10 @@ export default function AdminUsersPage() {
     enabled: !!submittedUserId,
   });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchUserId.trim()) {
-      setSubmittedUserId(searchUserId.trim());
+  const onSubmit = (data: AdminSearchFormValues) => {
+    const trimmed = data.userId.trim();
+    if (trimmed) {
+      setSubmittedUserId(trimmed);
     } else {
       setSubmittedUserId(null);
     }
@@ -87,16 +108,18 @@ export default function AdminUsersPage() {
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-md">
             <h3 className="text-lg font-medium text-white mb-4">Query User Lists</h3>
-            <form onSubmit={handleSearch} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-text-muted-dark mb-1">User ID</label>
                 <input
                   type="text"
-                  value={searchUserId}
-                  onChange={(e) => setSearchUserId(e.target.value)}
+                  {...register('userId')}
                   placeholder="Enter User UUID..."
                   className="w-full rounded-md border border-white/10 bg-elevated/50 px-3 py-2 text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 sm:text-sm transition-colors"
                 />
+                {errors.userId && (
+                  <p className="mt-1.5 text-xs text-red-400">{errors.userId.message}</p>
+                )}
               </div>
               <button
                 type="submit"
