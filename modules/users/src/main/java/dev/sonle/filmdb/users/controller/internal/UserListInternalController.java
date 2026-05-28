@@ -1,6 +1,6 @@
 package dev.sonle.filmdb.users.controller.internal;
 
-import dev.sonle.filmdb.shared.internal.UserListInterface;
+import dev.sonle.filmdb.shared.interfaces.UserListInterface;
 import dev.sonle.filmdb.users.dto.UserListDto;
 import dev.sonle.filmdb.users.dto.UserInfoDto;
 import dev.sonle.filmdb.users.service.UserListService;

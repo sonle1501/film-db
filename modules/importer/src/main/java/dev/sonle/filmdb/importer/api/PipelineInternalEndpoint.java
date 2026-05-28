@@ -1,7 +1,7 @@
 package dev.sonle.filmdb.importer.api;
 
 import dev.sonle.filmdb.importer.pipeline.ImdbDatasetPipeline;
-import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
+import dev.sonle.filmdb.shared.interfaces.ImdbDatasetPipelineInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
 package dev.sonle.filmdb.admin.controller;
 
-import dev.sonle.filmdb.shared.internal.UserListInterface;
+import dev.sonle.filmdb.shared.interfaces.UserListInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

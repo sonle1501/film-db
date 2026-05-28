@@ -2,11 +2,10 @@ package dev.sonle.filmdb.imdb.controller;
 
 import dev.sonle.filmdb.imdb.dto.*;
 import dev.sonle.filmdb.imdb.service.MovieQueryService;
-import dev.sonle.filmdb.shared.service.TmdbImageService;
+import dev.sonle.filmdb.shared.utils.TmdbImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
