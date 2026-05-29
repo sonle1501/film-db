@@ -1,4 +1,4 @@
-package dev.sonle.filmdb.shared;
+package dev.sonle.filmdb.shared.interfaces;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

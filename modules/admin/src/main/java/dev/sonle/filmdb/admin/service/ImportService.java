@@ -7,10 +7,9 @@ import dev.sonle.filmdb.admin.model.ImportJobType;
 import dev.sonle.filmdb.admin.repository.ImportJobHistoryRepository;
 import dev.sonle.filmdb.shared.exception.BusinessException;
 import dev.sonle.filmdb.shared.exception.BusinessExceptionCode;
-import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
+import dev.sonle.filmdb.shared.interfaces.ImdbDatasetPipelineInterface;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;

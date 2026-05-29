@@ -302,9 +302,10 @@ export const searchApi = {
     });
     return res.data;
   },
-  liveSearchSmart: async (query: string, limit = 5): Promise<MovieSearchResultDto[]> => {
+  liveSearchSmart: async (query: string, limit = 5, signal?: AbortSignal): Promise<MovieSearchResultDto[]> => {
     const res = await apiClient.get('/api/v1/search/live', {
-      params: { query, limit }
+      params: { query, limit },
+      signal
     });
     return res.data;
   },
@@ -314,9 +315,10 @@ export const searchApi = {
     });
     return res.data;
   },
-  liveSearchVietnamese: async (query: string, limit = 5): Promise<MovieSearchResultDto[]> => {
+  liveSearchVietnamese: async (query: string, limit = 5, signal?: AbortSignal): Promise<MovieSearchResultDto[]> => {
     const res = await apiClient.get('/api/v1/search/vn/live', {
-      params: { query, limit }
+      params: { query, limit },
+      signal
     });
     return res.data;
   }

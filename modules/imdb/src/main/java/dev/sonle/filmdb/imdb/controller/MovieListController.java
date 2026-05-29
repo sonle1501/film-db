@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import org.springframework.data.domain.Page;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/imdb/listfilm")
+@RequestMapping("/imdb/listfilm")
+@VersionedApi
 @RequiredArgsConstructor
 public class MovieListController {
 

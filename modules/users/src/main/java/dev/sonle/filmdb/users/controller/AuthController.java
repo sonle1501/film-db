@@ -1,9 +1,6 @@
 package dev.sonle.filmdb.users.controller;
 
-//import dev.sonle.filmdb.user.service.AuthService;
-//import dev.sonle.filmdb.user.service.LoginRequest;
-//import dev.sonle.filmdb.user.service.RegisterRequest;
-//import dev.sonle.filmdb.user.service.TokenResponse;
+
 import dev.sonle.filmdb.users.dto.AuthTokensDto;
 import dev.sonle.filmdb.users.dto.restdto.LoginRequestDto;
 import dev.sonle.filmdb.users.dto.restdto.RegisterRequestDto;
@@ -14,9 +11,9 @@ import dev.sonle.filmdb.users.service.AuthService;
 import dev.sonle.filmdb.users.service.RefreshTokenService;
 import dev.sonle.filmdb.shared.exception.AppException;
 import dev.sonle.filmdb.shared.exception.AppExceptionCode;
+import dev.sonle.filmdb.shared.config.SecurityProperties;
 import dev.sonle.filmdb.shared.security.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +30,7 @@ public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
-
-    @Value("${spring.security.refresh-token}")
-    private long refreshTokenDurationMs;
+    private final SecurityProperties securityProperties;
 
     /**
      * POST /api/auth/register
@@ -46,7 +41,7 @@ public class AuthController {
             @RequestBody RegisterRequestDto request
     ) {
         AuthTokensDto tokens = authService.register(request);
-        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), refreshTokenDurationMs);
+        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), securityProperties.jwt().refreshExpiration().toMillis());
         return ResponseEntity.ok().headers(headers).body(new TokenResponseDto(tokens.accessToken()));
     }
 
@@ -59,7 +54,7 @@ public class AuthController {
             @RequestBody RegisterRequestDto request
     ) {
         AuthTokensDto tokens = authService.registerAdmin(request);
-        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), refreshTokenDurationMs);
+        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), securityProperties.jwt().refreshExpiration().toMillis());
         return ResponseEntity.ok().headers(headers).body(new TokenResponseDto(tokens.accessToken()));
     }
 
@@ -72,7 +67,7 @@ public class AuthController {
             @RequestBody LoginRequestDto request
     ) {
         AuthTokensDto tokens = authService.login(request);
-        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), refreshTokenDurationMs);
+        HttpHeaders headers = authService.createCookieHeader(tokens.refreshToken(), securityProperties.jwt().refreshExpiration().toMillis());
         return ResponseEntity.ok().headers(headers).body(new TokenResponseDto(tokens.accessToken()));
     }
 

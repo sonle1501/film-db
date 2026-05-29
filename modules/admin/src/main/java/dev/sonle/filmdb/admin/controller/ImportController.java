@@ -1,23 +1,15 @@
 package dev.sonle.filmdb.admin.controller;
 
 import dev.sonle.filmdb.admin.model.ImportJobHistory;
-import dev.sonle.filmdb.admin.model.ImportJobStatus;
-import dev.sonle.filmdb.admin.model.ImportJobType;
-import dev.sonle.filmdb.admin.repository.ImportJobHistoryRepository;
 import dev.sonle.filmdb.admin.service.ImportService;
-import dev.sonle.filmdb.shared.internal.ImdbDatasetPipelineInterface;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor

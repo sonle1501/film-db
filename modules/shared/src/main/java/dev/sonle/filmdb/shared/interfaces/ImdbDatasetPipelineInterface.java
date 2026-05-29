@@ -1,4 +1,4 @@
-package dev.sonle.filmdb.shared.internal;
+package dev.sonle.filmdb.shared.interfaces;
 
 import java.util.UUID;
 

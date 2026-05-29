@@ -1,6 +1,6 @@
 package dev.sonle.filmdb.search.dto;
 
-import dev.sonle.filmdb.shared.MovieImageEnabled;
+import dev.sonle.filmdb.shared.interfaces.MovieImageEnabled;
 
 import java.math.BigDecimal;
 import java.util.List;

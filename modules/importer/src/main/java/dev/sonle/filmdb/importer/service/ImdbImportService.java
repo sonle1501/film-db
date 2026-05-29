@@ -1,15 +1,15 @@
 package dev.sonle.filmdb.importer.service;
 
+import dev.sonle.filmdb.importer.config.ImporterProperties;
 import dev.sonle.filmdb.importer.core.PostgreArrayFormatter;
 import dev.sonle.filmdb.importer.core.PostgreCopyEngine;
 import dev.sonle.filmdb.shared.exception.AppException;
 import dev.sonle.filmdb.shared.exception.AppExceptionCode;
+import lombok.RequiredArgsConstructor;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -22,21 +22,14 @@ import java.sql.Statement;
 import java.util.function.Consumer;
 
 @Service
+@RequiredArgsConstructor
 public class ImdbImportService {
     private static final Logger log = LoggerFactory.getLogger(ImdbImportService.class);
     private final DataSource dataSource;
     private final PostgreCopyEngine postgreCopyEngine;
     private final PostgreArrayFormatter postgreArrayFormatter;
+    private final ImporterProperties importerProperties;
     private static final int BATCH_SIZE = 100_000;
-
-    @Value("classpath:db/script/swap_staging_tables.sql")
-    private Resource swapScript;
-
-    ImdbImportService(DataSource dataSource, PostgreCopyEngine postgreCopyEngine, PostgreArrayFormatter postgreArrayFormatter){
-        this.dataSource = dataSource;
-        this.postgreCopyEngine = postgreCopyEngine;
-        this.postgreArrayFormatter = postgreArrayFormatter;
-    }
 
     private void importData(String gzipFilePath, String sqlCopyCommand, PostgreArrayFormatter.ArrayFormatter formatter, String taskName, java.util.function.Consumer<Double> progressCallback){
         log.info("Starting stream import for {} from: {}", taskName, gzipFilePath);
@@ -94,7 +87,7 @@ public class ImdbImportService {
     public void swapStagingWithActive() {
         log.info("Executing atomic rename swap for imdb tables and indexes from external script...");
         String sql;
-        try (InputStream is = swapScript.getInputStream()) {
+        try (InputStream is = importerProperties.scripts().swapStagingTables().getInputStream()) {
             sql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             log.error("Failed to read swap SQL script", e);

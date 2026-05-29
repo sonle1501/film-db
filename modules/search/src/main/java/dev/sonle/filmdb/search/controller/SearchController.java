@@ -1,4 +1,4 @@
-package dev.sonle.filmdb.search.api;
+package dev.sonle.filmdb.search.controller;
 
 import dev.sonle.filmdb.search.dto.MovieSearchResultDto;
 import dev.sonle.filmdb.search.service.SearchService;
@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/search")
+@RequestMapping("/search")
+@VersionedApi
 @RequiredArgsConstructor
 public class SearchController {
 

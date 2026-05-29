@@ -31,5 +31,4 @@ public class AdminJobController {
         adminJobService.rejectAdminRequest(userId);
         return ResponseEntity.ok("Reject the admin request from user: " + userId +  " completely");
     }
-
 }

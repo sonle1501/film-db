@@ -11,11 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users/lists")
+@RequestMapping("/users/lists")
+@VersionedApi
 @RequiredArgsConstructor
 public class UserListDetailsController {
     private final UserListDetailsService userListDetailsService;

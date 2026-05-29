@@ -14,11 +14,13 @@ import dev.sonle.filmdb.users.model.UserAuth;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import java.util.List;
 import java.util.UUID;
 
 @RestController // includes @ResponseBody on all methods
-@RequestMapping("api/v1/users/lists")
+@RequestMapping("/users/lists")
+@VersionedApi
 @RequiredArgsConstructor
 public class UserListController {
 

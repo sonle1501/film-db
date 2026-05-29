@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import dev.sonle.filmdb.imdb.service.PersonQueryService;
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/imdb/person")
+@RequestMapping("/imdb/person")
+@VersionedApi
 @RequiredArgsConstructor
 public class PersonController {
 

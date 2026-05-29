@@ -3,7 +3,7 @@ package dev.sonle.filmdb.imdb.dto;
 import dev.sonle.filmdb.imdb.model.Movie;
 import dev.sonle.filmdb.imdb.model.MovieRating;
 
-import dev.sonle.filmdb.shared.MovieImageEnabled;
+import dev.sonle.filmdb.shared.interfaces.MovieImageEnabled;
 
 import java.util.List;
 

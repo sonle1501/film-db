@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import dev.sonle.filmdb.shared.annotation.VersionedApi;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/imdb/tvseries")
+@RequestMapping("/imdb/tvseries")
+@VersionedApi
 @RequiredArgsConstructor
 public class TvSeriesController {
 
