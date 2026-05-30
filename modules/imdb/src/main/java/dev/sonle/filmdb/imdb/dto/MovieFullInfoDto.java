@@ -12,7 +12,7 @@ public record MovieFullInfoDto(
         Integer startYear,
         Integer runtimeMinutes,
         List<String> genres,
-        java.math.BigDecimal averageRating,
+        Float averageRating,
         Integer numVotes,
         List<MoviePersonInfoDto> persons
 ) implements MovieImageEnabled {

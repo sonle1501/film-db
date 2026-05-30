@@ -197,7 +197,7 @@ WHERE (:startYear IS NULL OR m.startYear >= :startYear)
 """)
     Page<MovieRatingInfoDto> filterMovies(
         @Param("startYear") Integer startYear,
-        @Param("averageRating") java.math.BigDecimal averageRating,
+        @Param("averageRating") Float averageRating,
         @Param("numVotes") Integer numVotes,
         @Param("titleType") String titleType,
         @Param("genre") String genre,
@@ -226,7 +226,7 @@ WHERE (:startYear IS NULL OR m.startYear >= :startYear)
     """)
     Page<MovieRatingInfoDto> filterMoviesExactYear(
         @Param("startYear") Integer startYear,
-        @Param("averageRating") java.math.BigDecimal averageRating,
+        @Param("averageRating") Float averageRating,
         @Param("numVotes") Integer numVotes,
         @Param("titleType") String titleType,
         @Param("genre") String genre,

@@ -30,6 +30,6 @@ public class RefreshToken {
     private Instant expiryDate;
 
     @OneToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_refresh_token_user_auth"))
     private UserAuth userAuth;
 }

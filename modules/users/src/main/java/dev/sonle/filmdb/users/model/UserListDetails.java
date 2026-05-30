@@ -23,7 +23,7 @@ public class UserListDetails {
     @Column(name = "list_id", nullable = false)
     private UUID listId;
 
-    @Column(name = "movie_id", length = 50)
+    @Column(name = "movie_id", length = 15)
     private String movieId;
 
     @Column(name = "added_at", updatable = false)
@@ -37,7 +37,7 @@ public class UserListDetails {
     private ItemState state;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id", insertable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "list_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_user_list_details_user_list"))
     private UserList userList;
 
     @Builder

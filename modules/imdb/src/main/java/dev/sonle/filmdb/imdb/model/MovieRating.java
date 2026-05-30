@@ -23,7 +23,7 @@ public class MovieRating {
     private String movieId;
 
     @Column(name = "average_rating")
-    private java.math.BigDecimal averageRating;
+    private Float averageRating;
 
     @Column(name = "num_votes")
     private Integer numVotes;

@@ -39,7 +39,7 @@ public class UserList {
     private OffsetDateTime dateCreated;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id", insertable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_user_list_user_auth"))
     private UserAuth userAuth;
 
     @Builder

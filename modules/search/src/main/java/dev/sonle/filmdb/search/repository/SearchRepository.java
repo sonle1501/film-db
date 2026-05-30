@@ -184,16 +184,19 @@ public class SearchRepository {
             genresList = Arrays.asList(genres);
         }
 
+        java.math.BigDecimal averageRatingBd = rs.getBigDecimal("average_rating");
+        Float averageRating = averageRatingBd != null ? averageRatingBd.floatValue() : null;
+
         return new MovieSearchResultDto(
                 rs.getString("movie_id"),
                 rs.getString("primary_title"),
                 rs.getString("original_title"),
                 rs.getString("title_type"),
-                rs.getInt("start_year"),
+                rs.getObject("start_year", Integer.class),
                 genresList,
-                rs.getBigDecimal("average_rating"),
-                rs.getInt("num_votes"),
-                rs.getDouble("relevance_score")
+                averageRating,
+                rs.getObject("num_votes", Integer.class),
+                rs.getObject("relevance_score", Double.class)
         );
     }
 }

@@ -22,7 +22,7 @@ import java.util.UUID;
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_user_profile_user_auth"))
     private UserAuth userAuth;
 
     @Column(name = "username")
