@@ -1,58 +1,74 @@
 package dev.sonle.filmdb.admin.listener;
 
-import dev.sonle.filmdb.admin.model.ImportJobHistory;
+import dev.sonle.filmdb.admin.model.ImportJobLog;
 import dev.sonle.filmdb.admin.model.ImportJobStatus;
 import dev.sonle.filmdb.admin.repository.ImportJobHistoryRepository;
+import dev.sonle.filmdb.admin.repository.ImportJobLogRepository;
 import dev.sonle.filmdb.shared.event.ImportProgressEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class ImportJobEventListener {
 
-    private final ImportJobHistoryRepository repository;
+    private final ImportJobHistoryRepository historyRepository;
+    private final ImportJobLogRepository logRepository;
 
+    @Async
     @EventListener
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void handleImportProgress(ImportProgressEvent event) {
-        log.debug("Received import progress event: {}", event);
-        repository.findById(event.jobId()).ifPresentOrElse(job -> {
-            job.setProgress(event.progress());
-            if (event.stage() != null) {
-                job.setCurrentStage(event.stage());
-            }
+        log.debug("Received async import progress event: {}", event);
 
-            // Append logs
-            List<String> currentLogs = job.getLogs();
-            if (currentLogs == null) {
-                currentLogs = new ArrayList<>();
+        // 1. Persist the log statement if message is present
+        if (event.message() != null) {
+            try {
+                logRepository.save(ImportJobLog.builder()
+                        .jobId(event.jobId())
+                        .message(event.message())
+                        .build());
+            } catch (Exception e) {
+                log.error("Failed to persist import job log for jobId: {}", event.jobId(), e);
             }
-            if (event.message() != null) {
-                currentLogs.add(event.message());
-            }
-            job.setLogs(currentLogs);
+        }
+
+        // 2. Perform atomic status update on ImportJobHistory
+        try {
+            ImportJobStatus status;
+            OffsetDateTime endTime = null;
+            String errorMessage = null;
 
             if (event.isFinished()) {
-                job.setStatus(ImportJobStatus.SUCCESS);
-                job.setEndTime(OffsetDateTime.now());
+                status = ImportJobStatus.SUCCESS;
+                endTime = OffsetDateTime.now();
             } else if (event.isFailed()) {
-                job.setStatus(ImportJobStatus.FAILED);
-                job.setEndTime(OffsetDateTime.now());
-                job.setErrorMessage(event.errorMessage());
+                status = ImportJobStatus.FAILED;
+                endTime = OffsetDateTime.now();
+                errorMessage = event.errorMessage();
             } else {
-                job.setStatus(ImportJobStatus.IN_PROGRESS);
+                status = ImportJobStatus.IN_PROGRESS;
             }
-            repository.save(job);
-        }, () -> log.warn("ImportJobHistory not found for jobId: {}", event.jobId()));
+
+            historyRepository.updateJobStatus(
+                    event.jobId(),
+                    event.stage(),
+                    event.progress(),
+                    status,
+                    endTime,
+                    errorMessage
+            );
+        } catch (Exception e) {
+            log.error("Failed to update import job history status for jobId: {}", event.jobId(), e);
+        }
     }
 }
+

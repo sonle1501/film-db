@@ -1,4 +1,3 @@
--- Create search schema if not exists
 CREATE SCHEMA IF NOT EXISTS search;
 
 CREATE EXTENSION IF NOT EXISTS pg_trgm SCHEMA public;

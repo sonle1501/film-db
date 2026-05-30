@@ -6,8 +6,8 @@ import org.springframework.core.io.Resource;
 
 @ConfigurationProperties(prefix = "app.importer")
 public record ImporterProperties(
-    Dataset dataset,
-    Scripts scripts
+    @DefaultValue Dataset dataset,
+    @DefaultValue Scripts scripts
 ) {
     public record Dataset(
         @DefaultValue("dataset/") String location

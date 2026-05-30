@@ -3,6 +3,7 @@ package dev.sonle.filmdb.shared.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -81,6 +82,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
         log.warn("Malformed JSON payload sent to: {}", request.getRequestURI());
         return buildResponse(AppExceptionCode.MALFORMED_JSON, AppExceptionCode.MALFORMED_JSON.getDefaultMsg(), request.getRequestURI());
+    }
+
+    // Optimistic locking failure handler
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<ApiErrorResponse> handleOptimisticLockingFailureException(OptimisticLockingFailureException ex, HttpServletRequest request) {
+        log.warn("Optimistic locking failure occurred at {}: {}", request.getRequestURI(), ex.getMessage());
+        return buildResponse(AppExceptionCode.CONCURRENT_UPDATE, AppExceptionCode.CONCURRENT_UPDATE.getDefaultMsg(), request.getRequestURI());
     }
 
     // SCENARIO 3: Database Issues (Spring Data JPA / JDBC)

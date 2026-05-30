@@ -15,7 +15,7 @@ public record MovieRatingInfoDto(
         Integer startYear,
         Integer runtimeMinutes,
         List<String> genres,
-        java.math.BigDecimal averageRating,
+        Float averageRating,
         Integer numVotes
 ) implements MovieImageEnabled {
     public static MovieRatingInfoDto from(Movie m, MovieRating r){

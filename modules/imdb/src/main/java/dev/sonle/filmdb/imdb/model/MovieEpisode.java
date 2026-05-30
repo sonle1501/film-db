@@ -33,6 +33,6 @@ public class MovieEpisode {
     private Movie episode;
 
     @ManyToOne
-    @JoinColumn(name = "parent_movie_id", insertable = false, updatable = false)
+    @JoinColumn(name = "parent_movie_id", insertable = false, updatable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Movie parentMovie;
 }

@@ -16,9 +16,9 @@ public class SearchRefreshListener {
     private final SearchRefreshService searchRefreshService;
 
     @Async
-    @EventListener
+    @org.springframework.transaction.event.TransactionalEventListener(phase = org.springframework.transaction.event.TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void handleImdbDataImported(ImdbDataImportedEvent event) {
-        log.info("Received ImdbDataImportedEvent for job {}. Triggering async search view refresh...", event.jobId());
+        log.info("Received ImdbDataImportedEvent for job {}. Triggering async search view refresh after transaction commit...", event.jobId());
         try {
             searchRefreshService.refreshSearch();
         } catch (Exception e) {

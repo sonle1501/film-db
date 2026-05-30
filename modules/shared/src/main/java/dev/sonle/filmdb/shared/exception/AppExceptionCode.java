@@ -16,7 +16,8 @@ public enum AppExceptionCode {
     VALIDATION_FAILED("SYS", "VALIDATION_FAILED", HttpStatus.BAD_REQUEST),
     MALFORMED_JSON("SYS", "MALFORMED_JSON", HttpStatus.BAD_REQUEST),
 
-    // Server & DB Errors (500)
+    // Server & DB Errors (500 / 409)
+    CONCURRENT_UPDATE("SYS", "The resource was updated by another transaction. Please reload and try again.", HttpStatus.CONFLICT),
     INTERNAL_SERVER_ERROR("SYS", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;

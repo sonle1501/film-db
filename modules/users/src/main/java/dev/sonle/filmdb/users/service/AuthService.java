@@ -47,6 +47,7 @@ public class AuthService {
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER) // Default role
+                .userState(UserState.ACTIVE)
                 .build();
 
         userAuthRepository.save(userAuth);
