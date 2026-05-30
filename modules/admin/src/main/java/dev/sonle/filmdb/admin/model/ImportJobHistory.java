@@ -1,11 +1,6 @@
 package dev.sonle.filmdb.admin.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -62,7 +59,20 @@ public class ImportJobHistory {
     @Column(name = "current_stage", length = 50)
     private String currentStage;
 
-    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.JSON)
-    @Column(name = "logs", columnDefinition = "jsonb")
-    private java.util.List<String> logs;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "job_id")
+    @OrderBy("timestamp ASC, id ASC")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private List<ImportJobLog> jobLogs;
+
+    @com.fasterxml.jackson.annotation.JsonProperty("logs")
+    public List<String> getLogs() {
+        if (jobLogs == null) {
+            return Collections.emptyList();
+        }
+        return jobLogs.stream()
+                .map(ImportJobLog::getMessage)
+                .toList();
+    }
 }
+

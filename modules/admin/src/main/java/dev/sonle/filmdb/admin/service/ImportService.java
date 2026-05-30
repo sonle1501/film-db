@@ -11,6 +11,7 @@ import dev.sonle.filmdb.shared.interfaces.ImdbDatasetPipelineInterface;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -35,22 +36,37 @@ public class ImportService {
                 .currentStage("PREPARATION")
                 .triggeredBy(adminId)
                 .startTime(OffsetDateTime.now())
-                .logs(new ArrayList<>())
+                .jobLogs(new ArrayList<>())
                 .build();
 
         return importJobHistoryRepository.save(job);
     }
 
     public void runPipeline(UUID jobId) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                pipeline.runPipeline(jobId);
-            } catch (Exception e) {
-                // If anything escapes the pipeline execution, log it here
-                LoggerFactory.getLogger(ImportController.class)
-                        .error("Async pipeline execution failed for jobId: {}", jobId, e);
-            }
-        });
+        Runnable pipelineTask = () -> {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    pipeline.runPipeline(jobId);
+                } catch (Exception e) {
+                    // If anything escapes the pipeline execution, log it here
+                    LoggerFactory.getLogger(ImportController.class)
+                            .error("Async pipeline execution failed for jobId: {}", jobId, e);
+                }
+            });
+        };
+
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(
+                new org.springframework.transaction.support.TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        pipelineTask.run();
+                    }
+                }
+            );
+        } else {
+            pipelineTask.run();
+        }
     }
 
     public ImportJobHistory getPipelineStatus(UUID jobId){
