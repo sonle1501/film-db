@@ -1,1 +1,0 @@
-ALTER TABLE admin.pending_request ADD COLUMN version INTEGER DEFAULT 0 NOT NULL;

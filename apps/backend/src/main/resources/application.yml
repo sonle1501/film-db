@@ -12,7 +12,7 @@ spring:
 
   flyway:
     enabled: true
-    schemas: imdb,users
+    schemas: public,imdb,users,admin
 #    default-schema: imdb
     locations: classpath:db/migration # everything in resources is moved to root
     # -on-validation-error: true # deprecated function
@@ -32,5 +32,11 @@ app:
   importer:
     dataset:
       location: dataset/
+    scripts:
+      swap-staging-tables: classpath:db2/script/swap_staging_tables.sql
+      drop-staging-indexes: classpath:db2/script/drop_staging_indexes.sql
+      create-staging-indexes: classpath:db2/script/create_staging_indexes.sql
+      wipe-staging-tables: classpath:db2/script/wipe_staging_tables.sql
+
 
 
