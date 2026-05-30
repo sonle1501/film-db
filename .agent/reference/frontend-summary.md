@@ -21,6 +21,7 @@ The Next.js application is organized into route groups and core layers under `sr
   - `(dashboard)`: User profile management and custom lists.
   - `(public)`: Public movie, cast/person, and general search pages.
   - `admin`: Admin portal for managing background importer jobs and users.
+  - ...
     
 - `components`: Categorized UI blocks (features, home, layout, and shared UI primitives).
     

@@ -45,7 +45,7 @@ To fulfill the requirements with minimal changes to the codebase and maximum cod
    - We will map it in `apps/backend/src/main/resources/application.yml` under `app.tmdb.bearer-token`.
 
 3. **TmdbImageService in `shared` module:**
-   - Lives in `dev.sonle.filmdb.shared.service` package.
+   - Lives in `dev.sonle.filmdb.shared.utils` package.
    - Inject the bearer token using Spring `@Value`.
    - Uses `RestTemplate` to fetch TMDB results. Sends the API token using the `Authorization: Bearer <token>` header.
    - Searches both `movie_results` and `tv_results` to find the first available `poster_path`.
@@ -75,8 +75,8 @@ To fulfill the requirements with minimal changes to the codebase and maximum cod
   ```
 
 #### Step 3: Create Shared Interface and Service
-- Create `MovieImageEnabled` interface in `modules/shared` at `dev.sonle.filmdb.shared.MovieImageEnabled`.
-- Create `TmdbImageService` in `modules/shared` at `dev.sonle.filmdb.shared.service.TmdbImageService`.
+- Create `MovieImageEnabled` interface in `modules/shared` at `dev.sonle.filmdb.shared.interfaces.MovieImageEnabled`.
+- Create `TmdbImageService` in `modules/shared` at `dev.sonle.filmdb.shared.utils.TmdbImageService`.
   - Include classes for TMDB JSON response parsing: `TmdbFindResult`, `TmdbMovieResult`, `TmdbTvResult`.
 
 #### Step 4: Implement DTO Mapping

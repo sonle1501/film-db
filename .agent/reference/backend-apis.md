@@ -640,6 +640,26 @@
         }
       }
     },
+    "/api/admin/import-pipeline/run": {
+      "post": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "adminRunImport",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportJobHistory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/profile": {
       "get": {
         "tags": [
@@ -1104,42 +1124,12 @@
     "/api/v1/search": {
       "get": {
         "tags": [
-          "hello"
+          "search-controller"
         ],
-        "operationId": "getSearchResult",
+        "operationId": "searchSmart",
         "parameters": [
           {
-            "name": "name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/search/{id}": {
-      "get": {
-        "tags": [
-          "hello"
-        ],
-        "operationId": "getHello",
-        "parameters": [
-          {
-            "name": "rid",
+            "name": "query",
             "in": "query",
             "required": true,
             "schema": {
@@ -1147,11 +1137,23 @@
             }
           },
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "page",
+            "in": "query",
+            "required": false,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
             }
           }
         ],
@@ -1161,7 +1163,143 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/PageMovieSearchResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/vn": {
+      "get": {
+        "tags": [
+          "search-controller"
+        ],
+        "operationId": "searchVietnamese",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageMovieSearchResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/vn/live": {
+      "get": {
+        "tags": [
+          "search-controller"
+        ],
+        "operationId": "liveSearchVietnamese",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MovieSearchResultDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/live": {
+      "get": {
+        "tags": [
+          "search-controller"
+        ],
+        "operationId": "liveSearchSmart",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MovieSearchResultDto"
+                  }
                 }
               }
             }
@@ -1877,6 +2015,29 @@
         }
       }
     },
+    "/api/v1/imdb/film/{film-id}/image": {
+      "get": {
+        "tags": [
+          "movie-controller"
+        ],
+        "operationId": "getMovieImage",
+        "parameters": [
+          {
+            "name": "film-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/imdb/film/{film-id}/crew": {
       "get": {
         "tags": [
@@ -1990,26 +2151,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/MovieSupplementInfoDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/admin/world": {
-      "get": {
-        "tags": [
-          "import-controller"
-        ],
-        "operationId": "run",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }
@@ -2151,19 +2292,53 @@
         }
       }
     },
-    "/api/admin/import-pipeline": {
+    "/api/admin/import-pipeline/status": {
       "get": {
         "tags": [
           "import-controller"
         ],
-        "operationId": "adminRunImport",
+        "operationId": "getImportStatus",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/ImportJobHistory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/import-pipeline/history": {
+      "get": {
+        "tags": [
+          "import-controller"
+        ],
+        "operationId": "getImportHistory",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ImportJobHistory"
+                  }
                 }
               }
             }
@@ -2261,6 +2436,67 @@
           }
         }
       },
+      "ImportJobHistory": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobType": {
+            "type": "string",
+            "enum": [
+              "FULL_WIPE_AND_LOAD",
+              "DELTA_UPSERT",
+              "DOWNLOAD_ONLY"
+            ]
+          },
+          "targetDataset": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "SUCCESS",
+              "FAILED"
+            ]
+          },
+          "rowsProcessed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "triggeredBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "progress": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentStage": {
+            "type": "string"
+          },
+          "logs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "ListMetadataForPatchUpdateDto": {
         "type": "object",
         "properties": {
@@ -2329,7 +2565,8 @@
             "format": "int32"
           },
           "averageRating": {
-            "type": "number"
+            "type": "number",
+            "format": "float"
           },
           "numVotes": {
             "type": "integer",
@@ -2373,24 +2610,28 @@
             }
           },
           "averageRating": {
-            "type": "number"
+            "type": "number",
+            "format": "float"
           },
           "numVotes": {
             "type": "integer",
             "format": "int32"
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
       "PageMovieRatingInfoDto": {
         "type": "object",
         "properties": {
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
           "totalElements": {
             "type": "integer",
             "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           },
           "size": {
             "type": "integer",
@@ -2437,16 +2678,16 @@
           "sort": {
             "$ref": "#/components/schemas/SortObject"
           },
-          "paged": {
-            "type": "boolean"
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           },
           "pageNumber": {
             "type": "integer",
             "format": "int32"
           },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
+          "paged": {
+            "type": "boolean"
           },
           "unpaged": {
             "type": "boolean"
@@ -2475,7 +2716,8 @@
             "format": "int32"
           },
           "averageRating": {
-            "type": "number"
+            "type": "number",
+            "format": "float"
           },
           "numVotes": {
             "type": "integer",
@@ -2592,6 +2834,94 @@
           }
         }
       },
+      "MovieSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "string"
+          },
+          "primaryTitle": {
+            "type": "string"
+          },
+          "originalTitle": {
+            "type": "string"
+          },
+          "titleType": {
+            "type": "string"
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "averageRating": {
+            "type": "number",
+            "format": "float"
+          },
+          "numVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relevanceScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "PageMovieSearchResultDto": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieSearchResultDto"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
       "EpisodeInfoDto": {
         "type": "object",
         "properties": {
@@ -2653,6 +2983,9 @@
             "items": {
               "type": "string"
             }
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
@@ -2741,13 +3074,13 @@
       "PageMovieBasicInfoDto": {
         "type": "object",
         "properties": {
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
           "totalElements": {
             "type": "integer",
             "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
           },
           "size": {
             "type": "integer",
@@ -2881,7 +3214,8 @@
             }
           },
           "averageRating": {
-            "type": "number"
+            "type": "number",
+            "format": "float"
           },
           "numVotes": {
             "type": "integer",
@@ -2892,6 +3226,9 @@
             "items": {
               "$ref": "#/components/schemas/MoviePersonInfoDto"
             }
+          },
+          "imageUrl": {
+            "type": "string"
           }
         }
       },
