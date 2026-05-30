@@ -21,6 +21,8 @@ Analyze the user's prompt. If it starts with a `/` (Slash Command), bypass inten
 | :--------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------- | :---------------------------------- |
 | **Question / Explain** / **Plan / Breakdown**  | `how`, `why`, `explain`, `what is`, `help me understand` , `plan`, `break down`, `steps to`, `how to approach` ...     | answer (no code or modify)          |
 | **Code / Implementation** / **Refactor / Fix** | `create`, `write`, `build`, `implement`, `add feature` , `fix`, `bug`, `error`, `refactor`, `clean up`, `optimize` ... | implementation / coding             |
+| **UI / Design** / **Enhance / Style**         | `design`, `enhance ui`, `polish styling`, `make it look better`, `change color`, `responsive layout`, `adjust styling` ... | ui design / styling modification    |
+
 ## TABLE 2: Slash Commands (Explicit Workflow Triggers)
 *If the user prompt begins with a Slash Command, bypass Table 1. Assume strict intent and execute the exact workflow defined below.*
 
@@ -29,6 +31,7 @@ Analyze the user's prompt. If it starts with a `/` (Slash Command), bypass inten
 | `/plan`       | [plan.md](../workflows/plan.md)    | Planning, brainstorming and disscusion. |
 | `/code`       | [code.md](../workflows/code.md)    | Executation and implementation          |
 | `/analyze`    | [analyze.md](../workflows/analyze.md) | Analyzation and revision.               |
+| `/ui`         | [ui.md](../workflows/ui.md)       | UI design, layout, styling enhancement. |
 
 ### Execution Rules for Table 2:
 1. **Strict Adherence:** When a slash command is used, do not deviate from the workflow. 
