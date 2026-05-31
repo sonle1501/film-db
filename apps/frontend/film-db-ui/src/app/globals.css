@@ -1,27 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-sans: var(--font-sans), 'Inter', system-ui, sans-serif;
+  --font-display: var(--font-display), monospace;
 
   /* Color System */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-900: #1e3a8a;
+  --color-primary-50: #e6fdfa;
+  --color-primary-100: #bbf7ed;
+  --color-primary-500: #55ead4; /* Cyberpunk Cyan */
+  --color-primary-600: #2be0c5; /* Interactive hover Cyan */
+  --color-primary-900: #0a4f45; /* Deep shadow/accent */
 
-  --color-surface-light: #ffffff;
-  --color-surface-dark: #09090b; /* Zinc 950 */
+  --color-surface-light: #f5f5f5;
+  --color-surface-dark: #323232; /* Deep Charcoal Grey */
   
-  --color-surface-elevated-light: #f4f4f5; /* Zinc 100 */
-  --color-surface-elevated-dark: #18181b; /* Zinc 900 */
+  --color-surface-elevated-light: #e5e5e5;
+  --color-surface-elevated-dark: #3a3a3a; /* Card Background */
 
-  --color-text-light: #18181b; /* Zinc 900 */
-  --color-text-muted-light: #71717a; /* Zinc 500 */
+  --color-text-light: #171717;
+  --color-text-muted-light: #737373;
   
-  --color-text-dark: #fafafa; /* Zinc 50 */
-  --color-text-muted-dark: #a1a1aa; /* Zinc 400 */
+  --color-text-dark: #c8c8c8; /* Grey Text (30%) */
+  --color-text-muted-dark: #8a8a8a; /* Border/Muted grey */
+
+  --color-yellow-accent: #f3e600; /* Cyberpunk Yellow */
+  --color-cyan-accent: #55ead4;
+  --color-red-accent: #ff0055; /* Cyberpunk Red */
 }
 
 /* Base layer */
@@ -30,15 +34,15 @@
   --foreground: var(--color-text-light);
   --muted: var(--color-text-muted-light);
   --elevated: var(--color-surface-elevated-light);
+  --border-color: #d4d4d4;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-surface-dark);
-    --foreground: var(--color-text-dark);
-    --muted: var(--color-text-muted-dark);
-    --elevated: var(--color-surface-elevated-dark);
-  }
+:root.dark, .dark {
+  --background: var(--color-surface-dark);
+  --foreground: var(--color-text-dark);
+  --muted: var(--color-text-muted-dark);
+  --elevated: var(--color-surface-elevated-dark);
+  --border-color: #4a4a4a;
 }
 
 body {
@@ -51,12 +55,47 @@ body {
 
 /* Utilities */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #3a3a3a;
+  border: 1px solid var(--border-color);
 }
 
-.dark .glass-effect {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.terminal-border {
+  border: 1px solid var(--border-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.terminal-border:hover, .terminal-border:focus-within {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 8px rgba(85, 234, 212, 0.4);
+}
+
+.terminal-border-yellow {
+  border: 1px solid var(--border-color);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.terminal-border-yellow:hover, .terminal-border-yellow:focus-within {
+  border-color: var(--color-yellow-accent);
+  box-shadow: 0 0 8px rgba(243, 230, 0, 0.4);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* 45-degree Angled chamfer cut on borders */
+.chamfer-border {
+  clip-path: polygon(
+    0px 8px, 
+    8px 0px, 
+    100% 0px, 
+    100% calc(100% - 8px), 
+    calc(100% - 8px) 100%, 
+    0px 100%
+  );
 }

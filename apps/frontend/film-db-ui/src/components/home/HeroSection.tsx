@@ -1,61 +1,100 @@
 import Link from "next/link";
-import { Play, ArrowRight } from "lucide-react";
 import { LiveSearchInput } from "@/components/ui/LiveSearchInput";
 
 export function HeroSection() {
   return (
-    <div className="relative min-h-[85vh] w-full flex items-center justify-center overflow-hidden">
-      {/* Background Image Setup */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-dark via-surface-dark/80 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-surface-dark via-surface-dark/50 to-transparent z-10" />
-        {/* Placeholder for dynamic hero image. 
-            A solid deep color or abstract pattern for now since we don't have a specific movie poster 
-            Wait, I'll use a CSS gradient as a placeholder until actual images are loaded from API */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary-900/40 via-surface-dark to-surface-dark z-0" />
-        
-        {/* Decorative elements */}
-        <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary-600/20 rounded-full blur-[120px] mix-blend-screen z-0" />
+    <div className="relative w-full flex items-center justify-center pb-12 pt-16 border-b border-white/5">
+      {/* HUD Corner Brackets */}
+      <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-white/15 pointer-events-none"></div>
+      <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-white/15 pointer-events-none"></div>
+      <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-white/15 pointer-events-none"></div>
+      <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-white/15 pointer-events-none"></div>
+
+      {/* HUD Tiny Monitor Tag */}
+      <div className="absolute left-1/2 top-4 -translate-x-1/2 font-display text-[8px] text-text-muted-dark/50 select-none tracking-[0.25em] pointer-events-none uppercase">
+        [ SYS_MONITOR // DECR_LEVEL_0 ]
       </div>
 
-      <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full flex flex-col items-start mt-16">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 mb-6 backdrop-blur-md">
-          <span className="flex h-2 w-2 rounded-full bg-primary-500 animate-pulse"></span>
-          <span className="text-xs font-medium text-white/80">Now featuring over 1M+ movies</span>
+      {/* HUD Left/Right Scale Bars */}
+      <div className="absolute left-6 top-1/4 bottom-1/4 w-[1px] bg-white/5 flex flex-col justify-between items-center py-4 text-[8px] font-mono text-white/20 select-none pointer-events-none hidden lg:flex">
+        <span>[00]</span>
+        <span>[25]</span>
+        <span>[50]</span>
+        <span>[75]</span>
+        <span>[99]</span>
+      </div>
+      <div className="absolute right-6 top-1/4 bottom-1/4 w-[1px] bg-white/5 flex flex-col justify-between items-center py-4 text-[8px] font-mono text-white/20 select-none pointer-events-none hidden lg:flex">
+        <span>MAX</span>
+        <span>•</span>
+        <span>MID</span>
+        <span>•</span>
+        <span>MIN</span>
+      </div>
+
+      <div className="relative z-20 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center text-center mt-2">
+        
+        {/* Technical Terminal Widget - Simulated Window */}
+        <div className="mb-8 w-full max-w-4xl border border-primary-500/20 bg-surface-elevated-dark/50 shadow-[0_0_25px_rgba(85,234,212,0.02)] select-none rounded-none">
+          {/* Terminal Window Header Bar */}
+          <div className="flex items-center justify-between px-4 py-2 border-b border-primary-500/20 bg-primary-900/10 font-display text-[9px] text-[#55ead4] tracking-widest">
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-accent animate-pulse shadow-[0_0_8px_#ff0055]"></span>
+              CONSOLE_LOG // TERMINAL.SYS
+            </span>
+
+          </div>
+
+          <div className="p-6 font-display text-xs text-text-muted-dark leading-relaxed text-left uppercase tracking-widest sm:grid sm:grid-cols-[1.1fr_auto_1.2fr] sm:gap-x-8">
+            {/* Left Column: ASCII Art Logo */}
+            <div className="hidden md:flex flex-col justify-center text-primary-500 font-bold select-none text-[8px] leading-[1.15]">
+              <pre>
+{`  ██████╗██╗██╗     ███╗   ███╗     ██████╗ ██████╗ 
+  ██╔════╝██║██║     ████╗ ████║     ██╔══██╗██╔══██╗
+  █████╗  ██║██║     ██╔████╔██║     ██║  ██║██████╔╝
+  ██╔══╝  ██║██║     ██║╚██╔╝██║     ██║  ██║██╔══██╗
+  ██║     ██║███████╗██║ ╚═╝ ██║     ██████╔╝██████╔╝
+  ╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝     ╚═════╝ ╚═════╝ `}
+              </pre>
+            </div>
+            
+            {/* Middle Vertical Divider Line */}
+            <div className="hidden md:block w-[1px] bg-white/10 self-stretch"></div>
+
+            {/* Right Column: Terminal logs */}
+            <div className="flex flex-col justify-center h-full font-mono text-xs text-white">
+              <div className="pb-2 border-b border-white/10 font-bold">
+                <span className="text-[#f3e600]">sonle@film-db</span><span className="text-white">:</span><span className="text-[#f3e600]">~$</span> <span className="text-white">systemctl status film-db</span>
+              </div>
+              <div className="space-y-1.5 pt-3 font-mono text-[11px] text-text-dark">
+                <div className="flex"><span className="text-red-accent w-24 shrink-0">[AUTHOR]</span> <span className="text-white font-sans uppercase">Son Le's Open Source Project</span></div>
+                <div className="flex"><span className="text-red-accent w-24 shrink-0">[DATASET]</span> <span className="text-white font-sans uppercase">IMDb Non-Commercial Dataset</span></div>
+                <div className="flex"><span className="text-red-accent w-24 shrink-0">[CAPACITY]</span> <span className="text-white font-sans uppercase">10,000,000+ Movies & Extra Info</span></div>
+                <div className="flex"><span className="text-red-accent w-24 shrink-0">[THEME]</span> <span className="text-white font-sans uppercase">Cyberpunk Aesthetic</span></div>
+                <div className="flex items-center"><span className="text-red-accent w-24 shrink-0">[STATUS]</span> <span className="text-[#55ead4] flex items-center gap-1.5 font-bold">ONLINE<span className="inline-block h-3.5 w-1.5 bg-[#55ead4] cursor-blink"></span></span></div>
+              </div>
+            </div>
+          </div>
         </div>
-        
-        <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white max-w-3xl leading-[1.1]">
-          Discover Your Next <br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-blue-600">Favorite Film.</span>
+
+        <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-widest text-white max-w-4xl leading-[1.1] uppercase mb-2">
+          EXPLORE <span className="text-primary-500">FILM-DB</span>
         </h1>
+
+        {/* Title decorative details */}
+        {/* <div className="flex items-center gap-4 w-full max-w-md justify-center mb-6">
+          <div className="h-[1px] bg-gradient-to-r from-transparent to-white/15 flex-grow"></div>
+          <span className="font-display text-[9px] text-[#f3e600] tracking-[0.3em]">[ HUD_V.2.0 // DECRYPTED ]</span>
+          <div className="h-[1px] bg-gradient-to-l from-transparent to-white/15 flex-grow"></div>
+        </div> */}
         
-        <p className="mt-6 max-w-xl text-lg sm:text-xl text-text-muted-dark leading-relaxed">
-          Explore the world's most comprehensive movie database. Track what you've watched, save what you want to see, and curate custom lists.
-        </p>
-        
-        <div className="mt-8 w-full max-w-xl z-30">
+        <div className="mt-2 w-[80%] max-w-4xl z-30">
           <LiveSearchInput
             variant="hero"
-            placeholder="Search for movies, TV series..."
+            placeholder="ENTER CRITERIA (MOVIE, PERSON, YEAR)..."
           />
         </div>
-        
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <Link
-            href="/movies"
-            className="flex h-12 sm:h-14 items-center justify-center gap-2 rounded-full bg-primary-600 px-8 text-base font-medium text-white hover:bg-primary-500 transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]"
-          >
-            <Play className="h-5 w-5 fill-current" />
-            Start Exploring
-          </Link>
-          <Link
-            href="/register"
-            className="flex h-12 sm:h-14 items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 text-base font-medium text-white hover:bg-white/10 backdrop-blur-md transition-all hover:scale-[1.02] active:scale-95"
-          >
-            Create Free Account
-            <ArrowRight className="h-5 w-5" />
-          </Link>
-        </div>
+
+
       </div>
     </div>
   );

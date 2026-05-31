@@ -37,39 +37,39 @@ export function Navbar({ showSearch = true }: NavbarProps) {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-surface-dark/80 backdrop-blur-lg">
+      <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-surface-dark/95 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 h-full">
             <Link href="/" className="flex items-center gap-2">
-              <span className="font-display text-2xl font-bold tracking-tight text-white">
-                Film<span className="text-primary-500">DB</span>
+              <span className="font-display text-xl font-bold tracking-widest text-primary-500 hover:text-white transition-colors">
+                FILM-DB
               </span>
             </Link>
-            <div className="hidden md:block">
-              <ul className="flex items-center gap-6 text-sm font-medium text-text-muted-dark">
-                <li>
-                  <Link href="/movies" className="hover:text-white transition-colors">
+            <div className="hidden md:block h-full">
+              <ul className="flex items-stretch h-full text-xs font-display tracking-widest text-text-muted-dark uppercase border-l border-white/10">
+                <li className="flex">
+                  <Link href="/movies" className="flex items-center px-5 border-r border-white/10 hover:text-primary-500 hover:bg-white/5 transition-all">
                     Movies
                   </Link>
                 </li>
-                <li>
-                  <Link href="/movies/genres" className="hover:text-white transition-colors">
+                <li className="flex">
+                  <Link href="/movies/genres" className="flex items-center px-5 border-r border-white/10 hover:text-primary-500 hover:bg-white/5 transition-all">
                     Genres
                   </Link>
                 </li>
-                <li>
-                  <Link href="/people" className="hover:text-white transition-colors">
+                <li className="flex">
+                  <Link href="/people" className="flex items-center px-5 border-r border-white/10 hover:text-primary-500 hover:bg-white/5 transition-all">
                     People
                   </Link>
                 </li>
-                <li>
-                  <Link href="/search" className="hover:text-white transition-colors">
+                <li className="flex">
+                  <Link href="/search" className="flex items-center px-5 border-r border-white/10 hover:text-primary-500 hover:bg-white/5 transition-all">
                     Search
                   </Link>
                 </li>
                 {user && (
-                  <li>
-                    <Link href="/lists" className="hover:text-white transition-colors">
+                  <li className="flex">
+                    <Link href="/lists" className="flex items-center px-5 border-r border-white/10 hover:text-primary-500 hover:bg-white/5 transition-all">
                       Lists
                     </Link>
                   </li>
@@ -90,18 +90,18 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 rounded-full border border-white/10 bg-elevated/50 px-3 py-1.5 text-sm font-medium text-white hover:bg-elevated transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-dark"
+                    className="flex items-center gap-2 rounded-none border border-primary-500/30 bg-surface-elevated-dark px-3 py-1.5 text-xs font-display uppercase tracking-wider text-white hover:border-primary-500 transition-all focus:outline-none"
                   >
-                    <UserIcon className="h-4 w-4 text-primary-400" />
+                    <UserIcon className="h-3.5 w-3.5 text-primary-500" />
                     <span className="hidden sm:inline-block max-w-[100px] truncate">{user.displayName || user.username}</span>
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-surface border border-white/10 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="py-1">
+                    <div className="absolute right-0 mt-2 w-48 origin-top-right rounded-none bg-surface-elevated-dark border border-white/10 shadow-2xl focus:outline-none z-50">
+                      <div className="py-1 border border-primary-500/20">
                         <Link
                           href="/profile"
-                          className="block px-4 py-2 text-sm text-white hover:bg-elevated transition-colors"
+                          className="block px-4 py-2 text-xs font-display uppercase tracking-widest text-white hover:bg-white/5 hover:text-primary-500 transition-colors"
                           onClick={() => setDropdownOpen(false)}
                         >
                           Your Profile
@@ -109,7 +109,7 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                         {user.role === 'ADMIN' && (
                           <Link
                             href="/admin"
-                            className="block px-4 py-2 text-sm text-white hover:bg-elevated transition-colors"
+                            className="block px-4 py-2 text-xs font-display uppercase tracking-widest text-white hover:bg-white/5 hover:text-primary-500 transition-colors"
                             onClick={() => setDropdownOpen(false)}
                           >
                             Admin Dashboard
@@ -117,10 +117,10 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                         )}
                         <button
                           onClick={handleLogout}
-                          className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-400/10 transition-colors"
+                          className="block w-full text-left px-4 py-2 text-xs font-display uppercase tracking-widest text-red-400 hover:bg-red-400/10 transition-colors border-t border-white/5 mt-1 pt-2"
                         >
                           <span className="flex items-center gap-2">
-                            <LogOut className="h-4 w-4" />
+                            <LogOut className="h-3.5 w-3.5" />
                             Sign out
                           </span>
                         </button>
@@ -132,13 +132,13 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                 <>
                   <Link
                     href="/login"
-                    className="hidden sm:flex h-9 items-center justify-center rounded-full px-4 text-sm font-medium text-white hover:bg-elevated transition-colors"
+                    className="hidden sm:flex h-9 items-center justify-center rounded-none border border-primary-500 px-4 text-xs font-display uppercase tracking-widest text-primary-500 hover:bg-primary-500 hover:text-surface-dark transition-all"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
-                    className="flex h-9 items-center justify-center rounded-full bg-primary-600 px-4 text-sm font-medium text-white hover:bg-primary-500 transition-colors"
+                    className="flex h-9 items-center justify-center rounded-none border border-yellow-accent px-4 text-xs font-display uppercase tracking-widest text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all"
                   >
                     Sign Up
                   </Link>
@@ -147,9 +147,9 @@ export function Navbar({ showSearch = true }: NavbarProps) {
               
               <button 
                 onClick={() => setMobileMenuOpen(true)}
-                className="flex h-9 w-9 items-center justify-center rounded-full md:hidden hover:bg-elevated transition-colors text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-none md:hidden border border-white/10 hover:border-primary-500 hover:bg-white/5 transition-all text-white"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -158,46 +158,46 @@ export function Navbar({ showSearch = true }: NavbarProps) {
 
       {/* Mobile drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="w-64 bg-surface-dark border-r border-white/10 p-6 flex flex-col justify-between h-full shadow-2xl">
+        <div className="md:hidden fixed inset-0 z-50 flex bg-black/80 backdrop-blur-sm">
+          <div className="w-64 bg-surface-dark border-r border-white/10 p-6 flex flex-col justify-between h-full shadow-2xl rounded-none">
             <div>
               <div className="flex items-center justify-between mb-8">
-                <span className="font-display text-xl font-bold text-white">
-                  Film<span className="text-primary-500">DB</span>
+                <span className="font-display text-sm font-bold tracking-widest text-primary-500">
+                  FILM-DB
                 </span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-full p-1.5 hover:bg-white/10 text-white transition-colors"
+                  className="rounded-none p-1.5 border border-white/10 hover:border-primary-500 text-white transition-colors"
                 >
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              <ul className="flex flex-col gap-4 text-sm font-medium text-text-muted-dark">
+              <ul className="flex flex-col gap-4 text-xs font-display uppercase tracking-widest text-text-muted-dark">
                 <li>
-                  <Link href="/movies" onClick={() => setMobileMenuOpen(false)} className="hover:text-white block py-2 transition-colors">
+                  <Link href="/movies" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary-500 block py-2 transition-colors border-b border-white/5">
                     Movies
                   </Link>
                 </li>
                 <li>
-                  <Link href="/movies/genres" onClick={() => setMobileMenuOpen(false)} className="hover:text-white block py-2 transition-colors">
+                  <Link href="/movies/genres" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary-500 block py-2 transition-colors border-b border-white/5">
                     Genres
                   </Link>
                 </li>
                 <li>
-                  <Link href="/people" onClick={() => setMobileMenuOpen(false)} className="hover:text-white block py-2 transition-colors">
+                  <Link href="/people" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary-500 block py-2 transition-colors border-b border-white/5">
                     People
                   </Link>
                 </li>
                 <li>
-                  <Link href="/search" onClick={() => setMobileMenuOpen(false)} className="hover:text-white block py-2 transition-colors">
+                  <Link href="/search" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary-500 block py-2 transition-colors border-b border-white/5">
                     Search
                   </Link>
                 </li>
                 {user && (
                   <li>
-                    <Link href="/lists" onClick={() => setMobileMenuOpen(false)} className="hover:text-white block py-2 transition-colors">
+                    <Link href="/lists" onClick={() => setMobileMenuOpen(false)} className="hover:text-primary-500 block py-2 transition-colors border-b border-white/5">
                       Lists
                     </Link>
                   </li>
@@ -207,14 +207,14 @@ export function Navbar({ showSearch = true }: NavbarProps) {
             <div className="border-t border-white/5 pt-6 mt-auto">
               {user ? (
                 <div className="space-y-4">
-                  <div className="text-sm font-medium text-white flex items-center gap-2">
-                    <UserIcon className="h-4 w-4 text-primary-400" />
+                  <div className="text-xs font-display uppercase tracking-wider text-white flex items-center gap-2">
+                    <UserIcon className="h-4 w-4 text-primary-500" />
                     <span className="truncate">{user.displayName || user.username}</span>
                   </div>
                   <Link
                     href="/profile"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block text-sm text-primary-400 hover:text-primary-300 font-medium py-1"
+                    className="block text-xs font-display uppercase tracking-widest text-primary-500 hover:text-primary-400 font-medium py-1"
                   >
                     Your Profile
                   </Link>
@@ -222,14 +222,14 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                     <Link
                       href="/admin"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block text-sm text-primary-400 hover:text-primary-300 font-medium py-1"
+                      className="block text-xs font-display uppercase tracking-widest text-primary-500 hover:text-primary-400 font-medium py-1"
                     >
                       Admin Dashboard
                     </Link>
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 font-medium w-full text-left py-1"
+                    className="flex items-center gap-2 text-xs font-display uppercase tracking-widest text-red-400 hover:text-red-300 font-medium w-full text-left py-1"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign out
@@ -240,14 +240,14 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex h-9 items-center justify-center rounded-full border border-white/10 text-sm font-medium text-white hover:bg-elevated transition-colors"
+                    className="flex h-9 items-center justify-center rounded-none border border-primary-500 text-xs font-display uppercase tracking-widest text-primary-500 hover:bg-primary-500 hover:text-surface-dark transition-all"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex h-9 items-center justify-center rounded-full bg-primary-600 text-sm font-medium text-white hover:bg-primary-500 transition-colors"
+                    className="flex h-9 items-center justify-center rounded-none border border-yellow-accent text-xs font-display uppercase tracking-widest text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all"
                   >
                     Sign Up
                   </Link>
