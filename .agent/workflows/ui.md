@@ -24,7 +24,7 @@ Enhance the visual appeal, layout, typography, animations, responsiveness, and g
 6. **Respond:** Summarize the UI changes made and link to the generated UI design document.
 
 ## Output Schema for the UI File
-The generated `@.agent/output/ui/<target-name>-ui.md` MUST follow this exact structure:
+The generated asset MUST follow this exact structure:
 - User's intent
 - Visual enhancements description
 - Modified UI components & files
