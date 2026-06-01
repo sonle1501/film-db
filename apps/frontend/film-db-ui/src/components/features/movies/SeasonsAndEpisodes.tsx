@@ -44,37 +44,37 @@ export function SeasonsAndEpisodes({ movieId, seasonsCount }: SeasonsAndEpisodes
     return Array.from({ length: 4 }).map((_, idx) => (
       <div
         key={idx}
-        className="w-full flex items-center justify-between p-5 rounded-2xl bg-surface-dark/40 border border-white/5 animate-pulse"
+        className="w-full flex items-center justify-between p-5 rounded-none bg-black/20 border border-white/15 animate-pulse"
       >
         <div className="flex-1 space-y-3">
-          <div className="h-4 bg-white/10 rounded w-16" />
-          <div className="h-6 bg-white/10 rounded w-2/3" />
+          <div className="h-4 bg-white/10 rounded-none w-16" />
+          <div className="h-6 bg-white/10 rounded-none w-2/3" />
           <div className="flex gap-4">
-            <div className="h-4 bg-white/10 rounded w-20" />
-            <div className="h-4 bg-white/10 rounded w-24" />
+            <div className="h-4 bg-white/10 rounded-none w-20" />
+            <div className="h-4 bg-white/10 rounded-none w-24" />
           </div>
         </div>
-        <div className="w-8 h-8 rounded-full bg-white/5" />
+        <div className="w-8 h-8 rounded-none bg-white/5 border border-white/10" />
       </div>
     ));
   };
 
   return (
-    <section className="space-y-8 bg-surface-dark/30 border border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-md">
+    <section className="space-y-8 bg-black/20 border border-white/10 rounded-none p-6 md:p-8 backdrop-blur-md font-mono text-xs">
       {/* Header */}
-      <div className="flex items-center gap-3 pb-4 border-b border-white/5">
-        <div className="p-3 bg-primary-600/10 text-primary-400 border border-primary-500/20 rounded-2xl">
-          <Tv className="w-6 h-6" />
+      <div className="flex items-center gap-3 pb-4 border-b border-white/10">
+        <div className="p-3 bg-cyan-accent/10 text-cyan-accent border border-cyan-accent/20 rounded-none">
+          <Tv className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white font-display">Seasons & Episodes</h2>
-          <p className="text-sm text-gray-400 mt-0.5">Explore episodes of this TV series</p>
+          <h2 className="text-xl font-bold text-white font-display uppercase tracking-widest">// SEASONS_AND_EPISODES</h2>
+          <p className="text-[11px] text-text-muted-dark mt-0.5">Explore episodes of this TV series</p>
         </div>
       </div>
 
       {/* Season Selector */}
       <div className="space-y-3">
-        <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">Select Season</label>
+        <label className="text-[10px] font-semibold uppercase tracking-wider text-text-muted-dark">// SELECT_SEASON</label>
         <div className="flex items-center gap-2.5 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {Array.from({ length: seasonsCount }).map((_, idx) => {
             const seasonNum = idx + 1;
@@ -83,10 +83,10 @@ export function SeasonsAndEpisodes({ movieId, seasonsCount }: SeasonsAndEpisodes
               <button
                 key={seasonNum}
                 onClick={() => setActiveSeason(seasonNum)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-300 transform active:scale-95 ${
+                className={`px-5 py-2.5 rounded-none text-xs font-bold font-mono whitespace-nowrap transition-all duration-300 uppercase cursor-pointer border ${
                   isActive
-                    ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/20 scale-105"
-                    : "bg-surface-dark/50 border border-white/5 hover:bg-surface-dark text-gray-400 hover:text-white"
+                    ? "bg-cyan-accent border-cyan-accent text-surface-dark font-black shadow-[0_0_8px_rgba(85,234,212,0.3)]"
+                    : "bg-black/40 border-white/5 hover:border-cyan-accent/20 text-text-muted-dark hover:text-white"
                 }`}
               >
                 Season {seasonNum}
@@ -101,18 +101,18 @@ export function SeasonsAndEpisodes({ movieId, seasonsCount }: SeasonsAndEpisodes
         {loading ? (
           <div className="space-y-4">{renderSkeletons()}</div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-center">
-            <p className="text-red-400 font-medium">{error}</p>
+          <div className="flex flex-col items-center justify-center p-8 rounded-none bg-red-accent/10 border border-red-accent/20 text-center">
+            <p className="text-red-accent font-medium">// SYSTEM_ERROR: {error}</p>
             <button
               onClick={() => fetchEpisodes(activeSeason)}
-              className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl text-sm font-semibold transition-colors"
+              className="mt-4 px-4 py-2 border border-red-accent bg-red-accent text-white rounded-none text-xs font-semibold hover:bg-transparent hover:text-red-accent transition-colors cursor-pointer"
             >
               Retry
             </button>
           </div>
         ) : episodes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-8 rounded-2xl bg-surface-dark/20 border border-white/5 text-center">
-            <p className="text-gray-400">No episodes found for Season {activeSeason}.</p>
+          <div className="flex flex-col items-center justify-center p-8 rounded-none bg-black/20 border border-white/10 text-center">
+            <p className="text-text-muted-dark">// SYSTEM_LOG: NO_EPISODES_FOUND FOR_SEASON {activeSeason}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
@@ -120,28 +120,28 @@ export function SeasonsAndEpisodes({ movieId, seasonsCount }: SeasonsAndEpisodes
               <Link
                 key={episode.episodeId}
                 href={`/movies/${episode.episodeId}`}
-                className="group flex items-center justify-between p-5 rounded-2xl bg-surface-dark/50 hover:bg-surface-dark border border-white/5 hover:border-primary-500/20 transition-all duration-300 shadow-sm hover:shadow-md hover:shadow-primary-500/5 transform hover:-translate-y-0.5"
+                className="group flex items-center justify-between p-5 rounded-none bg-black/40 hover:bg-white/5 border border-white/10 hover:border-cyan-accent/40 transition-all duration-300 shadow-sm hover:shadow-[0_0_12px_rgba(85,234,212,0.05)]"
               >
                 <div className="flex-1 space-y-1.5 pr-4">
                   {/* Episode Number Badge */}
-                  <span className="inline-block px-2.5 py-0.5 bg-primary-600/10 text-primary-400 border border-primary-500/20 rounded-md text-xs font-semibold mb-1">
+                  <span className="inline-block px-2.5 py-0.5 bg-cyan-accent/5 text-cyan-accent border border-cyan-accent/25 rounded-none text-[10px] font-semibold mb-1 uppercase tracking-wider">
                     Episode {episode.episodeNumber}
                   </span>
                   
                   {/* Title */}
-                  <h3 className="text-lg font-bold text-white group-hover:text-primary-400 transition-colors">
+                  <h3 className="text-base font-bold text-white group-hover:text-cyan-accent transition-colors font-mono uppercase tracking-wider">
                     {episode.primaryTitle || "Untitled Episode"}
                   </h3>
                   
                   {/* Original Title (if different) */}
                   {episode.originalTitle && episode.originalTitle !== episode.primaryTitle && (
-                    <p className="text-sm text-gray-400 italic mt-0.5">
-                      {episode.originalTitle}
+                    <p className="text-xs text-text-muted-dark italic mt-0.5">
+                      // {episode.originalTitle}
                     </p>
                   )}
 
                   {/* Metadata */}
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 pt-1">
+                  <div className="flex flex-wrap items-center gap-4 text-[10px] text-text-muted-dark pt-1 font-mono uppercase">
                     {episode.startYear && (
                       <div className="flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5" />
@@ -158,8 +158,8 @@ export function SeasonsAndEpisodes({ movieId, seasonsCount }: SeasonsAndEpisodes
                 </div>
 
                 {/* Arrow Action */}
-                <div className="p-2.5 rounded-full bg-white/5 group-hover:bg-primary-600/20 text-gray-400 group-hover:text-primary-400 border border-transparent group-hover:border-primary-500/20 transition-all duration-300 transform group-hover:translate-x-1">
-                  <ChevronRight className="w-5 h-5" />
+                <div className="p-2 border border-white/10 group-hover:border-cyan-accent/25 bg-black/40 group-hover:bg-cyan-accent/10 text-text-muted-dark group-hover:text-cyan-accent rounded-none transition-all duration-300 transform group-hover:translate-x-1">
+                  <ChevronRight className="w-4 h-4" />
                 </div>
               </Link>
             ))}

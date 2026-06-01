@@ -28,15 +28,18 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity">
       <div className="absolute inset-0" onClick={onClose}></div>
       
-      <div className="relative bg-surface border border-white/10 rounded-xl w-full max-w-md p-6 shadow-2xl transform transition-transform">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
+      <div className="relative bg-surface-dark border border-white/10 rounded-none w-full max-w-md p-6 shadow-2xl transform transition-all font-mono">
+        <div className="flex justify-between items-center mb-6 pb-2 border-b border-white/10 select-none">
+          <h2 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-cyan-accent animate-pulse"></span>
+            // {title}
+          </h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10"
+            className="text-[10px] text-text-muted-dark hover:text-red-accent transition-all font-mono font-bold px-1.5 py-0.5 border border-transparent hover:border-red-accent/30 hover:bg-red-accent/15 rounded-none cursor-pointer"
             aria-label="Close modal"
           >
-            <X size={24} />
+            ESC [X]
           </button>
         </div>
         {children}

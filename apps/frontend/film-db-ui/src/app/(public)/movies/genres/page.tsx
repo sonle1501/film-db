@@ -204,11 +204,11 @@ export default function GenresPage() {
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header */}
           <div className="flex flex-col gap-2 mb-8">
-            <h1 className="text-3xl font-bold font-display text-white tracking-tight flex items-center gap-2.5">
-              <Tag className="h-7 w-7 text-primary-500" />
-              Explore by Genre
+            <h1 className="text-3xl font-bold font-display uppercase tracking-widest text-white flex items-center gap-2.5">
+              <Tag className="h-5 w-5 text-cyan-accent" />
+              // EXPLORE_BY_GENRE
             </h1>
-            <p className="text-text-muted-dark text-sm max-w-xl">
+            <p className="text-text-muted-dark text-xs font-sans max-w-xl uppercase">
               Browse and filter titles matching your preferred style, category, or vibe.
             </p>
           </div>
@@ -226,11 +226,11 @@ export default function GenresPage() {
           ) : (
             <div className="lg:grid lg:grid-cols-4 lg:gap-8 items-start">
               {/* Left Column: Genres selection */}
-              <div className="mb-8 lg:mb-0 bg-surface-dark border border-white/10 rounded-2xl p-4 sticky top-24 max-h-[calc(100vh-140px)] overflow-y-auto">
-                <h3 className="text-sm font-semibold text-white/40 uppercase tracking-wider mb-4 px-2">Genres List</h3>
+              <div className="mb-8 lg:mb-0 bg-surface-dark border border-white/10 rounded-none p-4 sticky top-24 max-h-[calc(100vh-140px)] overflow-y-auto">
+                <h3 className="text-xs font-mono font-bold text-text-muted-dark uppercase tracking-wider mb-4 px-2">// GENRES_LIST</h3>
                 
                 {/* Swipeable container on mobile, simple list on desktop */}
-                <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-none">
+                <div className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-none">
                   {genres.map((genre) => (
                     <button
                       key={genre}
@@ -239,16 +239,13 @@ export default function GenresPage() {
                         // Reset pagination states
                         setCurrentPage(0);
                       }}
-                      className={`px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap text-left transition-all duration-200 cursor-pointer flex items-center justify-between ${
+                      className={`px-4 py-2.5 rounded-none text-xs font-mono font-bold uppercase whitespace-nowrap text-left transition-all duration-150 cursor-pointer flex items-center justify-between border ${
                         activeGenre === genre
-                          ? "bg-primary-600/25 border border-primary-500 text-white font-semibold"
-                          : "bg-white/5 border border-transparent text-gray-400 hover:bg-white/10 hover:text-white"
+                          ? "bg-cyan-accent/5 border-cyan-accent/20 text-cyan-accent"
+                          : "bg-transparent border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white"
                       }`}
                     >
-                      <span>{genre}</span>
-                      {activeGenre === genre && (
-                        <div className="h-1.5 w-1.5 rounded-full bg-primary-400 hidden lg:block" />
-                      )}
+                      <span>{activeGenre === genre ? `> [ ${genre} ]` : `  [ ${genre} ]`}</span>
                     </button>
                   ))}
                 </div>
@@ -260,13 +257,13 @@ export default function GenresPage() {
                   <>
                     {/* Filter and Top Action Bar */}
                     <div className="flex flex-col gap-4">
-                      <div className="flex items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-2xl p-4">
+                      <div className="flex items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-none p-4">
                         <div>
-                          <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-                            <Film className="h-5 w-5 text-gray-400" />
+                          <h2 className="text-xl font-bold font-display uppercase tracking-wider text-white flex items-center gap-2">
+                            <Film className="h-4 w-4 text-cyan-accent" />
                             {activeGenre}
                           </h2>
-                          <p className="text-xs text-text-muted-dark">
+                          <p className="text-[10px] font-mono uppercase tracking-widest text-text-muted-dark mt-0.5">
                             {sortBy 
                               ? `Showing ${movies.length} of ${totalElements} sorted results` 
                               : isFiltered 
@@ -277,41 +274,41 @@ export default function GenresPage() {
 
                         <button 
                           onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                          className={`flex items-center justify-center gap-2 px-5 py-2.5 border border-white/10 rounded-xl text-white transition-colors whitespace-nowrap text-sm font-medium ${
+                          className={`flex items-center justify-center gap-2 px-5 py-2.5 border transition-all whitespace-nowrap text-xs font-mono font-bold uppercase rounded-none cursor-pointer ${
                             isFilterPanelOpen || isFiltered
-                              ? "bg-primary-600 hover:bg-primary-500 border-primary-500 text-white"
-                              : "bg-surface-dark hover:bg-white/5"
+                              ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                              : "bg-surface-dark border-white/10 text-white/70 hover:border-white/20 hover:text-white"
                           }`}
                         >
-                          <SlidersHorizontal className="h-4 w-4" />
-                          <span>Filters</span>
+                          <SlidersHorizontal className="h-3.5 w-3.5" />
+                          <span>[ FILTERS ]</span>
                         </button>
                       </div>
 
                       {/* Dynamic Filter Panel */}
                       {isFilterPanelOpen && (
-                        <div className="bg-surface-elevated-dark/95 border border-white/10 rounded-2xl p-6 flex flex-col gap-6 shadow-2xl backdrop-blur-md transition-all duration-300">
+                        <div className="bg-surface-dark border border-white/10 rounded-none p-6 flex flex-col gap-6 shadow-2xl backdrop-blur-md transition-all duration-300">
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                             {/* Start Year */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-semibold text-gray-300">Start Year</label>
+                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Start Year</label>
                               <input
                                 type="number"
                                 min="1900"
                                 max={new Date().getFullYear() + 1}
-                                placeholder="e.g. 2024"
+                                placeholder="E.G. 2024"
                                 value={filterStartYear}
                                 onChange={(e) => setFilterStartYear(e.target.value)}
-                                className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                                className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                               />
                               <div className="relative">
                                 <select
                                   value={filterExactYear ? "exact" : "range"}
                                   onChange={(e) => setFilterExactYear(e.target.value === "exact")}
-                                  className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-xl px-3 py-1.5 pr-8 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-xs h-[32px]"
+                                  className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-none px-3 py-1.5 pr-8 text-white font-mono text-xs uppercase focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all h-[32px]"
                                 >
-                                  <option value="range">From this year onwards</option>
-                                  <option value="exact">Exactly in this year</option>
+                                  <option value="range">FROM THIS YEAR ONWARDS</option>
+                                  <option value="exact">EXACTLY IN THIS YEAR</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
                                   <svg className="fill-current h-3.5 w-3.5 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -323,45 +320,45 @@ export default function GenresPage() {
 
                             {/* Min Rating */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-semibold text-gray-300">Min Rating (and up)</label>
+                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Min Rating (and up)</label>
                               <input
                                 type="number"
                                 min="0"
                                 max="10"
                                 step="0.1"
-                                placeholder="e.g. 8.0"
+                                placeholder="E.G. 8.0"
                                 value={filterMinRating}
                                 onChange={(e) => setFilterMinRating(e.target.value)}
-                                className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                                className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                               />
                             </div>
 
                             {/* Min Votes */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-semibold text-gray-300">Min Votes (and up)</label>
+                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Min Votes (and up)</label>
                               <input
                                 type="number"
                                 min="0"
-                                placeholder="e.g. 50000"
+                                placeholder="E.G. 50000"
                                 value={filterMinVotes}
                                 onChange={(e) => setFilterMinVotes(e.target.value)}
-                                className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                                className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                               />
                             </div>
 
                             {/* Title Type */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-semibold text-gray-300">Type</label>
+                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Type</label>
                               <div className="relative">
                                 <select
                                   value={filterTitleType}
                                   onChange={(e) => setFilterTitleType(e.target.value)}
-                                  className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-2.5 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm h-[40px]"
+                                  className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2 pr-10 text-white font-mono text-xs uppercase focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all h-[36px]"
                                 >
-                                  <option value="">All Types</option>
-                                  <option value="movie">Movie</option>
-                                  <option value="tvSeries">TV Series</option>
-                                  <option value="short">Short</option>
+                                  <option value="">ALL TYPES</option>
+                                  <option value="movie">MOVIE</option>
+                                  <option value="tvSeries">TV SERIES</option>
+                                  <option value="short">SHORT</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
                                   <svg className="fill-current h-4 w-4 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -375,17 +372,17 @@ export default function GenresPage() {
                           <div className="flex justify-end gap-3 border-t border-white/5 pt-4">
                             <button
                               onClick={handleClearFilters}
-                              className="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl text-sm font-semibold transition-colors"
+                              className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                             >
-                              Clear Filters
+                              [ CLEAR FILTERS ]
                             </button>
                             <button
                               onClick={() => {
                                 fetchMovies(0, sortBy, sortDirection);
                               }}
-                              className="px-4 py-2 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-sm font-semibold transition-colors"
+                              className="px-4 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                             >
-                              Apply Filter
+                              [ APPLY FILTER ]
                             </button>
                           </div>
                         </div>
@@ -393,57 +390,57 @@ export default function GenresPage() {
 
                       {/* Active Filter Tags */}
                       {isFiltered && hasActiveFilters && (
-                        <div className="flex flex-wrap items-center gap-2 bg-primary-950/20 border border-primary-500/20 rounded-xl p-3.5">
-                          <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider mr-1">Active filters:</span>
+                        <div className="flex flex-wrap items-center gap-2 bg-cyan-accent/5 border border-cyan-accent/20 rounded-none p-3.5">
+                          <span className="text-xs text-text-muted-dark font-mono uppercase tracking-wider mr-1">Active filters:</span>
                           {filterStartYear && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                              Year: {filterStartYear}{filterExactYear ? "" : "+"}
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                              YEAR: {filterStartYear}{filterExactYear ? "" : "+"}
                             </span>
                           )}
                           {filterMinRating && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                              Rating: {filterMinRating}+
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                              RATING: {filterMinRating}+
                             </span>
                           )}
                           {filterMinVotes && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                              Votes: {parseInt(filterMinVotes).toLocaleString()}+
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                              VOTES: {parseInt(filterMinVotes).toLocaleString()}+
                             </span>
                           )}
                           {filterTitleType && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                              Type: {filterTitleType === "movie" ? "Movie" : filterTitleType === "tvSeries" ? "TV Series" : "Short"}
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                              TYPE: {filterTitleType === "movie" ? "MOVIE" : filterTitleType === "tvSeries" ? "TV SERIES" : "SHORT"}
                             </span>
                           )}
                           <button
                             onClick={handleClearFilters}
-                            className="text-xs text-red-400 hover:text-red-300 font-semibold underline underline-offset-2 ml-auto"
+                            className="text-xs text-red-accent hover:text-red-accent/80 font-mono uppercase font-bold ml-auto cursor-pointer"
                           >
-                            Clear all
+                            [ CLEAR ALL ]
                           </button>
                         </div>
                       )}
 
                       {/* Sorting Controls */}
-                      <div className="flex flex-wrap items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-xl p-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-none p-4">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-gray-400">Sort by:</span>
+                          <span className="text-xs font-mono uppercase text-text-muted-dark">Sort by:</span>
                           <button
                             onClick={() => handleSort("averageRating")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                            className={`px-3 py-1.5 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                               sortBy === "averageRating"
-                                ? "bg-primary-600 border-primary-500 text-white"
-                                : "bg-surface-dark border-white/10 hover:bg-white/5 text-gray-300"
+                                ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                                : "bg-surface-dark border-white/10 hover:bg-white/5 text-text-muted-dark hover:text-white"
                             }`}
                           >
                             Average Rating
                           </button>
                           <button
                             onClick={() => handleSort("numVotes")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                            className={`px-3 py-1.5 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                               sortBy === "numVotes"
-                                ? "bg-primary-600 border-primary-500 text-white"
-                                : "bg-surface-dark border-white/10 hover:bg-white/5 text-gray-300"
+                                ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                                : "bg-surface-dark border-white/10 hover:bg-white/5 text-text-muted-dark hover:text-white"
                             }`}
                           >
                             Number of Votes
@@ -453,10 +450,10 @@ export default function GenresPage() {
                         {sortBy && (
                           <button
                             onClick={handleSortDirection}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 text-gray-300 rounded-xl text-xs font-semibold transition-colors"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 text-white/70 hover:text-white rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                           >
-                            <ArrowUpDown className="h-3.5 w-3.5" />
-                            <span>Order: {sortDirection === "desc" ? "Descending" : "Ascending"}</span>
+                            <ArrowUpDown className="h-3.5 w-3.5 text-cyan-accent" />
+                            <span>Order: {sortDirection === "desc" ? "[ DESC ]" : "[ ASC ]"}</span>
                           </button>
                         )}
                       </div>
@@ -478,17 +475,17 @@ export default function GenresPage() {
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
                           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6 mt-8">
-                            <span className="text-xs text-gray-400">
+                            <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
                               Showing page {currentPage + 1} of {totalPages} ({totalElements} total results)
                             </span>
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <button
                                 onClick={() => fetchMovies(currentPage - 1)}
                                 disabled={currentPage === 0 || isLoadingMovies}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-xs font-semibold rounded-xl transition-all"
+                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                               >
-                                <ChevronLeft className="h-3.5 w-3.5" />
-                                Previous
+                                <ChevronLeft className="h-3.5 w-3.5 text-cyan-accent" />
+                                PREVIOUS
                               </button>
 
                               <div className="flex items-center gap-1">
@@ -521,7 +518,7 @@ export default function GenresPage() {
                                   return uniquePages.map((pageVal, idx) => {
                                     if (pageVal === "...") {
                                       return (
-                                        <span key={`ellipsis-${idx}`} className="px-2 py-1 text-gray-500 select-none text-xs font-semibold">
+                                        <span key={`ellipsis-${idx}`} className="px-2 py-1 text-text-muted-dark select-none text-xs font-mono font-bold">
                                           ...
                                         </span>
                                       );
@@ -532,10 +529,10 @@ export default function GenresPage() {
                                         key={pageNum}
                                         onClick={() => fetchMovies(pageNum)}
                                         disabled={isLoadingMovies}
-                                        className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-semibold rounded-xl border transition-all ${
+                                        className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-mono font-bold rounded-none border transition-all cursor-pointer ${
                                           currentPage === pageNum
-                                            ? "bg-primary-600 border-primary-500 text-white"
-                                            : "bg-surface-dark border-white/10 hover:bg-white/5 text-gray-300"
+                                            ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                                            : "bg-surface-dark border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
                                         }`}
                                       >
                                         {pageNum + 1}
@@ -548,10 +545,10 @@ export default function GenresPage() {
                               <button
                                 onClick={() => fetchMovies(currentPage + 1)}
                                 disabled={currentPage >= totalPages - 1 || isLoadingMovies}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-xs font-semibold rounded-xl transition-all"
+                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                               >
-                                Next
-                                <ChevronRight className="h-3.5 w-3.5" />
+                                NEXT
+                                <ChevronRight className="h-3.5 w-3.5 text-cyan-accent" />
                               </button>
                             </div>
                           </div>
@@ -581,11 +578,11 @@ export default function GenresPage() {
         {/* Right-click Add To List Context Menu */}
         {contextMenu && (
           <div
-            className="absolute z-50 bg-surface-elevated-dark border border-white/10 rounded-lg shadow-xl py-1.5 min-w-[150px]"
+            className="absolute z-50 bg-surface-elevated-dark border border-white/10 rounded-none shadow-2xl py-1.5 min-w-[150px]"
             style={{ top: contextMenu.y, left: contextMenu.x }}
           >
             <button
-              className="w-full text-left px-4 py-2 text-xs text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="w-full text-left px-4 py-2 text-xs font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedMovieId(contextMenu.movieId);

@@ -48,23 +48,23 @@ const MOCK_MOVIES: MovieProps[] = [
 
 export function TrendingSection() {
   return (
-    <section className="py-20">
+    <section className="py-16 bg-surface-dark border-b border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-end justify-between mb-8 border-b border-white/10 pb-4">
           <div>
-            <h2 className="font-display text-3xl font-bold text-white mb-2">Trending Now</h2>
-            <p className="text-text-muted-dark">The most popular movies this week</p>
+            <h2 className="font-display text-2xl font-bold tracking-widest text-white uppercase mb-1">// TRENDING_LIST</h2>
+            <p className="text-xs font-display tracking-widest text-text-muted-dark uppercase">ACTIVE_POPULARITY_INDEX // WEEKLY_UPDATES</p>
           </div>
           <Link 
             href="/trending" 
-            className="hidden sm:flex items-center gap-1 text-sm font-medium text-primary-500 hover:text-primary-400 transition-colors"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-display uppercase tracking-widest text-primary-500 hover:text-white transition-colors"
           >
-            View all
-            <ChevronRight className="h-4 w-4" />
+            [ ACCESS_ALL_RECORDS ]
+            <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
         
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:gap-x-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {MOCK_MOVIES.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
@@ -73,9 +73,9 @@ export function TrendingSection() {
         <div className="mt-8 flex justify-center sm:hidden">
           <Link 
             href="/trending" 
-            className="flex h-10 w-full items-center justify-center rounded-full border border-white/10 bg-white/5 text-sm font-medium text-white hover:bg-white/10 transition-colors"
+            className="flex h-10 w-full items-center justify-center border border-primary-500 bg-transparent text-xs font-display uppercase tracking-widest text-primary-500 hover:bg-primary-500 hover:text-surface-dark transition-all duration-150"
           >
-            View all trending
+            ACCESS_ALL_RECORDS
           </Link>
         </div>
       </div>

@@ -106,27 +106,33 @@ export function LiveSearchInput({
   // Determine styling based on variant
   let containerClass = "relative w-full";
   let inputClass = "";
-  let iconClass = "absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors";
-  let buttonClass = "absolute right-2 top-1/2 -translate-y-1/2 rounded-lg text-sm font-medium transition-all";
+  let iconClass = "absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 transition-colors";
+  let buttonClass = "absolute right-2 top-1/2 -translate-y-1/2 rounded-none text-xs font-display uppercase tracking-widest transition-all";
 
   if (variant === "navbar") {
     containerClass += " max-w-xs";
-    inputClass = "w-full rounded-full bg-elevated/40 hover:bg-elevated/60 border border-white/10 py-1.5 pl-9 pr-8 text-xs text-white placeholder-text-muted-dark focus:bg-elevated/80 focus:border-primary-500/80 focus:outline-none focus:ring-1 focus:ring-primary-500/50 transition-all duration-200";
-    iconClass = "absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted-dark";
+    inputClass = "w-full rounded-none bg-surface-elevated-dark/90 hover:bg-surface-elevated-dark border border-white/10 py-1.5 pl-8 pr-8 text-xs font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
+    iconClass = "absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted-dark";
   } else if (variant === "hero") {
-    inputClass = "w-full rounded-full bg-surface-dark/40 hover:bg-surface-dark/60 border border-white/10 py-4 pl-12 pr-32 text-base text-white placeholder-gray-400 focus:bg-surface-dark/80 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 backdrop-blur-md transition-all duration-200";
-    iconClass = "absolute left-4.5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400";
-    buttonClass += " px-5 py-2 bg-primary-600 hover:bg-primary-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:scale-[1.02] active:scale-95 text-sm";
+    inputClass = "w-full rounded-none bg-surface-elevated-dark/85 hover:bg-surface-elevated-dark border border-white/10 py-5 pl-14 pr-36 text-sm font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
+    iconClass = "absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-500 font-bold";
+    buttonClass += " px-6 py-2.5 border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-surface-dark";
   } else { // "search" page variant
-    inputClass = "w-full rounded-xl bg-surface-dark/40 hover:bg-surface-dark/60 border border-white/10 py-3.5 pl-12 pr-28 text-sm text-white placeholder-gray-400 focus:bg-surface-dark/80 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200";
-    iconClass = "absolute left-4.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-gray-400";
-    buttonClass += " px-4 py-1.5 bg-primary-600 hover:bg-primary-500 text-white text-xs";
+    inputClass = "w-full rounded-none bg-surface-elevated-dark border border-white/10 py-3.5 pl-12 pr-28 text-sm font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
+    iconClass = "absolute left-4.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-primary-500 font-bold";
+    buttonClass += " px-4 py-1.5 border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-surface-dark";
   }
 
   return (
     <div className={containerClass} ref={dropdownRef}>
       <form onSubmit={handleFormSubmit(onSubmit)} className="relative w-full">
-        <Search className={`${iconClass} ${isOpen ? "text-primary-500" : ""}`} />
+        {variant === "navbar" ? (
+          <Search className={`${iconClass} ${isOpen ? "text-primary-500" : ""}`} />
+        ) : (
+          <div className={`${iconClass} flex items-center justify-center font-display text-primary-500 font-black text-lg select-none`}>
+            &gt;
+          </div>
+        )}
         <input
           {...register("searchQuery")}
           ref={(node) => {
@@ -143,14 +149,14 @@ export function LiveSearchInput({
           <button
             type="submit"
             disabled={isPending}
-            className={variant === "navbar" ? "absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted-dark hover:text-white" : buttonClass}
+            className={variant === "navbar" ? "absolute right-2.5 top-1/2 -translate-y-1/2 text-primary-500 hover:text-white" : buttonClass}
           >
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : variant === "navbar" ? (
               <ArrowRight className="h-3.5 w-3.5" />
             ) : (
-              "Search"
+              "EXECUTE"
             )}
           </button>
         )}
@@ -158,16 +164,16 @@ export function LiveSearchInput({
 
       {/* Live Search Dropdown */}
       {isOpen && (isLoading || results.length > 0 || (query?.trim() && !isLoading)) && (
-        <div className="absolute left-0 right-0 z-50 mt-2 origin-top-right rounded-2xl border border-white/10 bg-surface-dark/95 p-2 shadow-2xl backdrop-blur-xl transition-all max-h-[380px] overflow-y-auto">
+        <div className="absolute left-0 right-0 z-50 mt-2 origin-top-right rounded-none border border-white/10 bg-surface-elevated-dark p-2 shadow-2xl backdrop-blur-xl transition-all max-h-[380px] overflow-y-auto">
           {isLoading && results.length === 0 ? (
-            <div className="flex items-center justify-center py-6 text-sm text-text-muted-dark gap-2">
+            <div className="flex items-center justify-center py-6 text-xs font-display text-text-muted-dark gap-2">
               <Loader2 className="h-4 w-4 text-primary-500 animate-spin" />
-              <span>Searching...</span>
+              <span>COMMUNICATION ACTIVE...</span>
             </div>
           ) : results.length > 0 ? (
             <div className="flex flex-col gap-1">
-              <div className="px-3 py-1 text-[10px] font-semibold text-text-muted-dark uppercase tracking-wider">
-                Suggestions ({searchMode === "vn" ? "Vietnamese" : "Smart"})
+              <div className="px-3 py-1 text-[10px] font-display font-semibold text-text-muted-dark uppercase tracking-widest border-b border-white/5 pb-2 mb-1">
+                // SUGGESTIONS ({searchMode === "vn" ? "VIETNAMESE" : "SMART"})
               </div>
               {results.map((movie) => (
                 <button
@@ -176,9 +182,9 @@ export function LiveSearchInput({
                     setIsOpen(false);
                     router.push(`/movies/${movie.movieId}`);
                   }}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-white/5 transition-all group"
+                  className="flex items-center gap-3 rounded-none border border-transparent hover:border-primary-500/20 px-3 py-2 text-left hover:bg-white/5 transition-all group"
                 >
-                  <div className="relative h-10 w-8 overflow-hidden rounded bg-elevated/50 shrink-0">
+                  <div className="relative h-10 w-8 overflow-hidden rounded-none bg-surface-dark border border-white/10 shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={getMoviePosterUrl(movie.imageUrl)}
@@ -187,10 +193,10 @@ export function LiveSearchInput({
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="truncate text-sm font-medium text-white group-hover:text-primary-400 transition-colors">
+                    <div className="truncate text-xs font-display uppercase tracking-widest text-white group-hover:text-primary-500 transition-colors">
                       {movie.primaryTitle || movie.originalTitle}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-text-muted-dark mt-0.5">
+                    <div className="flex items-center gap-2 text-[10px] font-display text-text-muted-dark mt-0.5">
                       <span>{movie.startYear}</span>
                       {movie.genres && movie.genres.length > 0 && (
                         <>
@@ -201,26 +207,26 @@ export function LiveSearchInput({
                     </div>
                   </div>
                   {movie.averageRating > 0 && (
-                    <div className="flex items-center gap-1 rounded bg-yellow-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-yellow-500 border border-yellow-500/20 shrink-0">
+                    <div className="flex items-center gap-1 rounded-none bg-yellow-accent/10 px-1.5 py-0.5 text-[9px] font-display font-semibold text-yellow-accent border border-yellow-accent/20 shrink-0">
                       <Star className="h-2.5 w-2.5 fill-current" />
                       <span>{movie.averageRating.toFixed(1)}</span>
                     </div>
                   )}
                 </button>
               ))}
-              <div className="border-t border-white/5 mt-1 pt-1">
+              <div className="border-t border-white/10 mt-1 pt-1">
                 <button
                   onClick={() => onSubmit({ searchQuery: query || "" })}
-                  className="flex w-full items-center justify-center gap-1.5 rounded-xl py-2 text-center text-xs font-semibold text-primary-400 hover:text-primary-300 hover:bg-primary-500/5 transition-all"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-none py-2 text-center text-[10px] font-display uppercase tracking-widest text-primary-500 hover:text-white hover:bg-primary-500/5 transition-all"
                 >
-                  <span>View all results for "{query}"</span>
+                  <span>[ EXECUTE DEEPER SEARCH FOR "{query}" ]</span>
                   <ArrowRight className="h-3 w-3" />
                 </button>
               </div>
             </div>
           ) : query?.trim() ? (
-            <div className="py-6 text-center text-sm text-text-muted-dark">
-              No results found for "{query}"
+            <div className="py-6 text-center text-xs font-display text-text-muted-dark">
+              NO CORRELATION FOUND FOR "{query}"
             </div>
           ) : null}
         </div>

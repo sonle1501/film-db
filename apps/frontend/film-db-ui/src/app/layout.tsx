@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Share_Tech_Mono } from "next/font/google";
 import QueryProvider from '@/providers/query-provider';
 import { Toaster } from 'react-hot-toast';
 
@@ -10,14 +10,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const outfit = Outfit({
+const shareTechMono = Share_Tech_Mono({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
-  title: "FilmDB - Discover Your Next Favorite Film",
-  description: "A premium movie database for exploring films, people, and creating custom watchlists.",
+  title: "FILM-DB",
+  description: "A cyberpunk-terminal database for exploring films, people, and datasets.",
 };
 
 export default function RootLayout({
@@ -28,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${outfit.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${shareTechMono.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-surface-dark text-text-dark">
         <QueryProvider>
