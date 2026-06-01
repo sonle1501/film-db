@@ -10,6 +10,7 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     compileOnly(libs.spring.boot.starter.data.jpa) // for handle org.springframework.dao.DataAccessException;
+    testImplementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.spring.boot.starter.security)
     implementation(libs.springdoc.openapi.starter.webmvc.ui)
 

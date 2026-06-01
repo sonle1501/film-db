@@ -9,5 +9,6 @@ dependencies {
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
     compileOnly(libs.spring.boot.starter.data.jpa)
+    testImplementation(libs.spring.boot.starter.data.jpa)
     implementation(libs.spring.boot.starter.security)
 }
