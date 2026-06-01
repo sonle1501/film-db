@@ -114,9 +114,9 @@ export function LiveSearchInput({
     inputClass = "w-full rounded-none bg-surface-elevated-dark/90 hover:bg-surface-elevated-dark border border-white/10 py-1.5 pl-8 pr-8 text-xs font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
     iconClass = "absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted-dark";
   } else if (variant === "hero") {
-    inputClass = "w-full rounded-none bg-surface-elevated-dark/85 hover:bg-surface-elevated-dark border border-white/10 py-4 pl-12 pr-32 text-sm font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
-    iconClass = "absolute left-4.5 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-500 font-bold";
-    buttonClass += " px-5 py-2 border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-surface-dark";
+    inputClass = "w-full rounded-none bg-surface-elevated-dark/85 hover:bg-surface-elevated-dark border border-white/10 py-5 pl-14 pr-36 text-sm font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
+    iconClass = "absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-primary-500 font-bold";
+    buttonClass += " px-6 py-2.5 border border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-surface-dark";
   } else { // "search" page variant
     inputClass = "w-full rounded-none bg-surface-elevated-dark border border-white/10 py-3.5 pl-12 pr-28 text-sm font-display text-white placeholder-text-muted-dark focus:border-primary-500 focus:outline-none transition-all duration-150";
     iconClass = "absolute left-4.5 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-primary-500 font-bold";

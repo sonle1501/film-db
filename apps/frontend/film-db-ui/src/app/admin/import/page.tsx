@@ -160,22 +160,22 @@ export default function AdminImportPage() {
       {/* Page Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-extrabold font-display text-white">IMDB Ingestion Control</h2>
-          <p className="text-text-muted-dark mt-1 text-sm">
+          <h2 className="text-3xl font-bold font-display uppercase tracking-widest text-white">// IMDB_INGESTION_CONTROL</h2>
+          <p className="text-text-muted-dark mt-1 text-xs font-mono uppercase leading-relaxed">
             Wipe staging schemas, fetch dataset chunks, index, and swap tables atomically.
           </p>
         </div>
         <button
           onClick={() => setIsConfirmOpen(true)}
           disabled={startImportMutation.isPending || (activeJob && (activeJob.status === 'PENDING' || activeJob.status === 'IN_PROGRESS'))}
-          className="flex items-center space-x-2 px-5 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-semibold rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none cursor-pointer"
+          className="flex items-center space-x-2 px-5 py-3 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors cursor-pointer"
         >
           {startImportMutation.isPending || (activeJob && (activeJob.status === 'PENDING' || activeJob.status === 'IN_PROGRESS')) ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            <Play className="w-5 h-5 fill-current" />
+            <Play className="w-4 h-4 fill-current" />
           )}
-          <span>Trigger Dataset Import</span>
+          <span>[ TRIGGER INGESTION ]</span>
         </button>
       </div>
 
@@ -184,25 +184,25 @@ export default function AdminImportPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Tracker Card */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md shadow-xl space-y-6">
+            <div className="rounded-none border border-white/10 bg-surface-dark p-6 shadow-xl space-y-6">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-3">
-                  <Database className="w-6 h-6 text-primary-400" />
-                  <h3 className="text-lg font-bold font-display text-white">Ingestion Status Board</h3>
+                  <Database className="w-5 h-5 text-cyan-accent" />
+                  <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// INGESTION_STATUS_BOARD</h3>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center space-x-1.5 ${
+                <span className={`px-3 py-1 rounded-none text-xs font-mono font-bold border flex items-center space-x-1.5 ${
                   activeJob.status === 'SUCCESS'
-                    ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                    ? 'bg-cyan-accent/10 text-cyan-accent border-cyan-accent/20'
                     : activeJob.status === 'FAILED'
-                    ? 'bg-red-500/10 text-red-400 border-red-500/20'
-                    : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20 animate-pulse'
+                    ? 'bg-red-accent/10 text-red-accent border-red-accent/20'
+                    : 'bg-yellow-accent/10 text-yellow-400 border-yellow-accent/20 animate-pulse'
                 }`}>
                   {activeJob.status === 'IN_PROGRESS' || activeJob.status === 'PENDING' ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-yellow-400" />
                   ) : activeJob.status === 'SUCCESS' ? (
-                    <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-cyan-accent" />
                   ) : (
-                    <AlertCircle className="w-3.5 h-3.5 text-red-400" />
+                    <AlertCircle className="w-3.5 h-3.5 text-red-accent" />
                   )}
                   <span>{activeJob.status}</span>
                 </span>
@@ -210,13 +210,13 @@ export default function AdminImportPage() {
 
               {/* Progress Bar */}
               <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-text-muted-dark font-medium">Stage: {activeStageLabel}</span>
-                  <span className="text-white font-bold font-mono">{activeJob.progress.toFixed(1)}%</span>
+                <div className="flex justify-between text-xs font-mono uppercase font-bold text-text-muted-dark">
+                  <span>Stage: {activeStageLabel}</span>
+                  <span>{activeJob.progress.toFixed(1)}%</span>
                 </div>
-                <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div className="h-3 w-full bg-white/5 rounded-none overflow-hidden border border-white/10">
                   <div
-                    className="h-full bg-gradient-to-r from-purple-600 via-primary-500 to-cyan-400 rounded-full transition-all duration-500"
+                    className="h-full bg-cyan-accent rounded-none transition-all duration-500 shadow-[0_0_8px_rgba(85,234,212,0.5)]"
                     style={{ width: `${activeJob.progress}%` }}
                   />
                 </div>
@@ -230,32 +230,32 @@ export default function AdminImportPage() {
                     return (
                       <div key={stage.id} className="flex items-center flex-1 last:flex-none">
                         <div className="flex flex-col items-center relative">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border transition-all z-10 ${
+                          <div className={`w-8 h-8 rounded-none flex items-center justify-center font-mono font-bold text-xs border transition-all z-10 ${
                             status === 'completed'
-                              ? 'bg-green-500/20 border-green-400 text-green-400'
+                              ? 'bg-cyan-accent/15 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]'
                               : status === 'active'
-                              ? 'bg-primary-500/20 border-primary-400 text-primary-400 shadow-[0_0_12px_rgba(59,130,246,0.3)] animate-pulse'
+                              ? 'bg-yellow-accent/15 border-yellow-accent text-yellow-accent shadow-[0_0_12px_rgba(243,230,0,0.3)] animate-pulse'
                               : status === 'failed'
-                              ? 'bg-red-500/20 border-red-400 text-red-400'
+                              ? 'bg-red-accent/15 border-red-accent text-red-accent shadow-[0_0_8px_rgba(255,0,85,0.2)]'
                               : 'bg-white/5 border-white/10 text-white/40'
                           }`}>
                             {status === 'completed' ? (
-                              <CheckCircle2 className="w-4 h-4" />
+                              <CheckCircle2 className="w-3.5 h-3.5" />
                             ) : status === 'failed' ? (
-                              <AlertCircle className="w-4 h-4" />
+                              <AlertCircle className="w-3.5 h-3.5" />
                             ) : (
-                              idx + 1
+                              `0${idx + 1}`
                             )}
                           </div>
-                          <span className={`text-[10px] mt-2 font-semibold absolute -bottom-5 whitespace-nowrap ${
-                            status === 'active' ? 'text-primary-400 font-bold' : 'text-text-muted-dark'
+                          <span className={`text-[9px] font-mono uppercase tracking-widest mt-2 absolute -bottom-5 whitespace-nowrap ${
+                            status === 'active' ? 'text-yellow-accent font-bold' : 'text-text-muted-dark'
                           }`}>
                             {stage.label}
                           </span>
                         </div>
                         {idx < STAGES.length - 1 && (
-                          <div className={`h-[2px] flex-1 mx-2 ${
-                            status === 'completed' ? 'bg-green-500/30' : 'bg-white/10'
+                          <div className={`h-[1px] flex-1 mx-2 ${
+                            status === 'completed' ? 'bg-cyan-accent/35' : 'bg-white/10'
                           }`} />
                         )}
                       </div>
@@ -266,16 +266,16 @@ export default function AdminImportPage() {
             </div>
 
             {/* Terminal Console */}
-            <div className="rounded-2xl border border-white/10 bg-black/60 shadow-xl overflow-hidden backdrop-blur-md flex flex-col h-[320px]">
+            <div className="rounded-none border border-white/10 bg-black/85 shadow-xl overflow-hidden flex flex-col h-[320px]">
               <div className="bg-white/5 border-b border-white/10 px-4 py-3 flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                  <Terminal className="w-4 h-4 text-cyan-400" />
-                  <span className="text-xs font-mono font-bold text-white/80">system_log_console</span>
+                  <Terminal className="w-3.5 h-3.5 text-cyan-accent" />
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-cyan-accent">system_log_console</span>
                 </div>
                 <div className="flex space-x-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+                  <div className="w-2 h-2 rounded-none bg-red-accent/60" />
+                  <div className="w-2 h-2 rounded-none bg-yellow-accent/60" />
+                  <div className="w-2 h-2 rounded-none bg-cyan-accent/60" />
                 </div>
               </div>
               <div
@@ -283,7 +283,7 @@ export default function AdminImportPage() {
                 className="p-4 flex-grow overflow-y-auto font-mono text-xs space-y-1.5 scrollbar-thin scrollbar-thumb-white/10"
               >
                 {activeJob.logs.length === 0 ? (
-                  <div className="text-white/40 italic">Waiting for pipeline processes to initialize logs...</div>
+                  <div className="text-white/40 italic font-mono uppercase text-[10px]">[ WAITING FOR PIPELINE PROCESSES TO INITIALIZE LOGS... ]</div>
                 ) : (
                   activeJob.logs.map((logLine, index) => (
                     <div key={index} className="flex items-start space-x-2 leading-relaxed">
@@ -298,30 +298,30 @@ export default function AdminImportPage() {
 
           {/* Quick Metrics sidebar */}
           <div className="space-y-6">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md shadow-xl space-y-6">
-              <h3 className="text-lg font-bold font-display text-white flex items-center space-x-2">
-                <Activity className="w-5 h-5 text-purple-400" />
-                <span>Job Metrics</span>
+            <div className="rounded-none border border-white/10 bg-surface-dark p-6 shadow-xl space-y-6">
+              <h3 className="text-sm font-bold font-display uppercase tracking-wider text-white flex items-center space-x-2">
+                <Activity className="w-4 h-4 text-cyan-accent" />
+                <span>// JOB_METRICS</span>
               </h3>
               <div className="space-y-4">
-                <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex justify-between items-center">
+                <div className="bg-white/5 rounded-none p-4 border border-white/10 flex justify-between items-center">
                   <div className="flex items-center space-x-3">
-                    <Clock className="w-5 h-5 text-cyan-400" />
+                    <Clock className="w-4 h-4 text-cyan-accent" />
                     <div>
-                      <div className="text-xs text-text-muted-dark font-medium">Duration</div>
-                      <div className="text-sm font-bold text-white mt-0.5">
+                      <div className="text-[10px] font-mono uppercase text-text-muted-dark font-bold">Duration</div>
+                      <div className="text-xs font-bold font-mono text-white mt-0.5">
                         {formatDuration(activeJob.startTime, activeJob.endTime)}
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/5 rounded-xl p-4 border border-white/5 flex justify-between items-center">
+                <div className="bg-white/5 rounded-none p-4 border border-white/10 flex justify-between items-center">
                   <div className="flex items-center space-x-3">
-                    <Calendar className="w-5 h-5 text-yellow-400" />
+                    <Calendar className="w-4 h-4 text-yellow-accent" />
                     <div>
-                      <div className="text-xs text-text-muted-dark font-medium">Started At</div>
-                      <div className="text-sm font-bold text-white mt-0.5">
+                      <div className="text-[10px] font-mono uppercase text-text-muted-dark font-bold">Started At</div>
+                      <div className="text-xs font-bold font-mono text-white mt-0.5">
                         {new Date(activeJob.startTime).toLocaleTimeString()}
                       </div>
                     </div>
@@ -329,12 +329,12 @@ export default function AdminImportPage() {
                 </div>
 
                 {activeJob.errorMessage && (
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 space-y-1">
-                    <div className="text-xs text-red-400 font-bold flex items-center space-x-1.5">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
+                  <div className="bg-red-accent/5 border border-red-accent/20 rounded-none p-4 space-y-1">
+                    <div className="text-[10px] font-mono uppercase text-red-accent font-bold flex items-center space-x-1.5">
+                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>Pipeline Error</span>
                     </div>
-                    <p className="text-xs text-red-300 font-mono break-all">{activeJob.errorMessage}</p>
+                    <p className="text-xs text-red-accent/80 font-mono break-all">{activeJob.errorMessage}</p>
                   </div>
                 )}
               </div>
@@ -345,60 +345,60 @@ export default function AdminImportPage() {
 
       {/* Historical Logs List */}
       <div className="space-y-4">
-        <h3 className="text-xl font-bold font-display text-white flex items-center space-x-2">
-          <History className="w-5 h-5 text-primary-400" />
-          <span>Execution History</span>
+        <h3 className="text-lg font-bold font-display text-white flex items-center space-x-2">
+          <History className="w-4 h-4 text-cyan-accent" />
+          <span>// EXECUTION_HISTORY</span>
         </h3>
 
         {isHistoryLoading ? (
           <div className="flex justify-center p-12">
-            <Loader2 className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+            <Loader2 className="w-6 h-6 text-cyan-accent animate-spin" />
           </div>
         ) : !history || history.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center text-text-muted-dark backdrop-blur-md">
+          <div className="rounded-none border border-white/10 bg-surface-dark p-12 text-center text-text-muted-dark font-mono text-xs uppercase">
             No pipeline executions have been triggered yet.
           </div>
         ) : (
-          <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-md shadow-xl">
+          <div className="bg-surface-dark border border-white/10 rounded-none overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-white/10">
-                <thead className="bg-white/5">
+                <thead className="bg-white/5 font-mono text-xs uppercase">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted-dark uppercase tracking-wider">Job ID</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted-dark uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted-dark uppercase tracking-wider">Duration</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted-dark uppercase tracking-wider">Triggered By</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-text-muted-dark uppercase tracking-wider">Start Time</th>
+                    <th className="px-6 py-4 text-left text-text-muted-dark tracking-wider">Job ID</th>
+                    <th className="px-6 py-4 text-left text-text-muted-dark tracking-wider">Status</th>
+                    <th className="px-6 py-4 text-left text-text-muted-dark tracking-wider">Duration</th>
+                    <th className="px-6 py-4 text-left text-text-muted-dark tracking-wider">Triggered By</th>
+                    <th className="px-6 py-4 text-left text-text-muted-dark tracking-wider">Start Time</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10 bg-transparent font-medium">
+                <tbody className="divide-y divide-white/10 bg-transparent font-mono text-xs text-white/95">
                   {history.map((job) => (
                     <tr 
                       key={job.jobId} 
-                      className={`hover:bg-white/5 transition-colors cursor-pointer ${activeJobId === job.jobId ? 'bg-primary-500/10' : ''}`}
+                      className={`hover:bg-white/5 transition-colors cursor-pointer ${activeJobId === job.jobId ? 'bg-cyan-accent/5' : ''}`}
                       onClick={() => setActiveJobId(job.jobId)}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-mono truncate max-w-[180px]">
+                      <td className="px-6 py-4 whitespace-nowrap text-white truncate max-w-[180px]">
                         {job.jobId}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2.5 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full border ${
+                        <span className={`px-2 py-0.5 inline-flex text-[10px] leading-5 font-bold rounded-none border ${
                           job.status === 'SUCCESS'
-                            ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                            ? 'bg-cyan-accent/10 text-cyan-accent border-cyan-accent/20'
                             : job.status === 'FAILED'
-                            ? 'bg-red-500/10 text-red-400 border-red-500/20'
-                            : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                            ? 'bg-red-accent/10 text-red-accent border-red-accent/20'
+                            : 'bg-yellow-accent/10 text-yellow-400 border-yellow-400/20'
                         }`}>
                           {job.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-dark">
+                      <td className="px-6 py-4 whitespace-nowrap text-text-muted-dark">
                         {formatDuration(job.startTime, job.endTime)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-dark font-mono truncate max-w-[120px]">
+                      <td className="px-6 py-4 whitespace-nowrap text-text-muted-dark truncate max-w-[120px]">
                         {job.triggeredBy || 'SYSTEM'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-dark">
+                      <td className="px-6 py-4 whitespace-nowrap text-text-muted-dark">
                         {new Date(job.startTime).toLocaleString()}
                       </td>
                     </tr>
@@ -413,24 +413,24 @@ export default function AdminImportPage() {
       {/* Confirmation Modal */}
       {isConfirmOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 transition-all p-4">
-          <div className="bg-[#1a1a24] border border-white/10 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-6 transform scale-100 transition-all">
+          <div className="bg-surface-dark border border-white/10 rounded-none p-6 max-w-md w-full shadow-2xl space-y-6 transform scale-100 transition-all">
             <div className="flex items-start space-x-4">
-              <div className="bg-yellow-500/10 p-3 rounded-xl border border-yellow-500/20 shrink-0">
-                <AlertCircle className="w-6 h-6 text-yellow-500" />
+              <div className="bg-yellow-accent/5 p-3 rounded-none border border-yellow-accent/20 shrink-0">
+                <AlertCircle className="w-5 h-5 text-yellow-accent" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-bold font-display text-white">Run Ingestion Pipeline?</h3>
-                <p className="text-sm text-text-muted-dark leading-relaxed">
+                <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// RUN_INGESTION_PIPELINE</h3>
+                <p className="text-xs font-mono uppercase text-text-muted-dark leading-relaxed">
                   You are about to trigger the IMDB dataset import pipeline. This will:
                 </p>
-                <ul className="text-xs text-text-muted-dark list-disc list-inside space-y-1 pl-1">
+                <ul className="text-xs font-mono uppercase text-text-muted-dark list-disc list-inside space-y-1 pl-1">
                   <li>Wipe current staging tables.</li>
                   <li>Download 7 large compressed TSV datasets.</li>
                   <li>Perform parallel COPY ingestion.</li>
                   <li>Rebuild database indexes.</li>
                   <li>Perform an atomic rename database swap.</li>
                 </ul>
-                <p className="text-xs text-yellow-500 font-medium pt-1">
+                <p className="text-xs text-yellow-accent font-mono uppercase font-bold pt-1">
                   Are you absolutely sure you want to proceed?
                 </p>
               </div>
@@ -439,15 +439,15 @@ export default function AdminImportPage() {
             <div className="flex justify-end space-x-3 pt-2">
               <button
                 onClick={() => setIsConfirmOpen(false)}
-                className="px-4 py-2.5 rounded-xl border border-white/10 hover:bg-white/5 text-sm font-semibold text-white transition-colors cursor-pointer"
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono font-bold uppercase text-white transition-colors cursor-pointer rounded-none"
               >
-                Cancel
+                [ CANCEL ]
               </button>
               <button
                 onClick={handleConfirmRun}
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-sm font-semibold text-white transition-all transform hover:-translate-y-0.5 cursor-pointer"
+                className="px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-all cursor-pointer"
               >
-                Trigger Ingestion
+                [ TRIGGER INGESTION ]
               </button>
             </div>
           </div>

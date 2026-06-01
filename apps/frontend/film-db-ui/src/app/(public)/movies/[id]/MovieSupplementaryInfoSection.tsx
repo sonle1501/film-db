@@ -28,43 +28,43 @@ export function MovieSupplementaryInfoSection({ movieId }: { movieId: string }) 
   };
 
   return (
-    <section className="mt-8">
+    <section className="mt-8 font-mono text-xs">
       <button
         onClick={handleToggle}
-        className="w-full flex items-center justify-between p-4 bg-surface-dark/50 border border-white/5 rounded-xl hover:bg-surface-dark/70 transition-colors"
+        className="w-full flex items-center justify-between p-4 bg-black/20 border border-white/10 rounded-none hover:bg-white/5 transition-all cursor-pointer hover:border-cyan-accent/20"
       >
-        <span className="text-xl font-bold text-white flex items-center gap-2">
-          <Globe className="w-5 h-5 text-primary-500" />
-          Supplementary Info
+        <span className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-widest">
+          <Globe className="w-4 h-4 text-cyan-accent" />
+          // SUPPLEMENTARY_INFO
         </span>
         {loading ? (
-          <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+          <Loader2 className="w-4 h-4 text-cyan-accent animate-spin" />
         ) : isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-400" />
+          <ChevronUp className="w-4 h-4 text-cyan-accent" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-400" />
+          <ChevronDown className="w-4 h-4 text-cyan-accent" />
         )}
       </button>
 
       {isOpen && (
-        <div className="mt-4 p-6 bg-surface-dark/50 border border-white/5 rounded-2xl overflow-hidden">
-          {error && <p className="text-red-400">{error}</p>}
+        <div className="mt-4 p-6 bg-black/20 border border-white/10 rounded-none">
+          {error && <p className="text-red-accent">// SYSTEM_ERROR: {error}</p>}
           {!loading && !error && data?.localizedTitles && data.localizedTitles.length > 0 ? (
-            <div>
-              <h3 className="text-lg font-bold text-white mb-4">Localized Titles</h3>
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-white/5 pb-2">// LOCALIZED_TITLES</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {data.localizedTitles.map((titleInfo, index) => (
-                  <div key={index} className="flex flex-col">
-                    <span className="text-xs text-gray-500 uppercase tracking-wider mb-1">
+                  <div key={index} className="flex flex-col bg-black/30 p-3 border border-white/5">
+                    <span className="text-[10px] text-text-muted-dark uppercase tracking-wider mb-1">
                       {titleInfo.language} {titleInfo.region ? `(${titleInfo.region})` : ""}
                     </span>
-                    <span className="text-gray-200">{titleInfo.title}</span>
+                    <span className="text-gray-200 text-xs font-bold">{titleInfo.title}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : !loading && !error && data ? (
-            <p className="text-gray-400">No supplementary info available.</p>
+            <p className="text-text-muted-dark">// SYSTEM_LOG: NO SUPPLEMENTARY DETAILS RESOLVED</p>
           ) : null}
         </div>
       )}

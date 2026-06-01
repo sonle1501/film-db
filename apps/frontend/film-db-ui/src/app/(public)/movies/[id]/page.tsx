@@ -75,7 +75,7 @@ export default async function MovieDetailsPage({
             <div className="container mx-auto px-4 py-12 max-w-7xl">
               <div className="flex flex-col md:flex-row gap-8 items-end">
                 {/* Poster */}
-                <MovieContextMenuWrapper movieId={movie.movieId} className="hidden md:block w-64 h-96 rounded-xl overflow-hidden border-4 border-surface-dark shadow-2xl relative z-10 flex-shrink-0 bg-surface-dark cursor-context-menu">
+                <MovieContextMenuWrapper movieId={movie.movieId} className="hidden md:block w-64 h-96 rounded-none overflow-hidden border border-white/10 shadow-2xl relative z-10 flex-shrink-0 bg-black/40 cursor-context-menu">
                   <img 
                     src={posterUrl} 
                     alt={movie.primaryTitle} 
@@ -84,47 +84,47 @@ export default async function MovieDetailsPage({
                 </MovieContextMenuWrapper>
                 
                 {/* Details */}
-                <div className="flex-grow relative z-10">
-                  <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex-grow relative z-10 font-mono">
+                  <div className="flex flex-wrap gap-2.5 mb-4">
                     {movie.genres?.map(genre => (
-                      <span key={genre} className="px-3 py-1 bg-primary-600/20 text-primary-400 border border-primary-500/30 rounded-full text-xs font-medium">
+                      <span key={genre} className="px-2.5 py-0.5 bg-cyan-accent/10 text-cyan-accent border border-cyan-accent/25 rounded-none text-xs uppercase tracking-wider font-bold">
                         {genre}
                       </span>
                     ))}
                     {movie.isAdult && (
-                      <span className="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-xs font-medium">
-                        Adult 18+
+                      <span className="px-2.5 py-0.5 bg-red-accent/10 text-red-accent border border-red-accent/25 rounded-none text-xs uppercase tracking-wider font-bold">
+                        ADULT 18+
                       </span>
                     )}
                   </div>
                   
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-2">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-2 uppercase tracking-wide">
                     {movie.primaryTitle || 'Unknown Title'}
                   </h1>
                   
                   {movie.originalTitle && movie.originalTitle !== movie.primaryTitle && (
-                    <p className="text-xl text-gray-400 mb-6 font-display italic">
-                      {movie.originalTitle}
+                    <p className="text-lg text-text-muted-dark mb-6 font-display italic">
+                      // {movie.originalTitle}
                     </p>
                   )}
                   
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-300">
-                    <div className="flex items-center gap-2">
-                      <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                      <span className="font-bold text-white text-lg">
+                  <div className="flex flex-wrap items-center gap-6 text-xs text-gray-300 uppercase tracking-widest mt-4">
+                    <div className="flex items-center gap-2 border border-yellow-accent/20 bg-yellow-accent/5 px-2 py-1 text-yellow-accent">
+                      <Star className="w-3.5 h-3.5 fill-yellow-accent text-yellow-accent" />
+                      <span className="font-bold text-sm">
                         {movie.averageRating != null ? movie.averageRating.toFixed(1) : "N/A"}
                       </span>
-                      <span>
-                        ({movie.numVotes != null ? movie.numVotes.toLocaleString() : 0} votes)
+                      <span className="text-[10px] text-yellow-accent/70 font-mono">
+                        ({movie.numVotes != null ? movie.numVotes.toLocaleString() : 0} VOTES)
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-5 h-5 text-gray-400" />
-                      <span>{movie.startYear || "Unknown"}</span>
+                    <div className="flex items-center gap-2 border border-white/5 bg-black/40 px-2 py-1 text-text-muted-dark font-mono">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>{movie.startYear || "UNKNOWN"}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-5 h-5 text-gray-400" />
-                      <span>{movie.runtimeMinutes ? `${movie.runtimeMinutes} min` : "Unknown runtime"}</span>
+                    <div className="flex items-center gap-2 border border-white/5 bg-black/40 px-2 py-1 text-text-muted-dark font-mono">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{movie.runtimeMinutes ? `${movie.runtimeMinutes} MIN` : "UNKNOWN"}</span>
                     </div>
                   </div>
                 </div>
@@ -134,35 +134,35 @@ export default async function MovieDetailsPage({
         </div>
 
         {/* Content Section */}
-        <div className="container mx-auto px-4 py-12 max-w-7xl">
+        <div className="container mx-auto px-4 py-12 max-w-7xl font-mono text-xs">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-6">About</h2>
-                <p className="text-gray-300 leading-relaxed text-lg">
+              <section className="space-y-4">
+                <h2 className="text-xl font-bold text-white uppercase tracking-widest border-b border-white/10 pb-2">// ABOUT</h2>
+                <p className="text-gray-300 leading-relaxed text-sm font-sans italic">
                   No plot summary available for this title. 
                 </p>
               </section>
 
               {/* Cast & Crew from moviePersons */}
               {movie.persons && movie.persons.length > 0 && (
-                <section>
-                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                    <Users className="w-6 h-6 text-primary-500" />
-                    Cast & Crew
+                <section className="space-y-4">
+                  <h2 className="text-xl font-bold text-white uppercase tracking-widest border-b border-white/10 pb-2 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-cyan-accent" />
+                    // CAST_AND_CREW
                   </h2>
-                  <div className="bg-surface-dark/50 border border-white/5 rounded-2xl overflow-hidden">
+                  <div className="bg-black/20 border border-white/10 rounded-none overflow-hidden">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
                       {movie.persons.map((person, index) => (
-                        <Link href={`/people/${person.personId}`} key={`${person.personId}-${index}`} className="flex flex-col bg-surface-dark/50 p-4 rounded-xl hover:bg-surface-dark transition-colors group">
-                          <span className="text-white font-bold mb-1 group-hover:text-primary-400 transition-colors">
+                        <Link href={`/people/${person.personId}`} key={`${person.personId}-${index}`} className="flex flex-col bg-black/40 p-4 rounded-none border border-transparent hover:border-cyan-accent/20 hover:bg-white/5 transition-all group">
+                          <span className="text-white font-bold mb-1 group-hover:text-cyan-accent transition-colors font-mono uppercase tracking-wider text-xs">
                             {person.primaryName}
                           </span>
-                          <span className="text-xs text-gray-400 mb-2">
+                          <span className="text-[10px] text-text-muted-dark mb-2 font-mono uppercase">
                             {person.category} {person.job ? `(${person.job})` : ""}
                           </span>
                           {person.characters && person.characters !== "[]" && (
-                            <span className="text-sm text-primary-400">
+                            <span className="text-[11px] text-cyan-accent font-mono">
                               as {person.characters.replace(/[\[\]"]/g, '')}
                             </span>
                           )}
@@ -182,24 +182,24 @@ export default async function MovieDetailsPage({
             </div>
             
             <div className="space-y-8">
-              <div className="bg-surface-dark/80 border border-white/5 rounded-2xl p-6">
-                <h3 className="font-bold text-white mb-4">Movie Info</h3>
-                <dl className="space-y-4 text-sm">
+              <div className="bg-black/20 border border-white/10 rounded-none p-6 font-mono">
+                <h3 className="font-bold text-white mb-4 uppercase tracking-widest pb-2 border-b border-white/10">// METADATA_LOG</h3>
+                <dl className="space-y-4 text-xs">
                   <div className="flex justify-between border-b border-white/5 pb-4">
-                    <dt className="text-gray-400">ID</dt>
-                    <dd className="text-white font-mono">{movie.movieId}</dd>
+                    <dt className="text-text-muted-dark uppercase tracking-wider">ID</dt>
+                    <dd className="text-cyan-accent font-mono font-bold uppercase">{movie.movieId}</dd>
                   </div>
                   <div className="flex justify-between border-b border-white/5 pb-4">
-                    <dt className="text-gray-400">Release Year</dt>
-                    <dd className="text-white">{movie.startYear || "Unknown"}</dd>
+                    <dt className="text-text-muted-dark uppercase tracking-wider">Release Year</dt>
+                    <dd className="text-white font-bold">{movie.startYear || "Unknown"}</dd>
                   </div>
                   <div className="flex justify-between border-b border-white/5 pb-4">
-                    <dt className="text-gray-400">Runtime</dt>
-                    <dd className="text-white">{movie.runtimeMinutes ? `${movie.runtimeMinutes} minutes` : "Unknown"}</dd>
+                    <dt className="text-text-muted-dark uppercase tracking-wider">Runtime</dt>
+                    <dd className="text-white font-bold">{movie.runtimeMinutes ? `${movie.runtimeMinutes} minutes` : "Unknown"}</dd>
                   </div>
                   <div className="flex justify-between pb-2">
-                    <dt className="text-gray-400">Rating</dt>
-                    <dd className="text-white">{movie.averageRating != null ? `${movie.averageRating}/10` : "N/A"}</dd>
+                    <dt className="text-text-muted-dark uppercase tracking-wider">Rating</dt>
+                    <dd className="text-yellow-accent font-bold">{movie.averageRating != null ? `${movie.averageRating}/10` : "N/A"}</dd>
                   </div>
                 </dl>
               </div>

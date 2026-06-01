@@ -21,23 +21,23 @@ export default function DashboardLayout({
           <nav className="space-y-1">
             <Link 
               href="/profile" 
-              className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`block px-4 py-2.5 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
                 pathname === '/profile' 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-text-muted-dark hover:bg-white/5 hover:text-white'
+                  ? 'border-cyan-accent/20 bg-cyan-accent/5 text-cyan-accent font-bold shadow-[0_0_8px_rgba(85,234,212,0.05)]' 
+                  : 'border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white'
               }`}
             >
-              Profile
+              {pathname === '/profile' ? '> [ PROFILE_CARD ]' : '  [ PROFILE_CARD ]'}
             </Link>
             <Link 
               href="/lists" 
-              className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`block px-4 py-2.5 text-xs uppercase tracking-widest font-mono border transition-all duration-200 ${
                 pathname === '/lists' || pathname?.startsWith('/lists/')
-                  ? 'bg-white/10 text-white' 
-                  : 'text-text-muted-dark hover:bg-white/5 hover:text-white'
+                  ? 'border-cyan-accent/20 bg-cyan-accent/5 text-cyan-accent font-bold shadow-[0_0_8px_rgba(85,234,212,0.05)]' 
+                  : 'border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white'
               }`}
             >
-              My Lists
+              {pathname === '/lists' || pathname?.startsWith('/lists/') ? '> [ MY_WATCHLISTS ]' : '  [ MY_WATCHLISTS ]'}
             </Link>
           </nav>
         </aside>

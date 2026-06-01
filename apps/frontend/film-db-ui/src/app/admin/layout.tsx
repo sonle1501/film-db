@@ -30,25 +30,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen bg-surface-dark flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-surface-dark flex items-center justify-center font-mono text-xs text-cyan-accent">
+        <div className="flex items-center gap-2 uppercase tracking-widest">
+          <span>Initializing system security authentication...</span>
+          <span className="inline-block h-3.5 w-1.5 bg-cyan-accent cursor-blink"></span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-surface-dark text-white flex flex-col">
-      <nav className="border-b border-white/10 bg-elevated/50 backdrop-blur-md px-6 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold font-display text-primary-400">
-          <Link href="/admin">Admin Dashboard</Link>
+      <nav className="border-b border-white/10 bg-surface-dark px-6 py-4 flex justify-between items-center rounded-none shadow-md">
+        <h1 className="text-xl font-bold font-display text-cyan-accent uppercase tracking-widest">
+          <Link href="/admin">&gt; ADMIN_DASHBOARD</Link>
         </h1>
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-text-muted-dark">Welcome, {user?.username}</span>
+          <span className="text-xs font-mono font-bold uppercase text-text-muted-dark">Welcome, {user?.username}</span>
           <button 
             onClick={handleLogout}
-            className="text-sm text-red-400 hover:text-red-300 transition-colors"
+            className="text-xs font-mono font-bold uppercase text-red-accent hover:bg-red-accent/10 border border-red-accent/30 hover:border-red-accent px-3 py-1.5 rounded-none transition-all cursor-pointer"
           >
-            Logout
+            [ LOGOUT ]
           </button>
         </div>
       </nav>

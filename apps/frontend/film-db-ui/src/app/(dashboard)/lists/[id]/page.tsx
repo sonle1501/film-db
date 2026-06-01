@@ -73,30 +73,30 @@ export default function ListDetailsPage() {
 
   if (error) {
     return (
-      <div className="text-red-500 py-12 text-center bg-red-500/10 rounded-xl border border-red-500/20">
-        <p>Failed to load list details. Please ensure you are logged in and have access to this list.</p>
+      <div className="text-red-accent py-12 text-center bg-red-accent/10 border border-red-accent/20 rounded-none font-mono">
+        <p>SYSTEM_ERROR: FAILED_TO_LOAD_LIST_DETAILS. VERIFY AUTHORIZATION OR SESSION KEY.</p>
       </div>
     );
   }
 
   return (
-    <div className="text-white">
+    <div className="text-white font-mono">
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold mb-2">
-          {listDetails ? listDetails.nameList : 'List Details'}
+        <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest">
+          // LIST: {listDetails ? listDetails.nameList : 'DETAILS'}
         </h1>
         {listDetails && (
-          <div className="flex gap-4 text-sm text-text-muted-dark">
-            <span className="bg-surface-dark/50 px-2 py-1 rounded border border-white/10">{listDetails.listType}</span>
-            <span className="bg-surface-dark/50 px-2 py-1 rounded border border-white/10">{listDetails.isPublic ? 'Public' : 'Private'}</span>
-            <span className="bg-surface-dark/50 px-2 py-1 rounded border border-white/10">{listItems.length} items</span>
+          <div className="flex flex-wrap gap-3 text-xs text-text-muted-dark mt-4">
+            <span className="bg-black/40 px-2 py-0.5 border border-white/10 text-cyan-accent font-bold uppercase tracking-wider rounded-none">{listDetails.listType}</span>
+            <span className="bg-black/40 px-2 py-0.5 border border-white/10 text-cyan-accent font-bold uppercase tracking-wider rounded-none">{listDetails.isPublic ? 'Public' : 'Private'}</span>
+            <span className="bg-black/40 px-2 py-0.5 border border-white/10 text-yellow-accent font-bold uppercase tracking-wider rounded-none">{listItems.length} items</span>
           </div>
         )}
       </div>
 
       {listItems.length === 0 ? (
-        <div className="py-12 text-center text-text-muted-dark bg-surface-dark/30 rounded-xl border border-white/5 border-dashed">
-          <p className="text-lg">This list is empty.</p>
+        <div className="py-12 text-center text-text-muted-dark bg-surface-dark/30 border border-white/10 border-dashed rounded-none">
+          <p className="text-sm uppercase tracking-widest">// SYSTEM_LOG: THIS_LIST_IS_EMPTY</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
@@ -107,16 +107,16 @@ export default function ListDetailsPage() {
             return (
               <div key={item.movieId} className="flex flex-col gap-2">
                 <MovieCard movie={movie} />
-                <div className="bg-surface-dark/50 p-3 rounded-lg border border-white/5 text-sm mt-2 flex-grow flex flex-col group/item">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-medium text-primary-400 text-xs">{item.state.replace(/_/g, ' ')}</span>
+                <div className="bg-black/20 p-3 rounded-none border border-white/10 text-xs mt-2 flex-grow flex flex-col group/item">
+                  <div className="flex justify-between items-center mb-2 pb-1 border-b border-white/5">
+                    <span className="font-mono text-cyan-accent uppercase tracking-wider text-[10px]">{item.state.replace(/_/g, ' ')}</span>
                     <div className="flex gap-2 opacity-0 group-hover/item:opacity-100 transition-opacity">
                       <button 
                         onClick={() => setEditingItem(item)}
-                        className="text-gray-400 hover:text-white"
+                        className="text-gray-400 hover:text-white cursor-pointer"
                         title="Edit Item"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-3 h-3" />
                       </button>
                       <button 
                         onClick={() => {
@@ -124,15 +124,15 @@ export default function ListDetailsPage() {
                             deleteListItem({ listId: id, itemId: item.itemId });
                           }
                         }}
-                        className="text-gray-400 hover:text-red-400"
+                        className="text-gray-400 hover:text-red-accent cursor-pointer"
                         title="Delete Item"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
                   {item.notes && (
-                    <p className="text-text-muted-dark text-xs italic line-clamp-2" title={item.notes}>
+                    <p className="text-text-muted-dark text-[11px] italic line-clamp-3 leading-relaxed" title={item.notes}>
                       &quot;{item.notes}&quot;
                     </p>
                   )}

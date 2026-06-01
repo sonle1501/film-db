@@ -252,17 +252,17 @@ export default function MoviesPage() {
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header and Search */}
           <div className="flex flex-col gap-6 mb-12">
-            <h1 className="text-3xl font-bold text-white tracking-tight">Movies</h1>
+            <h1 className="text-3xl font-bold font-display uppercase tracking-widest text-white">// MOVIES</h1>
             
             <div className="flex flex-col md:flex-row gap-4 w-full">
               <div className="flex w-full md:w-auto relative z-10">
                 <select
                   value={searchType}
                   onChange={(e) => setSearchType(e.target.value as "id" | "name")}
-                  className="appearance-none bg-surface-dark/80 border border-white/10 text-white rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary-500 h-full"
+                  className="appearance-none bg-surface-dark/80 border border-white/10 text-white rounded-none font-mono text-xs px-4 py-3 pr-10 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 h-full"
                 >
-                  <option value="id">Search by ID</option>
-                  <option value="name">Search by Name</option>
+                  <option value="id">SEARCH BY ID</option>
+                  <option value="name">SEARCH BY NAME</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
                   <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -273,63 +273,63 @@ export default function MoviesPage() {
               
               <div className="relative flex-grow flex items-center">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-4 w-4 text-text-muted-dark" />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="block w-full pl-11 pr-24 py-3 border border-white/10 rounded-xl bg-surface-dark/50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                  placeholder={searchType === "id" ? "Enter movie ID (e.g. tt0111161)" : "Enter movie name..."}
+                  className="block w-full pl-11 pr-28 py-3 border border-white/10 rounded-none bg-surface-dark/50 text-white font-mono text-xs uppercase placeholder-gray-500 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
+                  placeholder={searchType === "id" ? "> ENTER ID (E.G. TT0111161)" : "> ENTER TITLE..."}
                 />
                 <button
                   onClick={handleSearch}
                   disabled={isLoading}
-                  className="absolute right-2 px-4 py-1.5 bg-primary-600 hover:bg-primary-500 disabled:bg-primary-600/50 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                  className="absolute right-2 px-4 py-1.5 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center gap-2 cursor-pointer"
                 >
-                  {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  Search
+                  {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  [ SEARCH ]
                 </button>
               </div>
               
               <button 
                 onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                className={`flex items-center justify-center gap-2 px-6 py-3 border border-white/10 rounded-xl text-white transition-colors whitespace-nowrap ${
+                className={`flex items-center justify-center gap-2 px-6 py-3 border transition-colors whitespace-nowrap text-xs font-mono font-bold uppercase rounded-none cursor-pointer ${
                   isFilterPanelOpen || isFiltered
-                    ? "bg-primary-600 hover:bg-primary-500 border-primary-500 text-white"
-                    : "bg-surface-dark/80 hover:bg-surface-dark"
+                    ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                    : "bg-surface-dark/80 border-white/10 text-white/70 hover:border-white/20 hover:text-white"
                 }`}
               >
-                <SlidersHorizontal className="h-5 w-5" />
-                <span>Filter</span>
+                <SlidersHorizontal className="h-4 w-4" />
+                <span>[ FILTER ]</span>
               </button>
             </div>
 
             {/* Filter Options Panel */}
             {isFilterPanelOpen && (
-              <div className="bg-surface-dark/95 border border-white/10 rounded-2xl p-6 flex flex-col gap-6 shadow-2xl backdrop-blur-md transition-all duration-300">
+              <div className="bg-surface-dark border border-white/10 rounded-none p-6 flex flex-col gap-6 shadow-2xl backdrop-blur-md transition-all duration-300">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                   {/* Start Year */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Start Year</label>
+                    <label className="text-xs font-mono uppercase text-text-muted-dark">Start Year</label>
                     <input
                       type="number"
                       min="1900"
                       max={new Date().getFullYear() + 1}
-                      placeholder="e.g. 2024"
+                      placeholder="E.G. 2024"
                       value={filterStartYear}
                       onChange={(e) => setFilterStartYear(e.target.value)}
-                      className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                      className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2.5 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                     />
                     <div className="relative">
                       <select
                         value={filterExactYear ? "exact" : "range"}
                         onChange={(e) => setFilterExactYear(e.target.value === "exact")}
-                        className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-xl px-3 py-2 pr-8 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-xs h-[36px]"
+                        className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-none px-3 py-2 pr-8 text-white font-mono text-xs uppercase focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all h-[36px]"
                       >
-                        <option value="range">From this year onwards</option>
-                        <option value="exact">Exactly in this year</option>
+                        <option value="range">FROM THIS YEAR ONWARDS</option>
+                        <option value="exact">EXACTLY IN THIS YEAR</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
                         <svg className="fill-current h-3.5 w-3.5 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -341,45 +341,45 @@ export default function MoviesPage() {
 
                   {/* Min Rating */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Min Rating (and up)</label>
+                    <label className="text-xs font-mono uppercase text-text-muted-dark">Min Rating (and up)</label>
                     <input
                       type="number"
                       min="0"
                       max="10"
                       step="0.1"
-                      placeholder="e.g. 8.0"
+                      placeholder="E.G. 8.0"
                       value={filterMinRating}
                       onChange={(e) => setFilterMinRating(e.target.value)}
-                      className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                      className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2.5 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                     />
                   </div>
 
                   {/* Min Votes */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Min Votes (and up)</label>
+                    <label className="text-xs font-mono uppercase text-text-muted-dark">Min Votes (and up)</label>
                     <input
                       type="number"
                       min="0"
-                      placeholder="e.g. 50000"
+                      placeholder="E.G. 50000"
                       value={filterMinVotes}
                       onChange={(e) => setFilterMinVotes(e.target.value)}
-                      className="bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm"
+                      className="bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2.5 text-white font-mono text-xs uppercase placeholder-gray-600 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
                     />
                   </div>
 
                   {/* Title Type */}
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-semibold text-gray-300">Type</label>
+                    <label className="text-xs font-mono uppercase text-text-muted-dark">Type</label>
                     <div className="relative">
                       <select
                         value={filterTitleType}
                         onChange={(e) => setFilterTitleType(e.target.value)}
-                        className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-xl px-4 py-3 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all text-sm h-[46px]"
+                        className="appearance-none w-full bg-surface-dark/50 border border-white/10 rounded-none px-4 py-2.5 pr-10 text-white font-mono text-xs uppercase focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all h-[40px]"
                       >
-                        <option value="">All Types</option>
-                        <option value="movie">Movie</option>
-                        <option value="tvSeries">TV Series</option>
-                        <option value="short">Short</option>
+                        <option value="">ALL TYPES</option>
+                        <option value="movie">MOVIE</option>
+                        <option value="tvSeries">TV SERIES</option>
+                        <option value="short">SHORT</option>
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
                         <svg className="fill-current h-4 w-4 opacity-70" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -393,18 +393,18 @@ export default function MoviesPage() {
                 <div className="flex justify-end gap-3 border-t border-white/5 pt-4">
                   <button
                     onClick={handleClearFilters}
-                    className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl text-sm font-semibold transition-colors"
+                    className="px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                   >
-                    Clear Filters
+                    [ CLEAR FILTERS ]
                   </button>
                   <button
                     onClick={() => {
                       setSortBy("");
                       fetchFilteredMovies(0, "");
                     }}
-                    className="px-5 py-2.5 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-sm font-semibold transition-colors"
+                    className="px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                   >
-                    Apply Filter
+                    [ APPLY FILTER ]
                   </button>
                 </div>
               </div>
@@ -412,33 +412,33 @@ export default function MoviesPage() {
 
             {/* Active Filter Tags */}
             {isFiltered && (
-              <div className="flex flex-wrap items-center gap-2 bg-primary-950/20 border border-primary-500/20 rounded-xl p-3.5">
-                <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider mr-1">Active filters:</span>
+              <div className="flex flex-wrap items-center gap-2 bg-cyan-accent/5 border border-cyan-accent/20 rounded-none p-3.5">
+                <span className="text-xs text-text-muted-dark font-mono uppercase tracking-wider mr-1">Active filters:</span>
                 {filterStartYear && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                    Year: {filterStartYear}{filterExactYear ? "" : "+"}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                    YEAR: {filterStartYear}{filterExactYear ? "" : "+"}
                   </span>
                 )}
                 {filterMinRating && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                    Rating: {filterMinRating}+
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                    RATING: {filterMinRating}+
                   </span>
                 )}
                 {filterMinVotes && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                    Votes: {parseInt(filterMinVotes).toLocaleString()}+
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                    VOTES: {parseInt(filterMinVotes).toLocaleString()}+
                   </span>
                 )}
                 {filterTitleType && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary-600/15 border border-primary-500/30 text-primary-400 text-xs font-semibold rounded-full">
-                    Type: {filterTitleType === "movie" ? "Movie" : filterTitleType === "tvSeries" ? "TV Series" : "Short"}
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                    TYPE: {filterTitleType === "movie" ? "MOVIE" : filterTitleType === "tvSeries" ? "TV SERIES" : "SHORT"}
                   </span>
                 )}
                 <button
                   onClick={handleClearFilters}
-                  className="text-xs text-red-400 hover:text-red-300 font-semibold underline underline-offset-2 ml-auto"
+                  className="text-xs text-red-accent hover:text-red-accent/80 font-mono uppercase font-bold ml-auto cursor-pointer"
                 >
-                  Clear all
+                  [ CLEAR ALL ]
                 </button>
               </div>
             )}
@@ -447,36 +447,36 @@ export default function MoviesPage() {
             <div className="flex flex-wrap gap-3">
               <button 
                 onClick={fetchPopularMovies}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                   activeFilter === 'trending' 
-                    ? 'bg-primary-600/20 text-primary-400 border border-primary-500/30 hover:bg-primary-600/30' 
-                    : 'bg-surface-dark/50 text-gray-300 border border-white/10 hover:bg-surface-dark'
+                    ? 'bg-cyan-accent/20 text-cyan-accent border-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]' 
+                    : 'bg-surface-dark/50 text-text-muted-dark border-white/10 hover:border-white/20 hover:text-white'
                 }`}
               >
-                <Flame className="h-4 w-4" />
-                Trending
+                <Flame className="h-3.5 w-3.5" />
+                [ TRENDING ]
               </button>
               <button 
                 onClick={fetchTopRatedMovies}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                   activeFilter === 'top250' 
-                    ? 'bg-primary-600/20 text-primary-400 border border-primary-500/30 hover:bg-primary-600/30' 
-                    : 'bg-surface-dark/50 text-gray-300 border border-white/10 hover:bg-surface-dark'
+                    ? 'bg-cyan-accent/20 text-cyan-accent border-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]' 
+                    : 'bg-surface-dark/50 text-text-muted-dark border-white/10 hover:border-white/20 hover:text-white'
                 }`}
               >
-                <Trophy className="h-4 w-4" />
-                Top 250
+                <Trophy className="h-3.5 w-3.5" />
+                [ TOP 250 ]
               </button>
               <button 
                 onClick={fetchTopRatedTvSeries}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                   activeFilter === 'toptv' 
-                    ? 'bg-primary-600/20 text-primary-400 border border-primary-500/30 hover:bg-primary-600/30' 
-                    : 'bg-surface-dark/50 text-gray-300 border border-white/10 hover:bg-surface-dark'
+                    ? 'bg-cyan-accent/20 text-cyan-accent border-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]' 
+                    : 'bg-surface-dark/50 text-text-muted-dark border-white/10 hover:border-white/20 hover:text-white'
                 }`}
               >
-                <Tv className="h-4 w-4" />
-                Top TV Series
+                <Tv className="h-3.5 w-3.5" />
+                [ TOP TV SERIES ]
               </button>
             </div>
           </div>
@@ -491,39 +491,39 @@ export default function MoviesPage() {
           {/* Grid */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-white">
+              <h2 className="text-xl font-bold font-display uppercase tracking-wider text-white">
                 {searchQuery.trim() ? "Search Results" : 
                  isFiltered ? "Filtered Movies" :
                  activeFilter === 'trending' ? "Trending Now" :
                  activeFilter === 'top250' ? "Top 250 Movies" :
                  activeFilter === 'toptv' ? "Top TV Series" : "Trending Now"}
               </h2>
-              <span className="text-sm text-gray-400">
+              <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
                 {isFiltered ? `Showing ${movies.length} of ${totalElements} results` : `Showing ${movies.length} results`}
               </span>
             </div>
 
             {/* Sorting Controls */}
             {isFiltered && (
-              <div className="flex flex-wrap items-center justify-between gap-4 bg-surface-dark/40 border border-white/5 rounded-xl p-4">
+              <div className="flex flex-wrap items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-none p-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-400">Sort by:</span>
+                  <span className="text-xs font-mono uppercase text-text-muted-dark">Sort by:</span>
                   <button
                     onClick={() => handleSort("averageRating")}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
+                    className={`px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                       sortBy === "averageRating"
-                        ? "bg-primary-600 border-primary-500 text-white"
-                        : "bg-surface-dark/50 border-white/10 hover:bg-white/5 text-gray-300"
+                        ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                        : "bg-surface-dark/50 border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
                     }`}
                   >
                     Average Rating
                   </button>
                   <button
                     onClick={() => handleSort("numVotes")}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
+                    className={`px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
                       sortBy === "numVotes"
-                        ? "bg-primary-600 border-primary-500 text-white"
-                        : "bg-surface-dark/50 border-white/10 hover:bg-white/5 text-gray-300"
+                        ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                        : "bg-surface-dark/50 border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
                     }`}
                   >
                     Number of Votes
@@ -533,10 +533,10 @@ export default function MoviesPage() {
                 {sortBy && (
                   <button
                     onClick={handleSortDirection}
-                    className="flex items-center gap-2 px-4 py-2 bg-surface-dark/50 border border-white/10 hover:bg-white/5 text-gray-300 rounded-xl text-sm font-semibold transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-surface-dark/50 border border-white/10 hover:border-white/20 text-white/70 hover:text-white rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
                   >
-                    <ArrowUpDown className="h-4 w-4" />
-                    <span>Order: {sortDirection === "desc" ? "Descending" : "Ascending"}</span>
+                    <ArrowUpDown className="h-3.5 w-3.5 text-cyan-accent" />
+                    <span>Order: {sortDirection === "desc" ? "[ DESC ]" : "[ ASC ]"}</span>
                   </button>
                 )}
               </div>
@@ -557,17 +557,17 @@ export default function MoviesPage() {
                 {/* Pagination Controls */}
                 {isFiltered && totalPages > 1 && (
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6 mt-8">
-                    <span className="text-sm text-gray-400">
+                    <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
                       Showing page {currentPage + 1} of {totalPages} ({totalElements} total results)
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => fetchFilteredMovies(currentPage - 1)}
                         disabled={currentPage === 0 || isLoading}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-sm font-semibold rounded-xl transition-all"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                       >
-                        <ChevronLeft className="h-4 w-4" />
-                        Previous
+                        <ChevronLeft className="h-3.5 w-3.5 text-cyan-accent" />
+                        PREVIOUS
                       </button>
 
                       <div className="flex items-center gap-1">
@@ -600,7 +600,7 @@ export default function MoviesPage() {
                           return uniquePages.map((pageVal, idx) => {
                             if (pageVal === "...") {
                               return (
-                                <span key={`ellipsis-${idx}`} className="px-2 py-2 text-gray-500 select-none text-sm font-semibold">
+                                <span key={`ellipsis-${idx}`} className="px-2 py-2 text-text-muted-dark select-none text-xs font-mono font-bold">
                                   ...
                                 </span>
                               );
@@ -611,10 +611,10 @@ export default function MoviesPage() {
                                 key={pageNum}
                                 onClick={() => fetchFilteredMovies(pageNum)}
                                 disabled={isLoading}
-                                className={`min-w-[36px] h-9 flex items-center justify-center text-sm font-semibold rounded-xl border transition-all ${
+                                className={`min-w-[36px] h-9 flex items-center justify-center text-xs font-mono font-bold rounded-none border transition-all cursor-pointer ${
                                   currentPage === pageNum
-                                    ? "bg-primary-600 border-primary-500 text-white"
-                                    : "bg-surface-dark border-white/10 hover:bg-white/5 text-gray-300"
+                                    ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                                    : "bg-surface-dark border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
                                 }`}
                               >
                                 {pageNum + 1}
@@ -627,10 +627,10 @@ export default function MoviesPage() {
                       <button
                         onClick={() => fetchFilteredMovies(currentPage + 1)}
                         disabled={currentPage >= totalPages - 1 || isLoading}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:bg-white/5 disabled:opacity-40 disabled:hover:bg-surface-dark text-white text-sm font-semibold rounded-xl transition-all"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                       >
-                        Next
-                        <ChevronRight className="h-4 w-4" />
+                        NEXT
+                        <ChevronRight className="h-3.5 w-3.5 text-cyan-accent" />
                       </button>
                     </div>
                   </div>
@@ -647,11 +647,11 @@ export default function MoviesPage() {
 
         {contextMenu && (
           <div
-            className="absolute z-50 bg-surface-dark border border-white/10 rounded-lg shadow-xl py-2 min-w-[160px]"
+            className="absolute z-50 bg-surface-elevated-dark border border-white/10 rounded-none shadow-2xl py-1.5 min-w-[160px]"
             style={{ top: contextMenu.y, left: contextMenu.x }}
           >
             <button
-              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="w-full text-left px-4 py-2 text-xs font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedMovieId(contextMenu.movieId);
