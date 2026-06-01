@@ -193,7 +193,7 @@ WHERE (:startYear IS NULL OR m.startYear >= :startYear)
   AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
   AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
   AND (:titleType IS NULL OR m.titleType = :titleType)
-  AND (:genre IS NULL OR array_contains(m.genres, :genre) = true)
+  AND (cast(:genre as string) IS NULL OR array_contains(m.genres, cast(:genre as string)) = true)
 """)
     Page<MovieRatingInfoDto> filterMovies(
         @Param("startYear") Integer startYear,
@@ -222,7 +222,7 @@ WHERE (:startYear IS NULL OR m.startYear >= :startYear)
       AND (:averageRating IS NULL OR r.averageRating >= :averageRating)
       AND (:numVotes IS NULL OR r.numVotes >= :numVotes)
       AND (:titleType IS NULL OR m.titleType = :titleType)
-      AND (:genre IS NULL OR array_contains(m.genres, :genre) = true)
+      AND (cast(:genre as string) IS NULL OR array_contains(m.genres, cast(:genre as string)) = true)
     """)
     Page<MovieRatingInfoDto> filterMoviesExactYear(
         @Param("startYear") Integer startYear,
