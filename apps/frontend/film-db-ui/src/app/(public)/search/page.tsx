@@ -133,6 +133,7 @@ function SearchPageContent() {
     rating: movie.averageRating || 0,
     genre: movie.genres && movie.genres.length > 0 ? movie.genres[0] : "Unknown",
     imageUrl: getMoviePosterUrl(movie.imageUrl),
+    votes: movie.numVotes,
   });
 
   return (
@@ -141,60 +142,72 @@ function SearchPageContent() {
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Search Header */}
-          <div className="flex flex-col gap-6 mb-10">
-            <h1 className="text-3xl font-bold font-display uppercase tracking-widest text-white">// SEARCH</h1>
-            
-              <div className="w-full">
-                <LiveSearchInput
-                  variant="search"
-                  initialValue={qParam}
-                  searchMode={searchMode}
-                  placeholder="Search for movies, TV series, actors..."
-                  onInputChange={(val) => setInputValue(val)}
-                  onSearchSubmit={(q) => {
-                    setCurrentPage(0);
-                    updateUrl(q, searchMode);
-                  }}
-                />
-              </div>
-              
-              {/* Search Mode Toggles */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleModeChange("smart")}
-                    className={`px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
-                      searchMode === "smart"
-                        ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
-                        : "bg-surface-dark/50 border-white/10 text-text-muted-dark hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    [ SMART SEARCH ]
-                  </button>
-                  <button
-                    onClick={() => handleModeChange("vn")}
-                    className={`px-4 py-2 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
-                      searchMode === "vn"
-                        ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
-                        : "bg-surface-dark/50 border-white/10 text-text-muted-dark hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    [ VIETNAMESE LOCALIZED ]
-                  </button>
-                </div>
-                
-                {searchMode === "vn" && (
-                  <div className="flex items-center gap-1.5 text-xs font-mono uppercase text-cyan-accent bg-cyan-accent/5 border border-cyan-accent/20 px-3 py-1.5 rounded-none">
-                    <Info className="h-3.5 w-3.5 text-cyan-accent" />
-                    <span>Vietnamese mode matches accents and tones accurately.</span>
-                  </div>
-                )}
+          <div className="flex flex-col gap-6 mb-12 p-6 md:p-8 bg-surface-elevated-dark/30 border border-white/10 relative">
+            {/* Cyberpunk corner decorations */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-accent"></div>
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-accent"></div>
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-accent"></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-accent"></div>
+
+            <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mt-2">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold font-display uppercase tracking-widest text-white flex items-center gap-1">
+                  // SEARCH
+                </h1>
               </div>
             </div>
 
+            <div className="w-full mt-4">
+              <LiveSearchInput
+                variant="search"
+                initialValue={qParam}
+                searchMode={searchMode}
+                placeholder="Search for movies, TV series, actors..."
+                onInputChange={(val) => setInputValue(val)}
+                onSearchSubmit={(q) => {
+                  setCurrentPage(0);
+                  updateUrl(q, searchMode);
+                }}
+              />
+            </div>
+            
+            {/* Search Mode Toggles */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleModeChange("smart")}
+                  className={`px-4 py-2 rounded-none text-sm font-mono font-bold uppercase border transition-all cursor-pointer ${
+                    searchMode === "smart"
+                      ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                      : "bg-surface-dark/50 border-white/10 text-text-muted-dark hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  [ SMART SEARCH ]
+                </button>
+                <button
+                  onClick={() => handleModeChange("vn")}
+                  className={`px-4 py-2 rounded-none text-sm font-mono font-bold uppercase border transition-all cursor-pointer ${
+                    searchMode === "vn"
+                      ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
+                      : "bg-surface-dark/50 border-white/10 text-text-muted-dark hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  [ VIETNAMESE LOCALIZED ]
+                </button>
+              </div>
+              
+              {searchMode === "vn" && (
+                <div className="flex items-center gap-1.5 text-sm font-mono uppercase text-cyan-accent bg-cyan-accent/5 border border-cyan-accent/20 px-3 py-1.5 rounded-none">
+                  <Info className="h-3.5 w-3.5 text-cyan-accent" />
+                  <span>Vietnamese mode matches accents and tones accurately.</span>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-accent/10 border border-red-accent/30 rounded-none text-red-accent text-xs font-mono uppercase">
+            <div className="mb-6 p-4 bg-red-accent/10 border border-red-accent/30 rounded-none text-red-accent text-sm font-mono uppercase">
               {error}
             </div>
           )}
@@ -206,7 +219,7 @@ function SearchPageContent() {
                 <h2 className="text-xl font-bold font-display uppercase tracking-wider text-white">
                   Results for <span className="text-cyan-accent">"{qParam}"</span>
                 </h2>
-                <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
+                <span className="text-sm font-mono uppercase text-text-muted-dark font-bold">
                   Found <span className="text-white font-bold">{totalElements}</span> results
                 </span>
               </div>
@@ -218,7 +231,7 @@ function SearchPageContent() {
               </div>
             ) : results.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 pt-4">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-4">
                   {results.map((movie) => (
                     <MovieCard
                       key={movie.movieId}
@@ -231,14 +244,14 @@ function SearchPageContent() {
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6 mt-8">
-                    <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
+                    <span className="text-sm font-mono uppercase text-text-muted-dark font-bold">
                       Showing page {currentPage + 1} of {totalPages} ({totalElements} total results)
                     </span>
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => setCurrentPage(currentPage - 1)}
                         disabled={currentPage === 0 || isLoading}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-sm font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                       >
                         <ChevronLeft className="h-3.5 w-3.5 text-cyan-accent" />
                         PREVIOUS
@@ -274,7 +287,7 @@ function SearchPageContent() {
                           return uniquePages.map((pageVal, idx) => {
                             if (pageVal === "...") {
                               return (
-                                <span key={`ellipsis-${idx}`} className="px-2 py-2 text-text-muted-dark select-none text-xs font-mono font-bold">
+                                <span key={`ellipsis-${idx}`} className="px-2 py-2 text-text-muted-dark select-none text-sm font-mono font-bold">
                                   ...
                                 </span>
                               );
@@ -285,7 +298,7 @@ function SearchPageContent() {
                                 key={pageNum}
                                 onClick={() => setCurrentPage(pageNum)}
                                 disabled={isLoading}
-                                className={`min-w-[36px] h-9 flex items-center justify-center text-xs font-mono font-bold rounded-none border transition-all cursor-pointer ${
+                                className={`min-w-[36px] h-9 flex items-center justify-center text-sm font-mono font-bold rounded-none border transition-all cursor-pointer ${
                                   currentPage === pageNum
                                     ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
                                     : "bg-surface-dark border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
@@ -301,7 +314,7 @@ function SearchPageContent() {
                       <button
                         onClick={() => setCurrentPage(currentPage + 1)}
                         disabled={currentPage >= totalPages - 1 || isLoading}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-4 py-2 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-sm font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                       >
                         NEXT
                         <ChevronRight className="h-3.5 w-3.5 text-cyan-accent" />
@@ -331,7 +344,7 @@ function SearchPageContent() {
             style={{ top: contextMenu.y, left: contextMenu.x }}
           >
             <button
-              className="w-full text-left px-4 py-2 text-xs font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
+              className="w-full text-left px-4 py-2 text-sm font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedMovieId(contextMenu.movieId);

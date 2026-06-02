@@ -28,12 +28,12 @@ export function MovieSupplementaryInfoSection({ movieId }: { movieId: string }) 
   };
 
   return (
-    <section className="mt-8 font-mono text-xs">
+    <section className="mt-8 font-mono text-sm">
       <button
         onClick={handleToggle}
         className="w-full flex items-center justify-between p-4 bg-black/20 border border-white/10 rounded-none hover:bg-white/5 transition-all cursor-pointer hover:border-cyan-accent/20"
       >
-        <span className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-widest">
+        <span className="text-base font-bold text-white flex items-center gap-2 uppercase tracking-widest">
           <Globe className="w-4 h-4 text-cyan-accent" />
           // SUPPLEMENTARY_INFO
         </span>
@@ -48,17 +48,17 @@ export function MovieSupplementaryInfoSection({ movieId }: { movieId: string }) 
 
       {isOpen && (
         <div className="mt-4 p-6 bg-black/20 border border-white/10 rounded-none">
-          {error && <p className="text-red-accent">// SYSTEM_ERROR: {error}</p>}
+          {error && <p className="text-red-accent text-sm">// SYSTEM_ERROR: {error}</p>}
           {!loading && !error && data?.localizedTitles && data.localizedTitles.length > 0 ? (
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-white uppercase tracking-widest border-b border-white/5 pb-2">// LOCALIZED_TITLES</h3>
+              <h3 className="text-sm font-bold text-white uppercase tracking-widest border-b border-white/5 pb-2">// LOCALIZED_TITLES</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {data.localizedTitles.map((titleInfo, index) => (
                   <div key={index} className="flex flex-col bg-black/30 p-3 border border-white/5">
-                    <span className="text-[10px] text-text-muted-dark uppercase tracking-wider mb-1">
+                    <span className="text-xs text-text-muted-dark uppercase tracking-wider mb-1">
                       {titleInfo.language} {titleInfo.region ? `(${titleInfo.region})` : ""}
                     </span>
-                    <span className="text-gray-200 text-xs font-bold">{titleInfo.title}</span>
+                    <span className="text-gray-200 text-sm font-bold">{titleInfo.title}</span>
                   </div>
                 ))}
               </div>

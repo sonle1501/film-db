@@ -33,15 +33,17 @@ export default function ListDetailsPage() {
       try {
         const moviePromises = listItems.map(async (item) => {
           try {
-            const data = await movieApi.getMovieById(item.movieId);
-            return {
+            const data = await movieApi.getMovieFullById(item.movieId);
+            const movieInfo: MovieProps = {
               id: data.movieId,
               title: data.primaryTitle || "Unknown Title",
               year: data.startYear || new Date().getFullYear(),
               rating: data.averageRating || 0,
               imageUrl: getMoviePosterUrl(data.imageUrl),
               genre: (data.genres && data.genres.length > 0) ? data.genres[0] : "Unknown",
+              votes: data.numVotes,
             };
+            return movieInfo;
           } catch {
             return null;
           }
@@ -99,7 +101,7 @@ export default function ListDetailsPage() {
           <p className="text-sm uppercase tracking-widest">// SYSTEM_LOG: THIS_LIST_IS_EMPTY</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {listItems.map((item) => {
             const movie = movies.find(m => m.id === item.movieId);
             if (!movie) return null;

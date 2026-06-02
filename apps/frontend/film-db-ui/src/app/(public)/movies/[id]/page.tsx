@@ -111,10 +111,10 @@ export default async function MovieDetailsPage({
                   <div className="flex flex-wrap items-center gap-6 text-xs text-gray-300 uppercase tracking-widest mt-4">
                     <div className="flex items-center gap-2 border border-yellow-accent/20 bg-yellow-accent/5 px-2 py-1 text-yellow-accent">
                       <Star className="w-3.5 h-3.5 fill-yellow-accent text-yellow-accent" />
-                      <span className="font-bold text-sm">
+                      <span className="font-bold text-base">
                         {movie.averageRating != null ? movie.averageRating.toFixed(1) : "N/A"}
                       </span>
-                      <span className="text-[10px] text-yellow-accent/70 font-mono">
+                      <span className="text-xs text-yellow-accent/70 font-mono">
                         ({movie.numVotes != null ? movie.numVotes.toLocaleString() : 0} VOTES)
                       </span>
                     </div>
@@ -134,7 +134,7 @@ export default async function MovieDetailsPage({
         </div>
 
         {/* Content Section */}
-        <div className="container mx-auto px-4 py-12 max-w-7xl font-mono text-xs">
+        <div className="container mx-auto px-4 py-12 max-w-7xl font-mono text-sm">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
               <section className="space-y-4">
@@ -155,14 +155,14 @@ export default async function MovieDetailsPage({
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
                       {movie.persons.map((person, index) => (
                         <Link href={`/people/${person.personId}`} key={`${person.personId}-${index}`} className="flex flex-col bg-black/40 p-4 rounded-none border border-transparent hover:border-cyan-accent/20 hover:bg-white/5 transition-all group">
-                          <span className="text-white font-bold mb-1 group-hover:text-cyan-accent transition-colors font-mono uppercase tracking-wider text-xs">
+                          <span className="text-white font-bold mb-1 group-hover:text-cyan-accent transition-colors font-mono uppercase tracking-wider text-sm">
                             {person.primaryName}
                           </span>
-                          <span className="text-[10px] text-text-muted-dark mb-2 font-mono uppercase">
+                          <span className="text-xs text-text-muted-dark mb-2 font-mono uppercase">
                             {person.category} {person.job ? `(${person.job})` : ""}
                           </span>
                           {person.characters && person.characters !== "[]" && (
-                            <span className="text-[11px] text-cyan-accent font-mono">
+                            <span className="text-xs text-cyan-accent font-mono">
                               as {person.characters.replace(/[\[\]"]/g, '')}
                             </span>
                           )}

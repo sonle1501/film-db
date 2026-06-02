@@ -102,6 +102,10 @@ export const movieApi = {
     const res = await apiClient.get(`/api/v1/imdb/film/${encodeURIComponent(id)}`);
     return res.data;
   },
+  getMovieFullById: async (id: string) => {
+    const res = await apiClient.get(`/api/v1/imdb/film/full/${encodeURIComponent(id)}`);
+    return res.data;
+  },
   getMoviesByName: async (name: string) => {
     const res = await apiClient.get('/api/v1/imdb/listfilm/by-name', {
       params: { name }

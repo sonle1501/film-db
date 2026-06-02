@@ -11,22 +11,11 @@ import { AddToListModal } from "@/components/features/movies/AddToListModal";
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 
-const mockMovies: MovieProps[] = [
-  { id: "1", title: "Dune: Part Two", year: 2024, rating: 8.8, imageUrl: "https://images.unsplash.com/photo-1534809027769-b00d750a6bac?auto=format&fit=crop&w=400&q=80", genre: "Sci-Fi" },
-  { id: "2", title: "Oppenheimer", year: 2023, rating: 8.6, imageUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=400&q=80", genre: "Biography" },
-  { id: "3", title: "Poor Things", year: 2023, rating: 8.4, imageUrl: "https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&w=400&q=80", genre: "Comedy" },
-  { id: "4", title: "Spider-Man: Across the Spider-Verse", year: 2023, rating: 8.7, imageUrl: "https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&w=400&q=80", genre: "Animation" },
-  { id: "5", title: "The Dark Knight", year: 2008, rating: 9.0, imageUrl: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&w=400&q=80", genre: "Action" },
-  { id: "6", title: "Interstellar", year: 2014, rating: 8.6, imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=400&q=80", genre: "Sci-Fi" },
-  { id: "7", title: "Parasite", year: 2019, rating: 8.5, imageUrl: "https://images.unsplash.com/photo-1455380579765-810023662ea2?auto=format&fit=crop&w=400&q=80", genre: "Thriller" },
-  { id: "8", title: "Everything Everywhere All at Once", year: 2022, rating: 8.0, imageUrl: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=400&q=80", genre: "Action" },
-];
-
 export default function MoviesPage() {
   const { user } = useAuthStore();
   const [searchType, setSearchType] = useState<"id" | "name">("id");
   const [searchQuery, setSearchQuery] = useState("");
-  const [movies, setMovies] = useState<MovieProps[]>(mockMovies);
+  const [movies, setMovies] = useState<MovieProps[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<"trending" | "top250" | "toptv" | null>(null);
@@ -64,6 +53,7 @@ export default function MoviesPage() {
   useEffect(() => {
     const handleClick = () => closeContextMenu();
     window.addEventListener("click", handleClick);
+    fetchPopularMovies();
     return () => window.removeEventListener("click", handleClick);
   }, []);
 
@@ -76,6 +66,7 @@ export default function MoviesPage() {
       rating: item.averageRating || 0,
       imageUrl: getMoviePosterUrl(item.imageUrl),
       genre: (item.genres && item.genres.length > 0) ? item.genres[0] : "Unknown",
+      votes: item.numVotes,
     }));
   };
 
@@ -132,10 +123,7 @@ export default function MoviesPage() {
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setMovies(mockMovies);
-      setError(null);
-      setActiveFilter(null);
-      setIsFiltered(false);
+      fetchPopularMovies();
       return;
     }
 
@@ -146,7 +134,7 @@ export default function MoviesPage() {
 
     try {
       if (searchType === "id") {
-        const data = await movieApi.getMovieById(searchQuery.trim());
+        const data = await movieApi.getMovieFullById(searchQuery.trim());
         const mappedMovie: MovieProps = {
           id: data.movieId, // Aligned with backend schema
           title: data.primaryTitle || "Unknown Title", 
@@ -155,6 +143,7 @@ export default function MoviesPage() {
           imageUrl: getMoviePosterUrl(data.imageUrl),
           // Safely extract the first genre from the array
           genre: (data.genres && data.genres.length > 0) ? data.genres[0] : "Unknown", 
+          votes: data.numVotes,
         };
         setMovies([mappedMovie]);
       } else {
@@ -221,10 +210,10 @@ export default function MoviesPage() {
     setSortBy("");
     setSortDirection("desc");
     setIsFiltered(false);
-    setMovies(mockMovies);
     setTotalPages(0);
     setTotalElements(0);
     setCurrentPage(0);
+    fetchPopularMovies();
   };
 
   const handleSort = (field: string) => {
@@ -251,54 +240,66 @@ export default function MoviesPage() {
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header and Search */}
-          <div className="flex flex-col gap-6 mb-12">
-            <h1 className="text-3xl font-bold font-display uppercase tracking-widest text-white">// MOVIES</h1>
-            
-            <div className="flex flex-col md:flex-row gap-4 w-full">
-              <div className="flex w-full md:w-auto relative z-10">
+          <div className="flex flex-col gap-6 mb-12 p-6 md:p-8 bg-surface-elevated-dark/30 border border-white/10 relative overflow-hidden">
+            {/* Cyberpunk corner decorations */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-accent"></div>
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-accent"></div>
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-accent"></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-accent"></div>
+
+            <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mt-2">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold font-display uppercase tracking-widest text-white flex items-center gap-1">
+                  // MOVIES
+                </h1>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 w-full mt-4">
+              <div className="flex w-full md:w-auto relative z-10 terminal-border">
                 <select
                   value={searchType}
                   onChange={(e) => setSearchType(e.target.value as "id" | "name")}
-                  className="appearance-none bg-surface-dark/80 border border-white/10 text-white rounded-none font-mono text-xs px-4 py-3 pr-10 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 h-full"
+                  className="appearance-none bg-surface-dark/90 text-white rounded-none font-mono text-sm px-5 py-4 pr-12 focus:outline-none w-full md:w-[220px] cursor-pointer border-none"
                 >
                   <option value="id">SEARCH BY ID</option>
                   <option value="name">SEARCH BY NAME</option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-cyan-accent">
                   <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                   </svg>
                 </div>
               </div>
-              
-              <div className="relative flex-grow flex items-center">
+
+              <div className="relative flex-grow flex items-center terminal-border">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-text-muted-dark" />
+                  <Search className="h-5 w-5 text-cyan-accent/80" />
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="block w-full pl-11 pr-28 py-3 border border-white/10 rounded-none bg-surface-dark/50 text-white font-mono text-xs uppercase placeholder-gray-500 focus:outline-none focus:border-cyan-accent focus:ring-1 focus:ring-cyan-accent/30 transition-all"
+                  className="block w-full pl-12 pr-32 py-4 bg-surface-dark/60 text-white font-mono text-sm uppercase placeholder-gray-600 focus:outline-none border-none"
                   placeholder={searchType === "id" ? "> ENTER ID (E.G. TT0111161)" : "> ENTER TITLE..."}
                 />
                 <button
                   onClick={handleSearch}
                   disabled={isLoading}
-                  className="absolute right-2 px-4 py-1.5 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center gap-2 cursor-pointer"
+                  className="absolute right-3 px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/40 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                   [ SEARCH ]
                 </button>
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                className={`flex items-center justify-center gap-2 px-6 py-3 border transition-colors whitespace-nowrap text-xs font-mono font-bold uppercase rounded-none cursor-pointer ${
+                className={`flex items-center justify-center gap-2 px-8 py-4 border transition-all whitespace-nowrap text-xs font-mono font-bold uppercase rounded-none cursor-pointer ${
                   isFilterPanelOpen || isFiltered
-                    ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
-                    : "bg-surface-dark/80 border-white/10 text-white/70 hover:border-white/20 hover:text-white"
+                    ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.4)]"
+                    : "bg-surface-dark/90 border-white/10 text-white/80 hover:border-cyan-accent/50 hover:text-cyan-accent hover:shadow-[0_0_8px_rgba(85,234,212,0.15)]"
                 }`}
               >
                 <SlidersHorizontal className="h-4 w-4" />
@@ -548,7 +549,7 @@ export default function MoviesPage() {
               </div>
             ) : movies.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {movies.map((movie) => (
                     <MovieCard key={movie.id} movie={movie} onContextMenu={handleContextMenu} />
                   ))}
