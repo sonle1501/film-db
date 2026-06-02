@@ -1,5 +1,6 @@
 plugins {
     id("filmdb.java-common")
+    id("filmdb.env-loader")
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.dependency.management)
 }
