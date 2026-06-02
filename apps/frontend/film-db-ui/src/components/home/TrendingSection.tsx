@@ -11,6 +11,7 @@ const MOCK_MOVIES: MovieProps[] = [
     rating: 8.8,
     genre: "Sci-Fi",
     imageUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop",
+    votes: 432500,
   },
   {
     id: "2",
@@ -19,6 +20,7 @@ const MOCK_MOVIES: MovieProps[] = [
     rating: 8.4,
     genre: "Biography",
     imageUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=600&auto=format&fit=crop",
+    votes: 752100,
   },
   {
     id: "3",
@@ -27,6 +29,7 @@ const MOCK_MOVIES: MovieProps[] = [
     rating: 8.6,
     genre: "Animation",
     imageUrl: "https://images.unsplash.com/photo-1608889175123-8ee362201f81?q=80&w=600&auto=format&fit=crop",
+    votes: 389400,
   },
   {
     id: "4",
@@ -35,6 +38,7 @@ const MOCK_MOVIES: MovieProps[] = [
     rating: 7.8,
     genre: "Action",
     imageUrl: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=600&auto=format&fit=crop",
+    votes: 894000,
   },
   {
     id: "5",
@@ -43,6 +47,7 @@ const MOCK_MOVIES: MovieProps[] = [
     rating: 8.0,
     genre: "Adventure",
     imageUrl: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=600&auto=format&fit=crop",
+    votes: 450300,
   },
 ];
 
@@ -64,7 +69,7 @@ export function TrendingSection() {
           </Link>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {MOCK_MOVIES.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}

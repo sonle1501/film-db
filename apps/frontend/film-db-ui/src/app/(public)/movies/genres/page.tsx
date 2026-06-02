@@ -64,6 +64,7 @@ export default function GenresPage() {
       rating: item.averageRating || item.rating || 0,
       imageUrl: getMoviePosterUrl(item.imageUrl),
       genre: (item.genres && item.genres.length > 0) ? item.genres[0] : "Unknown",
+      votes: item.numVotes,
     }));
   };
 
@@ -203,14 +204,24 @@ export default function GenresPage() {
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header */}
-          <div className="flex flex-col gap-2 mb-8">
-            <h1 className="text-3xl font-bold font-display uppercase tracking-widest text-white flex items-center gap-2.5">
-              <Tag className="h-5 w-5 text-cyan-accent" />
-              // EXPLORE_BY_GENRE
-            </h1>
-            <p className="text-text-muted-dark text-xs font-sans max-w-xl uppercase">
-              Browse and filter titles matching your preferred style, category, or vibe.
-            </p>
+          <div className="flex flex-col gap-6 mb-12 p-6 md:p-8 bg-surface-elevated-dark/30 border border-white/10 relative overflow-hidden">
+            {/* Cyberpunk corner decorations */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-accent"></div>
+            <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-accent"></div>
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-accent"></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-accent"></div>
+
+            <div className="flex flex-col lg:flex-row justify-between lg:items-end gap-6 mt-2">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold font-display uppercase tracking-widest text-white flex items-center gap-2.5">
+                  <Tag className="h-6 w-6 text-cyan-accent" />
+                  // EXPLORE_BY_GENRE
+                </h1>
+                <p className="text-text-muted-dark text-sm font-sans max-w-xl uppercase mt-2">
+                  Browse and filter titles matching your preferred style, category, or vibe.
+                </p>
+              </div>
+            </div>
           </div>
 
           {error && (
@@ -226,11 +237,23 @@ export default function GenresPage() {
           ) : (
             <div className="lg:grid lg:grid-cols-4 lg:gap-8 items-start">
               {/* Left Column: Genres selection */}
-              <div className="mb-8 lg:mb-0 bg-surface-dark border border-white/10 rounded-none p-4 sticky top-24 max-h-[calc(100vh-140px)] overflow-y-auto">
-                <h3 className="text-xs font-mono font-bold text-text-muted-dark uppercase tracking-wider mb-4 px-2">// GENRES_LIST</h3>
+              <div className="mb-8 lg:mb-0 bg-surface-dark border border-white/10 rounded-none p-5 lg:sticky lg:top-24 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto relative overflow-hidden">
+                {/* Cyberpunk corner decorations */}
+                <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-cyan-accent"></div>
+                <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-cyan-accent"></div>
+                <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-cyan-accent"></div>
+                <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-cyan-accent"></div>
+
+                <div className="flex items-center justify-between mb-5 border-b border-white/10 pb-3">
+                  <h3 className="text-base lg:text-lg font-mono font-bold text-cyan-accent uppercase tracking-widest flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-cyan-accent inline-block animate-pulse"></span>
+                    // GENRES_LIST
+                  </h3>
+                  <span className="text-[10px] font-mono text-text-muted-dark font-semibold">SEC_04</span>
+                </div>
                 
-                {/* Swipeable container on mobile, simple list on desktop */}
-                <div className="flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 scrollbar-none">
+                {/* Grid layout on mobile/tablet, vertical stack on desktop */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-col gap-2">
                   {genres.map((genre) => (
                     <button
                       key={genre}
@@ -239,13 +262,20 @@ export default function GenresPage() {
                         // Reset pagination states
                         setCurrentPage(0);
                       }}
-                      className={`px-4 py-2.5 rounded-none text-xs font-mono font-bold uppercase whitespace-nowrap text-left transition-all duration-150 cursor-pointer flex items-center justify-between border ${
+                      className={`px-3 py-2.5 rounded-none text-base lg:text-lg font-mono font-bold uppercase transition-all duration-150 cursor-pointer flex items-center justify-center lg:justify-start border ${
                         activeGenre === genre
-                          ? "bg-cyan-accent/5 border-cyan-accent/20 text-cyan-accent"
-                          : "bg-transparent border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white"
+                          ? "bg-cyan-accent/15 border-cyan-accent text-cyan-accent shadow-[0_0_10px_rgba(85,234,212,0.3)]"
+                          : "bg-surface-elevated-dark/20 border-white/10 text-text-dark/80 hover:border-cyan-accent/50 hover:bg-cyan-accent/5 hover:text-cyan-accent"
                       }`}
                     >
-                      <span>{activeGenre === genre ? `> [ ${genre} ]` : `  [ ${genre} ]`}</span>
+                      {activeGenre === genre ? (
+                        <span className="flex items-center gap-1.5">
+                          <span>&gt; {genre}</span>
+                          <span className="w-1.5 h-3.5 bg-cyan-accent inline-block cursor-blink"></span>
+                        </span>
+                      ) : (
+                        <span>{genre}</span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -263,7 +293,7 @@ export default function GenresPage() {
                             <Film className="h-4 w-4 text-cyan-accent" />
                             {activeGenre}
                           </h2>
-                          <p className="text-[10px] font-mono uppercase tracking-widest text-text-muted-dark mt-0.5">
+                          <p className="text-xs font-mono uppercase tracking-widest text-text-muted-dark mt-0.5">
                             {sortBy 
                               ? `Showing ${movies.length} of ${totalElements} sorted results` 
                               : isFiltered 
@@ -274,7 +304,7 @@ export default function GenresPage() {
 
                         <button 
                           onClick={() => setIsFilterPanelOpen(!isFilterPanelOpen)}
-                          className={`flex items-center justify-center gap-2 px-5 py-2.5 border transition-all whitespace-nowrap text-xs font-mono font-bold uppercase rounded-none cursor-pointer ${
+                          className={`flex items-center justify-center gap-2 px-5 py-2.5 border transition-all whitespace-nowrap text-sm font-mono font-bold uppercase rounded-none cursor-pointer ${
                             isFilterPanelOpen || isFiltered
                               ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
                               : "bg-surface-dark border-white/10 text-white/70 hover:border-white/20 hover:text-white"
@@ -291,7 +321,7 @@ export default function GenresPage() {
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                             {/* Start Year */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Start Year</label>
+                              <label className="text-xs font-mono uppercase text-text-muted-dark">Start Year</label>
                               <input
                                 type="number"
                                 min="1900"
@@ -320,7 +350,7 @@ export default function GenresPage() {
 
                             {/* Min Rating */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Min Rating (and up)</label>
+                              <label className="text-xs font-mono uppercase text-text-muted-dark">Min Rating (and up)</label>
                               <input
                                 type="number"
                                 min="0"
@@ -335,7 +365,7 @@ export default function GenresPage() {
 
                             {/* Min Votes */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Min Votes (and up)</label>
+                              <label className="text-xs font-mono uppercase text-text-muted-dark">Min Votes (and up)</label>
                               <input
                                 type="number"
                                 min="0"
@@ -348,7 +378,7 @@ export default function GenresPage() {
 
                             {/* Title Type */}
                             <div className="flex flex-col gap-2">
-                              <label className="text-[10px] font-mono uppercase text-text-muted-dark">Type</label>
+                              <label className="text-xs font-mono uppercase text-text-muted-dark">Type</label>
                               <div className="relative">
                                 <select
                                   value={filterTitleType}
@@ -372,15 +402,16 @@ export default function GenresPage() {
                           <div className="flex justify-end gap-3 border-t border-white/5 pt-4">
                             <button
                               onClick={handleClearFilters}
-                              className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
+                              className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 rounded-none text-sm font-mono font-bold uppercase transition-colors cursor-pointer"
                             >
                               [ CLEAR FILTERS ]
                             </button>
                             <button
                               onClick={() => {
-                                fetchMovies(0, sortBy, sortDirection);
+                                setSortBy("");
+                                fetchMovies(0, "");
                               }}
-                              className="px-4 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
+                              className="px-4 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-sm font-mono font-bold uppercase transition-colors cursor-pointer"
                             >
                               [ APPLY FILTER ]
                             </button>
@@ -391,30 +422,30 @@ export default function GenresPage() {
                       {/* Active Filter Tags */}
                       {isFiltered && hasActiveFilters && (
                         <div className="flex flex-wrap items-center gap-2 bg-cyan-accent/5 border border-cyan-accent/20 rounded-none p-3.5">
-                          <span className="text-xs text-text-muted-dark font-mono uppercase tracking-wider mr-1">Active filters:</span>
+                          <span className="text-sm text-text-muted-dark font-mono uppercase tracking-wider mr-1">Active filters:</span>
                           {filterStartYear && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-sm font-mono font-bold uppercase rounded-none">
                               YEAR: {filterStartYear}{filterExactYear ? "" : "+"}
                             </span>
                           )}
                           {filterMinRating && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-sm font-mono font-bold uppercase rounded-none">
                               RATING: {filterMinRating}+
                             </span>
                           )}
                           {filterMinVotes && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-sm font-mono font-bold uppercase rounded-none">
                               VOTES: {parseInt(filterMinVotes).toLocaleString()}+
                             </span>
                           )}
                           {filterTitleType && (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-xs font-mono font-bold uppercase rounded-none">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent text-sm font-mono font-bold uppercase rounded-none">
                               TYPE: {filterTitleType === "movie" ? "MOVIE" : filterTitleType === "tvSeries" ? "TV SERIES" : "SHORT"}
                             </span>
                           )}
                           <button
                             onClick={handleClearFilters}
-                            className="text-xs text-red-accent hover:text-red-accent/80 font-mono uppercase font-bold ml-auto cursor-pointer"
+                            className="text-sm text-red-accent hover:text-red-accent/80 font-mono uppercase font-bold ml-auto cursor-pointer"
                           >
                             [ CLEAR ALL ]
                           </button>
@@ -424,10 +455,10 @@ export default function GenresPage() {
                       {/* Sorting Controls */}
                       <div className="flex flex-wrap items-center justify-between gap-4 bg-surface-dark border border-white/10 rounded-none p-4">
                         <div className="flex items-center gap-3">
-                          <span className="text-xs font-mono uppercase text-text-muted-dark">Sort by:</span>
+                          <span className="text-sm font-mono uppercase text-text-muted-dark">Sort by:</span>
                           <button
                             onClick={() => handleSort("averageRating")}
-                            className={`px-3 py-1.5 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-none text-sm font-mono font-bold uppercase border transition-all cursor-pointer ${
                               sortBy === "averageRating"
                                 ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
                                 : "bg-surface-dark border-white/10 hover:bg-white/5 text-text-muted-dark hover:text-white"
@@ -437,7 +468,7 @@ export default function GenresPage() {
                           </button>
                           <button
                             onClick={() => handleSort("numVotes")}
-                            className={`px-3 py-1.5 rounded-none text-xs font-mono font-bold uppercase border transition-all cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-none text-sm font-mono font-bold uppercase border transition-all cursor-pointer ${
                               sortBy === "numVotes"
                                 ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
                                 : "bg-surface-dark border-white/10 hover:bg-white/5 text-text-muted-dark hover:text-white"
@@ -450,7 +481,7 @@ export default function GenresPage() {
                         {sortBy && (
                           <button
                             onClick={handleSortDirection}
-                            className="flex items-center gap-2 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 text-white/70 hover:text-white rounded-none text-xs font-mono font-bold uppercase transition-colors cursor-pointer"
+                            className="flex items-center gap-2 px-3 py-1.5 bg-surface-dark border border-white/10 hover:bg-white/5 text-white/70 hover:text-white rounded-none text-sm font-mono font-bold uppercase transition-colors cursor-pointer"
                           >
                             <ArrowUpDown className="h-3.5 w-3.5 text-cyan-accent" />
                             <span>Order: {sortDirection === "desc" ? "[ DESC ]" : "[ ASC ]"}</span>
@@ -475,14 +506,14 @@ export default function GenresPage() {
                         {/* Pagination Controls */}
                         {totalPages > 1 && (
                           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6 mt-8">
-                            <span className="text-xs font-mono uppercase text-text-muted-dark font-bold">
+                            <span className="text-sm font-mono uppercase text-text-muted-dark font-bold">
                               Showing page {currentPage + 1} of {totalPages} ({totalElements} total results)
                             </span>
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <button
                                 onClick={() => fetchMovies(currentPage - 1)}
                                 disabled={currentPage === 0 || isLoadingMovies}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
+                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-sm font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                               >
                                 <ChevronLeft className="h-3.5 w-3.5 text-cyan-accent" />
                                 PREVIOUS
@@ -518,7 +549,7 @@ export default function GenresPage() {
                                   return uniquePages.map((pageVal, idx) => {
                                     if (pageVal === "...") {
                                       return (
-                                        <span key={`ellipsis-${idx}`} className="px-2 py-1 text-text-muted-dark select-none text-xs font-mono font-bold">
+                                        <span key={`ellipsis-${idx}`} className="px-2 py-1 text-text-muted-dark select-none text-sm font-mono font-bold">
                                           ...
                                         </span>
                                       );
@@ -529,7 +560,7 @@ export default function GenresPage() {
                                         key={pageNum}
                                         onClick={() => fetchMovies(pageNum)}
                                         disabled={isLoadingMovies}
-                                        className={`min-w-[32px] h-8 flex items-center justify-center text-xs font-mono font-bold rounded-none border transition-all cursor-pointer ${
+                                        className={`min-w-[32px] h-8 flex items-center justify-center text-sm font-mono font-bold rounded-none border transition-all cursor-pointer ${
                                           currentPage === pageNum
                                             ? "bg-cyan-accent/20 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]"
                                             : "bg-surface-dark border-white/10 hover:border-white/20 text-text-muted-dark hover:text-white"
@@ -545,7 +576,7 @@ export default function GenresPage() {
                               <button
                                 onClick={() => fetchMovies(currentPage + 1)}
                                 disabled={currentPage >= totalPages - 1 || isLoadingMovies}
-                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-xs font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
+                                className="flex items-center gap-1 px-3 py-1.5 bg-surface-dark border border-white/10 hover:border-white/20 disabled:opacity-30 disabled:hover:bg-surface-dark text-white text-sm font-mono font-bold uppercase rounded-none transition-all cursor-pointer"
                               >
                                 NEXT
                                 <ChevronRight className="h-3.5 w-3.5 text-cyan-accent" />
@@ -582,7 +613,7 @@ export default function GenresPage() {
             style={{ top: contextMenu.y, left: contextMenu.x }}
           >
             <button
-              className="w-full text-left px-4 py-2 text-xs font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
+              className="w-full text-left px-4 py-2 text-sm font-mono uppercase text-text-muted-dark hover:bg-cyan-accent/10 hover:text-cyan-accent transition-colors cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedMovieId(contextMenu.movieId);

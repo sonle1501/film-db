@@ -51,7 +51,7 @@ export default async function PersonDetailsPage({
           
           <div className="flex flex-wrap gap-2 mb-6">
             {person.primaryProfession.map((profession, index) => (
-              <span key={index} className="px-3 py-1 bg-cyan-accent/5 text-cyan-accent border border-cyan-accent/20 rounded-none text-xs font-mono font-bold uppercase">
+              <span key={index} className="px-3 py-1 bg-cyan-accent/5 text-cyan-accent border border-cyan-accent/20 rounded-none text-sm font-mono font-bold uppercase">
                 {profession}
               </span>
             ))}
@@ -61,8 +61,8 @@ export default async function PersonDetailsPage({
             <h2 className="text-sm font-bold font-display uppercase tracking-wider mb-4 text-text-muted-dark">// PERSONAL_INFO</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-surface-dark/50 p-4 rounded-none border border-white/10">
-                <span className="block text-[10px] font-mono uppercase text-text-muted-dark mb-1">ID</span>
-                <span className="font-mono text-sm text-white font-bold">{person.personId}</span>
+                <span className="block text-xs font-mono uppercase text-text-muted-dark mb-1">ID</span>
+                <span className="font-mono text-base text-white font-bold">{person.personId}</span>
               </div>
             </div>
           </div>
@@ -86,25 +86,25 @@ export default async function PersonDetailsPage({
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-dark via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   
                   {movie.startYear && (
-                    <div className="absolute top-2 right-2 bg-yellow-accent/15 border border-yellow-accent/40 px-2 py-0.5 font-display text-[9px] font-bold text-yellow-accent uppercase tracking-widest rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)]">
+                    <div className="absolute top-2 right-2 bg-yellow-accent/15 border border-yellow-accent/40 px-2 py-0.5 font-display text-xs font-bold text-yellow-accent uppercase tracking-widest rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)]">
                       {movie.startYear}
                     </div>
                   )}
                 </div>
                 
                 <div className="flex flex-col mt-2 pt-1 border-t border-white/[0.03]">
-                  <h3 className="font-display text-xs font-bold tracking-widest text-white uppercase group-hover:text-cyan-accent transition-colors line-clamp-2" title={movie.primaryTitle}>
+                  <h3 className="font-display text-sm font-bold tracking-widest text-white uppercase group-hover:text-cyan-accent transition-colors line-clamp-2" title={movie.primaryTitle}>
                     {movie.primaryTitle}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[9px] font-display text-text-muted-dark uppercase truncate">{movie.genres?.join(", ")}</span>
+                    <span className="text-xs font-display text-text-muted-dark uppercase truncate">{movie.genres?.join(", ")}</span>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="font-mono text-xs text-text-muted-dark uppercase">[ NO KNOWN TITLES AVAILABLE ]</p>
+          <p className="font-mono text-sm text-text-muted-dark uppercase">[ NO KNOWN TITLES AVAILABLE ]</p>
         )}
       </div>
     </div>

@@ -4,6 +4,18 @@
   --font-sans: var(--font-sans), 'Inter', system-ui, sans-serif;
   --font-display: var(--font-display), monospace;
 
+  /* Redefined Font Sizes for Improved Legibility (Scaled up ~10-15%) */
+  --font-size-xs: 0.825rem;
+  --font-size-sm: 0.95rem;
+  --font-size-base: 1.1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.4rem;
+  --font-size-2xl: 1.675rem;
+  --font-size-3xl: 2.1rem;
+  --font-size-4xl: 2.6rem;
+  --font-size-5xl: 3.4rem;
+  --font-size-6xl: 4.5rem;
+
   /* Color System */
   --color-primary-50: #e6fdfa;
   --color-primary-100: #bbf7ed;

@@ -110,21 +110,25 @@ export default function ProfilePage() {
 
   return (
     <div className="text-white max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8 relative font-mono">
-      <div className="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-6 pb-6 border-b border-white/10">
-        <div>
-          <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest">// USER_PROFILE</h1>
-          <p className="text-xs text-text-muted-dark">// SESSION_IDENTITY: ACTIVE</p>
+      <div className="mb-10 flex flex-col gap-6 pb-6 border-b border-white/10 relative overflow-hidden">
+        {/* Cyberpunk corner decorations */}
+        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-accent"></div>
+        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-accent"></div>
+        
+        <div className="pt-2 px-1">
+          <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest text-white">// USER_PROFILE</h1>
+          <p className="text-xs text-text-muted-dark font-mono">// SESSION_IDENTITY: ACTIVE</p>
         </div>
-        <div className="flex flex-wrap gap-4 text-xs font-mono">
+        <div className="flex flex-wrap gap-3 text-xs font-mono px-1">
           <button 
             onClick={() => setIsProfileModalOpen(true)}
-            className="px-4 py-2 border border-white/10 text-white hover:bg-white/5 hover:border-white/20 transition-all rounded-none cursor-pointer uppercase tracking-widest font-bold"
+            className="px-4 py-2.5 border border-white/15 text-white hover:border-cyan-accent hover:bg-cyan-accent/5 transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold"
           >
             [ EDIT_PROFILE ]
           </button>
           <button 
             onClick={() => setIsUsernameModalOpen(true)}
-            className="px-4 py-2 bg-cyan-accent/5 text-cyan-accent border border-cyan-accent/20 hover:bg-cyan-accent/15 transition-all rounded-none cursor-pointer uppercase tracking-widest font-bold"
+            className="px-4 py-2.5 bg-cyan-accent/10 text-cyan-accent border border-cyan-accent/30 hover:bg-cyan-accent hover:text-black hover:border-cyan-accent transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold shadow-[0_0_8px_rgba(85,234,212,0.15)]"
           >
             [ CHANGE_USERNAME ]
           </button>
@@ -132,7 +136,7 @@ export default function ProfilePage() {
             profile.userState === 'ADMIN_PENDING' ? (
               <button 
                 disabled
-                className="px-4 py-2 bg-yellow-accent/10 text-yellow-accent border border-yellow-accent/20 rounded-none flex items-center gap-2 cursor-not-allowed opacity-80 uppercase tracking-widest font-bold"
+                className="px-4 py-2.5 bg-yellow-accent/15 text-yellow-accent border border-yellow-accent/30 rounded-none flex items-center gap-2 cursor-not-allowed opacity-85 uppercase tracking-wider font-bold"
               >
                 <span className="w-1.5 h-1.5 bg-yellow-accent animate-pulse shadow-[0_0_8px_rgba(243,230,0,0.6)]"></span>
                 [ PENDING_ADMIN_ACCESS ]
@@ -141,7 +145,7 @@ export default function ProfilePage() {
               <button 
                 onClick={handleRequestAdmin}
                 disabled={requestAdminMutation.isPending}
-                className="px-4 py-2 bg-yellow-accent/10 border border-yellow-accent/40 text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer uppercase tracking-widest font-bold"
+                className="px-4 py-2.5 bg-yellow-accent/15 border border-yellow-accent/40 text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer uppercase tracking-wider font-bold"
               >
                 {requestAdminMutation.isPending ? (
                   <>
