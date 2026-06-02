@@ -3,7 +3,7 @@ import { LiveSearchInput } from "@/components/ui/LiveSearchInput";
 
 export function HeroSection() {
   return (
-    <div className="relative w-full flex items-center justify-center pb-16 pt-16 border-b border-white/5">
+    <div className="relative z-30 w-full flex items-center justify-center pb-16 pt-16 border-b border-white/5">
       {/* HUD Corner Brackets */}
       <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-white/15 pointer-events-none"></div>
       <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-white/15 pointer-events-none"></div>

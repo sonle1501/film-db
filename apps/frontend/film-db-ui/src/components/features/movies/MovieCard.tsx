@@ -73,7 +73,7 @@ export function MovieCard({ movie, onContextMenu }: { movie: MovieProps; onConte
         <div className="flex justify-between items-center pt-2 border-t border-white/5">
           <div className="flex items-center gap-1 bg-yellow-accent/10 border border-yellow-accent/30 px-2 py-0.5 font-mono text-xs font-bold text-yellow-accent select-none">
             <Star className="h-3 w-3 fill-yellow-accent text-yellow-accent" />
-            <span>{movie.rating.toFixed(1)}</span>
+            <span>{(!movie.rating || movie.rating <= 0) ? "?" : movie.rating.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1 bg-[#ff6b6b]/10 border border-[#ff6b6b]/30 px-2 py-0.5 font-mono text-xs font-bold text-[#ff6b6b] select-none">
             <Users className="h-3 w-3 fill-[#ff6b6b] text-[#ff6b6b]" />
