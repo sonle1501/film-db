@@ -22,7 +22,7 @@ type UsernameFormData = {
 };
 
 export default function ProfilePage() {
-  const { user, setAuth, token } = useAuthStore();
+  const { user, setAuth, token, isInitializing } = useAuthStore();
   const { data: profile, isLoading: isProfileLoading, error: profileError } = useProfile(user?.username);
   const { data: lists, isLoading: isListsLoading, error: listsError } = useLists();
 
@@ -100,10 +100,26 @@ export default function ProfilePage() {
     }
   };
 
+  if (isInitializing) {
+    return (
+      <div className="min-h-screen bg-surface-dark flex items-center justify-center font-mono text-xs text-cyan-accent">
+        <div className="flex items-center gap-2 uppercase tracking-widest">
+          <span>Initializing system security authorization...</span>
+          <span className="inline-block h-3.5 w-1.5 bg-cyan-accent cursor-blink"></span>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
     return (
-      <div className="text-white p-8 text-center">
-        <p className="text-lg">Please log in to view your profile.</p>
+      <div className="text-white p-8 text-center font-mono">
+        <p className="text-lg text-red-accent">// ACCESS_DENIED: Please log in to view your profile.</p>
+        <div className="mt-4">
+          <Link href="/login" className="px-4 py-2.5 border border-cyan-accent text-cyan-accent hover:bg-cyan-accent/10 transition-all font-bold uppercase">
+            [ GO_TO_LOGIN ]
+          </Link>
+        </div>
       </div>
     );
   }

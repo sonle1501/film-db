@@ -31,7 +31,7 @@ public class ImdbImportService {
     private final ImporterProperties importerProperties;
     private static final int BATCH_SIZE = 100_000;
 
-    private void importData(String gzipFilePath, String sqlCopyCommand, PostgreArrayFormatter.ArrayFormatter formatter, String taskName, java.util.function.Consumer<Double> progressCallback){
+    private void importData(String gzipFilePath, String sqlCopyCommand, PostgreArrayFormatter.ArrayFormatter formatter, String taskName, Consumer<Double> progressCallback){
         log.info("Starting stream import for {} from: {}", taskName, gzipFilePath);
         try (Connection conn = dataSource.getConnection()) {
             BaseConnection pgConn = conn.unwrap(BaseConnection.class);
