@@ -1,168 +1,91 @@
-# 🎬 Film-DB: Software Requirements Specification (SRS)
+# 🎬 Film-DB: Requirements Specification
 
-A modern, high-performance web interface for exploring IMDB movie datasets, curating personal lists, and managing import operations.
-
----
-
-## 1. Introduction
-
-### 1.1 Purpose
-This document specifies the software requirements for the **Film-DB Frontend** application. It serves as the single source of truth for developers, designers, and testers to understand how the web interface interacts with the Film-DB modular monolith backend to deliver a seamless movie discovery and curation experience.
-
-### 1.2 Scope
-The Film-DB client is a responsive web application that provides:
-* **Public Discovery**: Rich filtering and searching of movies, TV shows, and crew members sourced from the IMDB dataset.
-* **Curation Engine**: Secure user authentication, profile customization, and custom list management (watchlist, favorites, custom-themed collections).
-* **Administrative Console**: Tools for administrators to oversee users, review administrative access requests, and trigger data ingestion pipelines.
+This document specifies the functional and non-functional requirements for the Film-DB client-server application, establishing a clear link between frontend capabilities and the Spring Boot modular monolith backend API endpoints.
 
 ---
 
-## 2. Overall Description
-
-### 2.1 System Architecture
-The application follows a client-server architecture. The frontend communicates with the Spring Boot backend via RESTful APIs, securing transactions using JWT access and refresh tokens.
-
-```mermaid
-graph TD
-    subgraph Frontend [Next.js Client App Router]
-        UI[Tailwind CSS Components]
-        Store[Zustand Client Store]
-        Query[TanStack React Query]
-    end
-
-    subgraph Backend [Spring Boot Modular Monolith]
-        Security[Security & JWT Filter - Shared]
-        subgraph Modules
-            AUTH[Users Module: Auth & Profile]
-            IMDB[IMDB Module: Movie/TV/Person Query]
-            SEARCH[Search Module: Search Engine]
-            IMPORTER[Importer Module: Gzip TSV Pipeline]
-            ADMIN[Admin Module: User & Task Mgmt]
-        end
-    end
-
-    subgraph Database [PostgreSQL Database]
-        Schema[(Tables & Indexes)]
-    end
-
-    UI <--> Store
-    UI <--> Query
-    Query <-->|HTTP REST / JWT| Security
-    Security <--> AUTH
-    Security <--> IMDB
-    Security <--> SEARCH
-    Security <--> IMPORTER
-    Security <--> ADMIN
-
-    AUTH <--> Schema
-    IMDB <--> Schema
-    SEARCH <--> Schema
-    IMPORTER <-->|JDBC COPY| Schema
-    IMPORTER <-->|Download| TSV[IMDB Gzip TSV Files]
-```
-
-### 2.2 Technology Stack
-* **Client Frontend**:
-  * **Framework**: Next.js 16.2.6 (App Router, React 19)
-  * **Styling**: Tailwind CSS (v4) for responsive utility-first layouts
-  * **State & Data Management**: Zustand 5 (Client State) & TanStack React Query 5 (Server State)
-  * **API Fetching**: Native fetch wrapper configured with base endpoints (`api-client.ts` and `api-server.ts`)
-* **Backend Monolith**:
-  * Spring Boot 3.5.13 (Java 21), Gradle (Kotlin DSL), PostgreSQL
-  * JWT Auth & Session Cookie Management
-
-### 2.3 Modular Structure
-The backend modular monolith structure maps to specific domains:
-* `admin`: Handles admin roles, user info/lists inspection, and approval logs.
-* `imdb`: Manages core movie, TV series, seasons, and actor/crew details.
-* `importer`: Triggers downloading and ingesting IMDB TSV files using PostgreSQL's high-speed JDBC `COPY`.
-* `search`: Standard query search index.
-* `shared`: Houses cross-cutting exceptions, utility schemas, and Spring Security filters.
-* `users`: Holds registration, profile customization, and custom list metadata/details.
-
----
-
-## 3. System Features & Functional Requirements
+## 1. Functional Requirements (FR)
 
 > [!NOTE]
-> All functional requirements utilize the prefix `FR-<domain>-<id>` for clean traceability. Every request matches real Spring Boot Controller mappings.
+> All functional requirements utilize the prefix `FR-<domain>-<id>` for clean traceability. Every request maps directly to a verified endpoint in the Spring Boot backend OpenAPI specification.
 
-### 3.1 Authentication & Profile (AUTH)
+### 1.1 Authentication & Profile (AUTH)
 
 #### `FR-AUTH-01: User Registration`
-* **Description**: Allows new visitors to create a standard user account.
-* **Input**: 
+* **Description**: Registers a new visitor as a standard user.
+* **Input**:
   * Path: `POST /api/auth/register`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "username": "jane_doe",
-      "password": "SuperSecurePassword123!"
+      "username": "string",
+      "password": "string"
     }
     ```
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiIsIn..."
+      "token": "string"
     }
     ```
-* **Note**: A companion HttpOnly cookie containing the refresh token is set by the backend.
+* **Note**: A secure `refresh_jwt` HttpOnly cookie is set by the backend containing the refresh token.
 
 #### `FR-AUTH-02: Admin Registration Request`
-* **Description**: Allows administrative users to request account creation. These accounts start in a pending state until approved.
+* **Description**: Allows administrative users to request account creation. These accounts start in a pending state until approved by an active administrator.
 * **Input**:
   * Path: `POST /api/auth/register/admin`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "username": "admin_bob",
-      "password": "AdminSecurePassword987!"
+      "username": "string",
+      "password": "string"
     }
     ```
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiIsIn..."
+      "token": "string"
     }
     ```
-* **Note**: The user will have role `ROLE_ADMIN` but user state `PENDING_APPROVAL`. They cannot access administrative endpoints until approved.
+* **Note**: Created users start with state `PENDING_APPROVAL` and role `ROLE_ADMIN` but cannot access administrative endpoints until approved.
 
 #### `FR-AUTH-03: User Login`
 * **Description**: Authenticates users using their username and password.
 * **Input**:
   * Path: `POST /api/auth/login`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "username": "jane_doe",
-      "password": "SuperSecurePassword123!"
+      "username": "string",
+      "password": "string"
     }
     ```
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiIsIn..."
+      "token": "string"
     }
     ```
+* **Note**: Sets a companion HttpOnly cookie containing the refresh token (`refresh_jwt`).
 
 #### `FR-AUTH-04: Token Refresh`
-* **Description**: Refreshes the short-lived access token using the HTTP-only refresh token cookie.
+* **Description**: Refreshes the short-lived access token using the HttpOnly refresh token cookie.
 * **Input**:
   * Path: `POST /api/auth/refresh`
-  * Cookie: `refresh_jwt=eyJhbGciOi...`
+  * Cookie: `refresh_jwt=string`
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "token": "eyJhbGciOiJIUzI1NiIsIn..."
+      "token": "string"
     }
     ```
 
 #### `FR-AUTH-05: User Logout`
-* **Description**: Invalidates the user session and clears the HttpOnly refresh token cookie.
+* **Description**: Invalidates the current user session and clears the HttpOnly refresh token cookie.
 * **Input**:
   * Path: `POST /api/auth/logout`
 * **Output**: `200 OK`
@@ -172,18 +95,18 @@ The backend modular monolith structure maps to specific domains:
 * **Description**: Retrieves public profile information for a specific username.
 * **Input**:
   * Path: `GET /api/v1/user/profile`
-  * Query Parameter: `username=jane_doe`
+  * Query Parameter: `username=string` (required)
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "userId": "d3b07384-d113-4ecb-a320-fd0e19488349",
-      "displayName": "Jane Doe",
-      "username": "jane_doe",
-      "dateCreated": "2026-05-23T14:23:00Z",
-      "bio": "Movie enthusiast & cataloger",
-      "role": "ROLE_USER",
-      "userState": "ACTIVE"
+      "userId": "uuid",
+      "displayName": "string",
+      "username": "string",
+      "dateCreated": "date-time",
+      "bio": "string",
+      "role": "string",
+      "userState": "string"
     }
     ```
 
@@ -192,31 +115,31 @@ The backend modular monolith structure maps to specific domains:
 * **Input**:
   * Path: `PATCH /api/v1/user/profile`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "displayName": "Jane D. Doe",
-      "bio": "Avid watcher. Rating everything."
+      "bio": "string",
+      "displayName": "string"
     }
     ```
-* **Output**: `200 OK` (String representation)
-  * Body: `"Update profile user profile success"`
+* **Output**: `200 OK`
+  * Body (`text/plain`): `"Update profile user profile success"`
 
 #### `FR-AUTH-08: Change Username`
 * **Description**: Allows a user to change their account username, requiring verification of credentials.
 * **Input**:
   * Path: `PUT /api/v1/user/profile/username`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "username": "jane_doe",
-      "password": "SuperSecurePassword123!",
-      "newUsername": "jane_doe_prime"
+      "username": "string",
+      "password": "string",
+      "newUsername": "string"
     }
     ```
 * **Output**: `200 OK`
-  * Body: `"Change username success!"`
+  * Body (`text/plain`): `"Change username success!"`
 
 #### `FR-AUTH-09: Request Admin Role`
 * **Description**: Allows an existing standard user to request promotion to the Admin role.
@@ -224,19 +147,19 @@ The backend modular monolith structure maps to specific domains:
   * Path: `POST /api/v1/user/profile/request-admin`
   * Headers: `Authorization: Bearer <token>`
 * **Output**: `200 OK`
-  * Body: `"Request admin role success"`
-* **Note**: Creates a pending request in the admin queue, to be approved by an existing admin.
+  * Body (`text/plain`): `"Request admin role success"`
+* **Note**: Creates a pending request task in the admin queue for approval.
 
 ---
 
-### 3.2 IMDB Search & Discovery (DISC)
+### 1.2 IMDB Search & Discovery (DISC)
 
 #### `FR-DISC-01: Advanced Movie Filtering`
-* **Description**: Retrieves a paginated list of movies based on genre, minimum rating, and minimum votes.
+* **Description**: Retrieves a paginated list of movies based on start year, minimum average rating, minimum votes, title type, and genre.
 * **Input**:
   * Path: `PATCH /api/v1/imdb/listfilm/filter`
-  * Query Parameters: `page=0`, `size=10` (optional)
-  * Body:
+  * Query Parameters: `page=0` (optional), `size=10` (optional)
+  * Body (`application/json`):
     ```json
     {
       "startYear": 2010,
@@ -247,11 +170,11 @@ The backend modular monolith structure maps to specific domains:
     }
     ```
 * **Output**: `200 OK`
-  * Body: Paginated payload (`PageMovieRatingInfoDto`)
+  * Body (`application/json`): Paginated payload (`PageMovieRatingInfoDto`)
     ```json
     {
-      "totalPages": 45,
       "totalElements": 448,
+      "totalPages": 45,
       "size": 10,
       "number": 0,
       "content": [
@@ -264,21 +187,23 @@ The backend modular monolith structure maps to specific domains:
           "runtimeMinutes": 148,
           "genres": ["Action", "Adventure", "Sci-Fi"],
           "averageRating": 8.8,
-          "numVotes": 2400000
+          "numVotes": 2400000,
+          "imageUrl": "string"
         }
       ],
       "first": true,
       "last": false,
+      "numberOfElements": 1,
       "empty": false
     }
     ```
 
 #### `FR-DISC-02: Movie Filtering and Sorting`
-* **Description**: Filters titles similar to `FR-DISC-01` but supports specific sorting dimensions (e.g. ratings, release year).
+* **Description**: Filters titles based on criteria and supports sorting by specific fields and directions.
 * **Input**:
   * Path: `PATCH /api/v1/imdb/listfilm/filter/sort`
-  * Query Parameters: `page=0`, `size=10`
-  * Body:
+  * Query Parameters: `page=0` (optional), `size=10` (optional)
+  * Body (`application/json`):
     ```json
     {
       "startYear": 1999,
@@ -290,32 +215,227 @@ The backend modular monolith structure maps to specific domains:
       "genre": "Drama"
     }
     ```
-* **Output**: `200 OK` (`PageMovieRatingInfoDto` content)
-
-#### `FR-DISC-03: Movie Detail Lookup`
-* **Description**: Returns all basic and metadata info for a specific film by its IMDB ID.
-* **Input**:
-  * Path: `GET /api/v1/imdb/film/{film-id}` (e.g. `/api/v1/imdb/film/tt1375666`)
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`): `PageMovieRatingInfoDto` (similar to `FR-DISC-01`).
+
+#### `FR-DISC-03: Filter Movies by Exact Year`
+* **Description**: Retrieves a paginated list of movies filtered by the exact release year.
+* **Input**:
+  * Path: `PATCH /api/v1/imdb/listfilm/filter-year`
+  * Query Parameters: `page=0` (optional), `size=10` (optional)
+  * Body (`application/json`): `MovieFilterRequestDto` (same as `FR-DISC-01`)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieRatingInfoDto`
+
+#### `FR-DISC-04: Filter and Sort Movies by Exact Year`
+* **Description**: Retrieves a paginated list of movies filtered by the exact release year and sorted by specific criteria.
+* **Input**:
+  * Path: `PATCH /api/v1/imdb/listfilm/filter-year/sort`
+  * Query Parameters: `page=0` (optional), `size=10` (optional)
+  * Body (`application/json`): `MovieFilterSortRequestDto` (same as `FR-DISC-02`)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieRatingInfoDto`
+
+#### `FR-DISC-05: Get Top Rated TV Series`
+* **Description**: Retrieves static top-rated TV Series listings.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/top-rated-tvseries`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieRatingInfoDto>`
+
+#### `FR-DISC-06: Get Top Rated Movies`
+* **Description**: Retrieves static top-rated movie listings.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/top-rated-movies`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieRatingInfoDto>`
+
+#### `FR-DISC-07: Get Recent Movies by Year`
+* **Description**: Retrieves a list of basic movie metadata released in a specific year.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/recent`
+  * Query Parameter: `year=integer` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+    ```json
+    [
+      {
+        "movieId": "tt1375666",
+        "primaryTitle": "Inception",
+        "originalTitle": "Inception",
+        "isAdult": false,
+        "startYear": 2010,
+        "runtimeMinutes": 148,
+        "genres": ["Action", "Adventure", "Sci-Fi"],
+        "imageUrl": "string"
+      }
+    ]
+    ```
+
+#### `FR-DISC-08: Filter Movies by Rating`
+* **Description**: Returns movies filtered by a specific average rating.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/rating/{rating}`
+  * Path Parameter: `rating=number` (double, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieRatingInfoDto>`
+
+#### `FR-DISC-09: Get Most Popular Movies`
+* **Description**: Retrieves currently popular movies.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/popular-movies`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieRatingInfoDto>`
+
+#### `FR-DISC-10: Get Movies by Localized Name`
+* **Description**: Searches movies using alternative or localized titles.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/localized`
+  * Query Parameter: `name=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieSupplementInfoDto>`
+    ```json
+    [
+      {
+        "movieId": "tt1375666",
+        "localizedTitles": [
+          {
+            "title": "Inception: El origen",
+            "region": "MX",
+            "language": "es"
+          }
+        ]
+      }
+    ]
+    ```
+
+#### `FR-DISC-11: Filter Movies by Name`
+* **Description**: Filters titles matching a raw text string.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/by-name`
+  * Query Parameter: `name=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+
+#### `FR-DISC-12: Filter Movies by Name with Limit/Paging`
+* **Description**: Filters titles matching a text query in a paginated format.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/by-name-limit`
+  * Query Parameters: `name=string` (required), `page=0` (optional), `size=10` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieBasicInfoDto`
+
+#### `FR-DISC-13: Filter Movies by Name and Type`
+* **Description**: Filters titles matching a name and a specific title type (e.g. short, tvSpecial).
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/by-name-and-type`
+  * Query Parameters: `name=string` (required), `type=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+
+#### `FR-DISC-14: Filter Movies by Name and Genre`
+* **Description**: Filters titles matching a name query and a specific genre.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/by-name-and-genre`
+  * Query Parameters: `name=string` (required), `genre=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+
+#### `FR-DISC-15: Filter Movies by Genre`
+* **Description**: Retrieves a paginated list of movies for a specific genre.
+* **Input**:
+  * Path: `GET /api/v1/imdb/listfilm/by-genre`
+  * Query Parameters: `genre=string` (required), `page=0` (optional), `size=10` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieBasicInfoDto`
+
+#### `FR-DISC-16: Get All Genres`
+* **Description**: Retrieves a list of all unique movie genres stored in the database.
+* **Input**:
+  * Path: `GET /api/v1/imdb/genres`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<string>` (e.g., `["Action", "Comedy", "Sci-Fi"]`)
+
+#### `FR-DISC-17: Movie Detail Lookup`
+* **Description**: Returns core metadata and basic parameters for a specific film.
+* **Input**:
+  * Path: `GET /api/v1/imdb/film/{film-id}`
+  * Path Parameter: `film-id=string` (IMDB ID, e.g. `tt1375666`)
+* **Output**: `200 OK`
+  * Body (`application/json`): `MovieBasicInfoDto`
+
+#### `FR-DISC-18: Get Movie People/Cast`
+* **Description**: Retrieves characters, roles, and cast details associated with a movie.
+* **Input**:
+  * Path: `GET /api/v1/imdb/film/{film-id}/people`
+  * Path Parameter: `film-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MoviePersonInfoDto>`
+    ```json
+    [
+      {
+        "personId": "nm0000138",
+        "primaryName": "Leonardo DiCaprio",
+        "birthYear": 1974,
+        "deathYear": null,
+        "category": "actor",
+        "job": "actor",
+        "characters": "Cobb"
+      }
+    ]
+    ```
+
+#### `FR-DISC-19: Get Movie Image`
+* **Description**: Returns or redirects to the cover image of a movie.
+* **Input**:
+  * Path: `GET /api/v1/imdb/film/{film-id}/image`
+  * Path Parameter: `film-id=string` (required)
+* **Output**: `200 OK` (binary image payload).
+
+#### `FR-DISC-20: Get Movie Crew`
+* **Description**: Retrieves directors and writers of a specific movie.
+* **Input**:
+  * Path: `GET /api/v1/imdb/film/{film-id}/crew`
+  * Path Parameter: `film-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `MovieCrewInfoDto`
     ```json
     {
       "movieId": "tt1375666",
-      "primaryTitle": "Inception",
-      "originalTitle": "Inception",
-      "isAdult": false,
-      "startYear": 2010,
-      "runtimeMinutes": 148,
-      "genres": ["Action", "Adventure", "Sci-Fi"]
+      "directors": [
+        {
+          "personId": "nm0000204",
+          "primaryName": "Christopher Nolan",
+          "birthYear": 1970,
+          "deathYear": null
+        }
+      ],
+      "writers": [
+        {
+          "personId": "nm0000204",
+          "primaryName": "Christopher Nolan",
+          "birthYear": 1970,
+          "deathYear": null
+        }
+      ]
     }
     ```
 
-#### `FR-DISC-04: Full Movie Rating & Metadata`
-* **Description**: Returns complete details including average rating and vote count.
+#### `FR-DISC-21: Get Movie Rating Info`
+* **Description**: Retrieves rating score and vote count metrics.
+* **Input**:
+  * Path: `GET /api/v1/imdb/film/rating/{film-id}`
+  * Path Parameter: `film-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `MovieRatingInfoDto`
+
+#### `FR-DISC-22: Full Movie Detail Lookup`
+* **Description**: Returns complete details including average rating, vote count, and cast list.
 * **Input**:
   * Path: `GET /api/v1/imdb/film/full/{film-id}`
+  * Path Parameter: `film-id=string` (required)
 * **Output**: `200 OK`
-  * Body:
+  * Body (`application/json`): `MovieFullInfoDto`
     ```json
     {
       "movieId": "tt1375666",
@@ -326,60 +446,43 @@ The backend modular monolith structure maps to specific domains:
       "runtimeMinutes": 148,
       "genres": ["Action", "Adventure", "Sci-Fi"],
       "averageRating": 8.8,
-      "numVotes": 2415000
+      "numVotes": 2400000,
+      "imageUrl": "string",
+      "persons": [
+        {
+          "personId": "nm0000138",
+          "primaryName": "Leonardo DiCaprio",
+          "category": "actor",
+          "characters": "Cobb"
+        }
+      ]
     }
     ```
 
-#### `FR-DISC-05: Alternative Regional Titles`
-* **Description**: Fetches alternate titles and translated names for international regions.
+#### `FR-DISC-23: Get Movie Supplement Info`
+* **Description**: Retrieves localized title listings for regional distributions.
 * **Input**:
   * Path: `GET /api/v1/imdb/film/alternative/{film-id}`
+  * Path Parameter: `film-id=string` (required)
 * **Output**: `200 OK`
-  * Body:
-    ```json
-    {
-      "movieId": "tt1375666",
-      "localizedTitles": [
-        {
-          "title": "Inception: El origen",
-          "region": "MX",
-          "language": "es"
-        }
-      ]
-    }
-    ```
+  * Body (`application/json`): `MovieSupplementInfoDto`
 
-#### `FR-DISC-06: Person Profile & Details`
-* **Description**: Returns the professional profile and the known titles for a director, writer, or actor.
+#### `FR-DISC-24: TV Series Seasons Count`
+* **Description**: Returns the total number of seasons for a given TV Series ID.
 * **Input**:
-  * Path: `GET /api/v1/imdb/person/{person-id}/details` (e.g. `/api/v1/imdb/person/nm0000204/details`)
+  * Path: `GET /api/v1/imdb/tvseries/{film-id}/seasons`
+  * Path Parameter: `film-id=string` (required)
 * **Output**: `200 OK`
-  * Body:
-    ```json
-    {
-      "personId": "nm0000204",
-      "primaryName": "Christopher Nolan",
-      "primaryProfession": ["director", "writer", "producer"],
-      "knownForTitles": [
-        {
-          "movieId": "tt1375666",
-          "primaryTitle": "Inception",
-          "originalTitle": "Inception",
-          "isAdult": false,
-          "startYear": 2010,
-          "runtimeMinutes": 148,
-          "genres": ["Action", "Sci-Fi"]
-        }
-      ]
-    }
-    ```
+  * Body (`application/json`): `integer`
 
-#### `FR-DISC-07: TV Series Seasons & Episodes`
-* **Description**: Lists all seasons and episodes for a TV Series.
+#### `FR-DISC-25: TV Series Episodes by Season`
+* **Description**: Retrieves all episodes belonging to a specific season of a TV Series.
 * **Input**:
   * Path: `GET /api/v1/imdb/tvseries/{film-id}/episodes`
+  * Path Parameter: `film-id=string` (required)
+  * Query Parameter: `season=integer` (required)
 * **Output**: `200 OK`
-  * Body: Array of `EpisodeInfoDto`
+  * Body (`application/json`): `Array<EpisodeInfoDto>`
     ```json
     [
       {
@@ -395,16 +498,148 @@ The backend modular monolith structure maps to specific domains:
     ]
     ```
 
+#### `FR-DISC-26: Get TV Series by Name`
+* **Description**: Returns television shows matching a name search.
+* **Input**:
+  * Path: `GET /api/v1/imdb/tvseries/{film-id}/by-name`
+  * Path Parameter: `film-id=string` (required)
+  * Query Parameter: `name=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+
+#### `FR-DISC-27: Get Episode Info`
+* **Description**: Retrieves details for an episode.
+* **Input**:
+  * Path: `GET /api/v1/imdb/tvseries/{episode-id}`
+  * Path Parameter: `episode-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `EpisodeInfoDto`
+
+#### `FR-DISC-28: Get Person Basic Info`
+* **Description**: Retrieves basic professional bio profile of a person.
+* **Input**:
+  * Path: `GET /api/v1/imdb/person/{person-id}`
+  * Path Parameter: `person-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PersonInfoDto`
+    ```json
+    {
+      "personId": "nm0000204",
+      "primaryName": "Christopher Nolan",
+      "birthYear": 1970,
+      "deathYear": null,
+      "primaryProfession": ["director", "writer", "producer"],
+      "knownForTitles": ["tt1375666", "tt0468569"]
+    }
+    ```
+
+#### `FR-DISC-29: Get Person Details`
+* **Description**: Retrieves professional profile and standard titles known for.
+* **Input**:
+  * Path: `GET /api/v1/imdb/person/{person-id}/details`
+  * Path Parameter: `person-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PersonDetailsDto`
+    ```json
+    {
+      "personId": "nm0000204",
+      "primaryName": "Christopher Nolan",
+      "primaryProfession": ["director", "writer", "producer"],
+      "knownForTitles": [
+        {
+          "movieId": "tt1375666",
+          "primaryTitle": "Inception",
+          "originalTitle": "Inception",
+          "isAdult": false,
+          "startYear": 2010,
+          "runtimeMinutes": 148,
+          "genres": ["Action", "Adventure", "Sci-Fi"],
+          "imageUrl": "string"
+        }
+      ]
+    }
+    ```
+
+#### `FR-DISC-30: Get Person Career Movies`
+* **Description**: Returns all movies a person participated in.
+* **Input**:
+  * Path: `GET /api/v1/imdb/person/{person-id}/career`
+  * Path Parameter: `person-id=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieBasicInfoDto>`
+
 ---
 
-### 3.3 User Lists & Curation (LIST)
+### 1.3 Smart Search Engine (SEARCH)
 
-#### `FR-LIST-01: Create Custom List`
-* **Description**: Users can create themed movie collections with metadata.
+#### `FR-SEARCH-01: Smart Search`
+* **Description**: Full-text smart search on movies and TV shows.
+* **Input**:
+  * Path: `GET /api/v1/search`
+  * Query Parameters: `query=string` (required), `page=0` (optional), `size=10` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieSearchResultDto`
+    ```json
+    {
+      "totalElements": 200,
+      "totalPages": 20,
+      "size": 10,
+      "number": 0,
+      "content": [
+        {
+          "movieId": "tt1375666",
+          "primaryTitle": "Inception",
+          "originalTitle": "Inception",
+          "titleType": "movie",
+          "startYear": 2010,
+          "genres": ["Action", "Sci-Fi"],
+          "averageRating": 8.8,
+          "numVotes": 2400000,
+          "relevanceScore": 1.25,
+          "imageUrl": "string"
+        }
+      ],
+      "first": true,
+      "last": false,
+      "numberOfElements": 1,
+      "empty": false
+    }
+    ```
+
+#### `FR-SEARCH-02: Vietnamese Search`
+* **Description**: Executes a search utilizing Vietnamese accent normalization.
+* **Input**:
+  * Path: `GET /api/v1/search/vn`
+  * Query Parameters: `query=string` (required), `page=0` (optional), `size=10` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `PageMovieSearchResultDto`
+
+#### `FR-SEARCH-03: Live Vietnamese Search (Suggestions)`
+* **Description**: Real-time autocomplete suggestions using Vietnamese accent normalization.
+* **Input**:
+  * Path: `GET /api/v1/search/vn/live`
+  * Query Parameters: `query=string` (required), `limit=5` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieSearchResultDto>`
+
+#### `FR-SEARCH-04: Live Smart Search (Suggestions)`
+* **Description**: Real-time autocomplete suggestions for smart queries.
+* **Input**:
+  * Path: `GET /api/v1/search/live`
+  * Query Parameters: `query=string` (required), `limit=5` (optional)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<MovieSearchResultDto>`
+
+---
+
+### 1.4 User Lists & Curation (LIST)
+
+#### `FR-LIST-01: Create Custom List with Metadata`
+* **Description**: Users can create custom movie collections with metadata.
 * **Input**:
   * Path: `POST /api/v1/users/lists`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
       "nameList": "My Sci-Fi Classics",
@@ -412,19 +647,27 @@ The backend modular monolith structure maps to specific domains:
       "isPublic": true
     }
     ```
-* **Output**: `200 OK` (returns the string confirmation or list UUID)
-  * Body: `"Create User list success!"`
+* **Output**: `200 OK`
+  * Body (`text/plain`): `"Create User list success!"`
 
-#### `FR-LIST-02: Update List Metadata`
-* **Description**: Updates list parameters including visibility, custom flag, or type.
+#### `FR-LIST-02: Get Lists by Name`
+* **Description**: Retrieves a list of user lists filtering by title query.
+* **Input**:
+  * Path: `GET /api/v1/users/lists`
+  * Query Parameter: `nameList=string` (required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<UserListDto>`
+
+#### `FR-LIST-03: Update List Metadata`
+* **Description**: Updates list properties including visibility, custom flag, or type.
 * **Input**:
   * Path: `PATCH /api/v1/users/lists`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Body (`application/json`):
     ```json
     {
-      "userId": "d3b07384-d113-4ecb-a320-fd0e19488349",
-      "listId": "ac820078-43d9-40fe-8f0a-1563f6ba012b",
+      "userId": "uuid",
+      "listId": "uuid",
       "nameList": "Must Watch Sci-Fi",
       "isPublic": false,
       "isCustom": true,
@@ -432,15 +675,78 @@ The backend modular monolith structure maps to specific domains:
     }
     ```
 * **Output**: `200 OK`
-  * Body: `"Update metadata user list success!"`
+  * Body (`text/plain`): `"Update metadata user list success!"`
 
-#### `FR-LIST-03: View All Personal Lists`
-* **Description**: Returns all watchlists, favorites, and custom lists owned by the user.
+#### `FR-LIST-04: Set List Public`
+* **Description**: Sets user list visibility to public.
+* **Input**:
+  * Path: `PUT /api/v1/users/lists/{list-id}/public`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-05: Set List Private`
+* **Description**: Restricts user list visibility to private.
+* **Input**:
+  * Path: `PUT /api/v1/users/lists/{list-id}/private`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-06: Toggle Custom List Status`
+* **Description**: Toggles list custom property flag.
+* **Input**:
+  * Path: `PUT /api/v1/users/lists/{list-id}/custom`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-07: Create System List`
+* **Description**: Initializes pre-seeded system default list types (e.g. watchlists, favorites).
+* **Input**:
+  * Path: `POST /api/v1/users/lists/system-list`
+  * Body (`application/json`):
+    ```json
+    {
+      "userId": "uuid",
+      "nameList": "string",
+      "type": "string"
+    }
+    ```
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-08: Create Simple List`
+* **Description**: Quickly registers a basic list.
+* **Input**:
+  * Path: `POST /api/v1/users/lists/simple-list`
+  * Query Parameter: `nameList=string` (required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-09: Get List by ID`
+* **Description**: Returns configuration summary parameters of a specific list by ID.
+* **Input**:
+  * Path: `GET /api/v1/users/lists/{list-id}`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `UserListDto`
+
+#### `FR-LIST-10: Delete List by ID`
+* **Description**: Deletes a user list.
+* **Input**:
+  * Path: `DELETE /api/v1/users/lists/{list-id}`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-LIST-11: View All Personal Lists`
+* **Description**: Returns all watchlists, favorites, and custom lists owned by the authenticated user.
 * **Input**:
   * Path: `GET /api/v1/users/lists/all`
   * Headers: `Authorization: Bearer <token>`
 * **Output**: `200 OK`
-  * Body: Array of `UserListDto`
+  * Body (`application/json`): `Array<UserListDto>`
     ```json
     [
       {
@@ -455,12 +761,13 @@ The backend modular monolith structure maps to specific domains:
     ]
     ```
 
-#### `FR-LIST-04: Add Item to List`
-* **Description**: Appends a movie or show to a user list with watch status and review notes.
+#### `FR-LIST-12: Add Item to List`
+* **Description**: Appends a movie or TV show to a user list with watch status and review notes.
 * **Input**:
   * Path: `POST /api/v1/users/lists/{list-id}/item`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Path Parameter: `list-id=string` (UUID, required)
+  * Body (`application/json`):
     ```json
     {
       "movieId": "tt1375666",
@@ -469,158 +776,241 @@ The backend modular monolith structure maps to specific domains:
     }
     ```
 * **Output**: `200 OK`
-  * Body: `"Add list item details success!"`
+  * Body (`text/plain`): `"Add list item details success!"`
 
-#### `FR-LIST-05: Update List Item Details`
-* **Description**: Updates the watch status or note for a movie already inside a list.
+#### `FR-LIST-13: Update List Item Details`
+* **Description**: Updates watch status or review notes on a specific item.
 * **Input**:
   * Path: `PATCH /api/v1/users/lists/{list-id}/item`
   * Headers: `Authorization: Bearer <token>`
-  * Body:
+  * Path Parameter: `list-id=string` (UUID, required)
+  * Body (`application/json`):
     ```json
     {
-      "itemId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "itemId": "uuid",
       "state": "WATCHED",
       "notes": "Loved the Hans Zimmer score!"
     }
     ```
 * **Output**: `200 OK`
-  * Body: `"Update details metadata list item details success!"`
+  * Body (`text/plain`): `"Update details metadata list item details success!"`
 
-#### `FR-LIST-06: Remove Item from List`
-* **Description**: Deletes a list item reference.
+#### `FR-LIST-14: Get All List Items`
+* **Description**: Retrieves all items stored within a list.
+* **Input**:
+  * Path: `GET /api/v1/users/lists/{list-id}/items`
+  * Path Parameter: `list-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<ListItemDto>`
+    ```json
+    [
+      {
+        "itemId": "uuid",
+        "listId": "uuid",
+        "movieId": "tt1375666",
+        "state": "PLAN_TO_WATCH",
+        "notes": "string"
+      }
+    ]
+    ```
+
+#### `FR-LIST-15: Get Single List Item Details`
+* **Description**: Fetches info for a specific list item inside a list.
+* **Input**:
+  * Path: `GET /api/v1/users/lists/{list-id}/item/{item-id}`
+  * Path Parameters: `list-id=string` (UUID, required), `item-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `ListItemDto`
+
+#### `FR-LIST-16: Remove Item from List`
+* **Description**: Removes an item reference from a user list.
 * **Input**:
   * Path: `DELETE /api/v1/users/lists/{list-id}/item/{item-id}`
   * Headers: `Authorization: Bearer <token>`
+  * Path Parameters: `list-id=string` (UUID, required), `item-id=string` (UUID, required)
 * **Output**: `200 OK`
-  * Body: `"Delete list item details success"`
+  * Body (`text/plain`): `"Delete list item details success"`
 
 ---
 
-### 3.4 Administrative Console (ADM)
+### 1.5 Administrative Console (ADM)
 
 #### `FR-ADM-01: View Pending Admin Requests`
-* **Description**: Lists users who have requested admin roles or signed up through `/api/auth/register/admin`.
+* **Description**: Lists pending approval tasks for admin promotions.
 * **Input**:
   * Path: `GET /api/admin/job/pending-tasks`
   * Headers: `Authorization: Bearer <admin_token>`
 * **Output**: `200 OK`
-  * Body: Array of `PendingRequestDto`
+  * Body (`application/json`): `Array<PendingRequestDto>`
     ```json
     [
       {
-        "userId": "e67503fc-4623-45f8-b3d9-d04b9015c719",
-        "username": "admin_bob",
-        "dateCreated": "2026-05-23T21:10:00Z"
+        "taskId": "uuid",
+        "initiator": "uuid",
+        "targetEntityId": "string",
+        "actionType": "ADMIN_APPROVAL",
+        "state": "PENDING",
+        "description": "string",
+        "priority": 1,
+        "createdAt": "date-time"
       }
     ]
     ```
 
 #### `FR-ADM-02: Approve Admin Request`
-* **Description**: Promotes a user to administrative state.
+* **Description**: Promotes a pending user to administrative state.
 * **Input**:
   * Path: `POST /api/admin/job/approve-admin`
-  * Query Parameter: `userId=e67503fc-4623-45f8-b3d9-d04b9015c719`
   * Headers: `Authorization: Bearer <admin_token>`
+  * Query Parameter: `userId=string` (UUID, required)
 * **Output**: `200 OK`
-  * Body: `"Approve admin for user success"`
+  * Body (`text/plain`): `"Approve admin for user success"`
 
-#### `FR-ADM-03: Ban User`
-* **Description**: Deactivates a user's account, preventing login and token refreshes.
+#### `FR-ADM-03: Reject Admin Request`
+* **Description**: Rejects a pending admin request.
+* **Input**:
+  * Path: `POST /api/admin/job/reject-admin`
+  * Headers: `Authorization: Bearer <admin_token>`
+  * Query Parameter: `userId=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-ADM-04: Ban User`
+* **Description**: Bans a user account, preventing login and token refreshes.
 * **Input**:
   * Path: `PUT /api/admin/users/{user-id}/state/ban`
   * Headers: `Authorization: Bearer <admin_token>`
+  * Path Parameter: `user-id=string` (UUID, required)
 * **Output**: `200 OK`
-  * Body: `"Ban user success!"`
+  * Body (`text/plain`): `"Ban user success!"`
 
-#### `FR-ADM-04: Trigger Data Import Pipeline`
-* **Description**: Initiates backend workers to download, extract, and bulk-load IMDB TSV files into PostgreSQL database.
+#### `FR-ADM-05: Activate User`
+* **Description**: Re-enables a banned user account.
 * **Input**:
-  * Path: `GET /api/admin/import-pipeline`
+  * Path: `PUT /api/admin/users/{user-id}/state/active`
+  * Headers: `Authorization: Bearer <admin_token>`
+  * Path Parameter: `user-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`text/plain`): String confirmation message.
+
+#### `FR-ADM-06: Get User Info Details`
+* **Description**: Retrieves details for a specific user ID.
+* **Input**:
+  * Path: `GET /api/admin/users/{user-id}/user-info`
+  * Headers: `Authorization: Bearer <admin_token>`
+  * Path Parameter: `user-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `UserInfoProjection`
+    ```json
+    {
+      "userId": "uuid",
+      "displayName": "string",
+      "username": "string",
+      "dateCreated": "date-time",
+      "bio": "string",
+      "role": "string",
+      "userState": "string"
+    }
+    ```
+
+#### `FR-ADM-07: Get All User Infos`
+* **Description**: Retrieves information for all users.
+* **Input**:
+  * Path: `GET /api/admin/users/user-infos`
   * Headers: `Authorization: Bearer <admin_token>`
 * **Output**: `200 OK`
-  * Body: `"Triggered pipeline job successfully"`
-* **Note**: Importer clears existing tables, streams dataset files, and executes high-speed PostgreSQL `COPY` queries.
+  * Body (`application/json`): `Array<UserInfoProjection>`
+
+#### `FR-ADM-08: Get User Lists by User ID`
+* **Description**: Returns all watchlists and custom lists owned by a user.
+* **Input**:
+  * Path: `GET /api/admin/userlist/{user-id}/lists`
+  * Headers: `Authorization: Bearer <admin_token>`
+  * Path Parameter: `user-id=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<UserListProjection>`
+    ```json
+    [
+      {
+        "listId": "uuid",
+        "userId": "uuid",
+        "nameList": "string",
+        "listType": "string",
+        "isPublic": true,
+        "isCustom": true,
+        "dateCreated": "date-time"
+      }
+    ]
+    ```
+
+#### `FR-ADM-09: Get All User Lists`
+* **Description**: Retrieves all lists in the system.
+* **Input**:
+  * Path: `GET /api/admin/userlist/all-lists`
+  * Headers: `Authorization: Bearer <admin_token>`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<UserListProjection>`
+
+#### `FR-ADM-10: Trigger Data Import Pipeline`
+* **Description**: Initiates backend workers to download, extract, and bulk-load IMDB TSV files into PostgreSQL.
+* **Input**:
+  * Path: `POST /api/admin/import-pipeline/run`
+  * Headers: `Authorization: Bearer <admin_token>`
+* **Output**: `200 OK`
+  * Body (`application/json`): `ImportJobHistory`
+    ```json
+    {
+      "jobId": "uuid",
+      "jobType": "FULL_WIPE_AND_LOAD",
+      "targetDataset": "string",
+      "status": "PENDING",
+      "rowsProcessed": 0,
+      "startTime": "date-time",
+      "endTime": null,
+      "errorMessage": null,
+      "triggeredBy": "uuid",
+      "progress": 0.0,
+      "currentStage": "string",
+      "logs": []
+    }
+    ```
+* **Note**: Clears existing tables, streams dataset files, and executes high-speed PostgreSQL `COPY` queries.
+
+#### `FR-ADM-11: Get Import Job Status`
+* **Description**: Retrieves progress and details for a triggered dataset import job.
+* **Input**:
+  * Path: `GET /api/admin/import-pipeline/status`
+  * Headers: `Authorization: Bearer <admin_token>`
+  * Query Parameter: `jobId=string` (UUID, required)
+* **Output**: `200 OK`
+  * Body (`application/json`): `ImportJobHistory`
+
+#### `FR-ADM-12: Get Import Job History`
+* **Description**: Returns status logs of all previous import jobs.
+* **Input**:
+  * Path: `GET /api/admin/import-pipeline/history`
+  * Headers: `Authorization: Bearer <admin_token>`
+* **Output**: `200 OK`
+  * Body (`application/json`): `Array<ImportJobHistory>`
 
 ---
 
-## 4. User & Use Cases
+## 2. Non-functional Requirements (NFR)
 
-### 4.1 User Personas
-* **Guest (Anonymous)**: Browses public search listings, filters by year, looks up director detail sheets. No login required.
-* **Member (Authenticated)**: Can search and curate custom movie watchlists, rate entries, and customize profile display tags.
-* **Pending Admin**: A user requesting admin clearance. Restricted from executing admin control logs until approved.
-* **Administrator**: Full privileges to approve other admins, ban malicious users, audit database logs, and trigger high-resource data ingestion pipelines.
-
-### 4.2 Use Case Diagram
-
-```mermaid
-graph LR
-    subgraph Col1 [1. Actors & Roles]
-        Guest[Guest / Anonymous]
-        User[User / Member]
-        PAdmin[Pending Admin]
-        Admin[Administrator]
-    end
-
-    subgraph Col2 [2. Public & Ingress Features]
-        Browse(IMDB Features: Browse, Filter, Search)
-        RegUser(Register User Account)
-        RegAdmin(Register Admin Account)
-    end
-
-    subgraph Col3 [3. Authenticated & Admin Features]
-        CRUD_List(User Features: CRUD Lists & curation)
-        Profile(Update Profile Metadata)
-        ApproveAdmin(Approve Pending Admins)
-        UserMgmt(Ban / Activate Users)
-        Import(Trigger IMDB Data Import)
-    end
-
-    %% Anyone (including Guest, User, Pending Admin, Admin) accesses IMDB features
-    Guest --> Browse
-    User --> Browse
-    PAdmin --> Browse
-    Admin --> Browse
-
-    %% Guest Registration Flows
-    Guest --> RegUser
-    Guest -->|Pending Approval| RegAdmin
-
-    %% User's Features (accessible by User, Pending Admin, and Admin)
-    User --> CRUD_List
-    User --> Profile
-
-    PAdmin --> CRUD_List
-    PAdmin --> Profile
-
-    Admin --> CRUD_List
-    Admin --> Profile
-
-    %% Administrative Features
-    Admin --> ApproveAdmin
-    Admin --> UserMgmt
-    Admin --> Import
-```
-
----
-
-## 5. Non-functional Requirements (NFR)
-
-### 5.1 Performance & Latency
+### 2.1 Performance & Latency
 * **NFR-PERF-01**: IMDB movie list filtering must return sub-second response times (less than **500ms** latency under 100 concurrent requests). This is supported by composite PostgreSQL indexing on `averageRating`, `startYear`, and `genres`.
 * **NFR-PERF-02**: Long scrollable pages (like lists of all movies or admin audit users lists) must implement virtual scrolling or infinite pagination to minimize DOM node overhead in the client browser.
 
-### 5.2 Security & Data Privacy
+### 2.2 Security & Data Privacy
 * **NFR-SEC-01**: User access tokens (JWT) must have a lifespan of **15 minutes**. Refresh tokens are stored inside secure `HttpOnly`, `SameSite=Strict` cookies to mitigate Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF) vectors.
 * **NFR-SEC-02**: All communication between client and monolith must traverse encrypted transport layers (TLS 1.3).
 * **NFR-SEC-03**: All administrative routes (`/api/admin/**`) are strictly guarded behind role authorization checks on the Spring Boot monolith filter chain.
 
-### 5.3 UX, Styling, and Accessibility
+### 2.3 UX, Styling, and Accessibility
 * **NFR-UX-01**: The client interface must utilize Tailwind CSS (v4) with a modern visual design, showcasing smooth transitions, glassmorphism accents, hover states, and clear loading indicators.
 * **NFR-UX-02**: The interface must comply with WCAG AA accessibility standards, assuring a contrast ratio of at least 4.5:1 for body copy and complete keyboard navigation support.
 * **NFR-UX-03**: Responsive layout support is mandatory, optimizing components across mobile, tablet, and widescreen desktop displays.
 
-### 5.4 Operational & Scaling
+### 2.4 Operational & Scaling
 * **NFR-OPS-01**: Database bulk loading during TSV imports should operate asynchronously without blocking standard user query search traffic.
 * **NFR-OPS-02**: The importer must handle large datasets efficiently using streaming IO and PostgreSQL JDBC `COPY` queries to avoid loading entire TSV contents into JVM memory.
