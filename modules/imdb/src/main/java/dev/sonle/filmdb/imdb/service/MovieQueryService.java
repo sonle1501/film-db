@@ -5,8 +5,7 @@ import dev.sonle.filmdb.imdb.model.Movie;
 import dev.sonle.filmdb.imdb.model.MovieAlternative;
 import dev.sonle.filmdb.imdb.model.MovieCrew;
 import dev.sonle.filmdb.imdb.model.MovieRating;
-import dev.sonle.filmdb.imdb.repository.MovieAlternativeRepository;
-import dev.sonle.filmdb.imdb.repository.MovieRepository;
+import dev.sonle.filmdb.imdb.repository.*;
 import dev.sonle.filmdb.shared.exception.AppException;
 import dev.sonle.filmdb.shared.exception.AppExceptionCode;
 import dev.sonle.filmdb.shared.exception.BusinessException;
@@ -24,10 +23,10 @@ import java.util.List;
 public class MovieQueryService {
     private final MovieRepository movieRepository;
     private final MovieAlternativeRepository movieAlternativeRepository;
-    private final dev.sonle.filmdb.imdb.repository.MoviePrincipalRepository moviePrincipalRepository;
-    private final dev.sonle.filmdb.imdb.repository.MovieCrewRepository movieCrewRepository;
-    private final dev.sonle.filmdb.imdb.repository.PersonRepository personRepository;
-    private final dev.sonle.filmdb.imdb.repository.MovieRatingRepository movieRatingRepository;
+    private final MoviePrincipalRepository moviePrincipalRepository;
+    private final MovieCrewRepository movieCrewRepository;
+    private final PersonRepository personRepository;
+    private final MovieRatingRepository movieRatingRepository;
 
     public MovieBasicInfoDto getMovieBasicInfo(String movieId){
         return movieRepository.findById(movieId)
