@@ -7,13 +7,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, token } = useAuthStore();
+  const { user, token, isInitializing } = useAuthStore();
   const { logout } = useAuth();
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    console.log(user);
+    if (isInitializing) return;
+
     if (!token || !user) {
       router.push('/login');
     } else if (user.role !== 'ADMIN') {
@@ -21,14 +22,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     } else {
       setIsAuthorized(true);
     }
-  }, [user, token, router]);
+  }, [user, token, router, isInitializing]);
 
   const handleLogout = async () => {
     await logout();
     router.push('/login');
   };
 
-  if (!isAuthorized) {
+  if (isInitializing || !isAuthorized) {
     return (
       <div className="min-h-screen bg-surface-dark flex items-center justify-center font-mono text-xs text-cyan-accent">
         <div className="flex items-center gap-2 uppercase tracking-widest">

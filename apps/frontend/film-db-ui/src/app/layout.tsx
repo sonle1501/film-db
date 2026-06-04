@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Share_Tech_Mono } from "next/font/google";
 import QueryProvider from '@/providers/query-provider';
+import AuthProvider from '@/providers/auth-provider';
 import { Toaster } from 'react-hot-toast';
 
 import "./globals.css";
@@ -33,8 +34,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-surface-dark text-text-dark">
         <QueryProvider>
-        {children}
-        <Toaster position="bottom-right" />
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+          <Toaster position="bottom-right" />
         </QueryProvider>
       </body>
     </html>
