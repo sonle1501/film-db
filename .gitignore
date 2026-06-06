@@ -12,7 +12,6 @@ out/
 target/
 .gradle/
 .kotlin/
-!gradle/wrapper/gradle-wrapper.jar
 
 # =========================
 # IDEs and Editors
@@ -66,3 +65,10 @@ Thumbs.db
 # =========================
 temp/
 dataset/
+
+# Allow gradle wrapper jar to be tracked by git
+!gradle/wrapper/gradle-wrapper.jar
+
+
+# AI Agent configurations
+.agent/
