@@ -33,10 +33,10 @@ app:
     dataset:
       location: dataset/
     scripts:
-      swap-staging-tables: classpath:db2/script/swap_staging_tables.sql
-      drop-staging-indexes: classpath:db2/script/drop_staging_indexes.sql
-      create-staging-indexes: classpath:db2/script/create_staging_indexes.sql
-      wipe-staging-tables: classpath:db2/script/wipe_staging_tables.sql
+      swap-staging-tables: classpath:db/script/swap_staging_tables.sql
+      drop-staging-indexes: classpath:db/script/drop_staging_indexes.sql
+      create-staging-indexes: classpath:db/script/create_staging_indexes.sql
+      wipe-staging-tables: classpath:db/script/wipe_staging_tables.sql
 
 
 
