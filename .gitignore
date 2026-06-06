@@ -2,6 +2,7 @@
 # Secret and env
 # =========================
 secret.env
+docker.env
 
 # =========================
 # Build and Dependencies
