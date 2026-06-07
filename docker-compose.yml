@@ -65,6 +65,22 @@ services:
       backend:
         condition: service_healthy
 
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: filmdb-ngrok
+    restart: unless-stopped
+    command:
+      - "http"
+      - "nginx:80"
+      - "--log=stdout"
+    env_file:
+      - docker.env
+    ports:
+      - "4040:4040"
+    depends_on:
+      nginx:
+        condition: service_started
+
 volumes:
   pgdata:
     driver: local

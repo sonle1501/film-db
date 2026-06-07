@@ -17,7 +17,7 @@ export function getMoviePosterUrl(imageUrl?: string | null) {
   if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
     return imageUrl;
   }
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
   return `${baseUrl}${imageUrl}`;
 }
 

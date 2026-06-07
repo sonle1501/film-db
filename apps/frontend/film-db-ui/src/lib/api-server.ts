@@ -1,6 +1,6 @@
 // Native fetch wrappers for Server Components
 export const fetchApi = async (endpoint: string, options?: RequestInit) => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+  const baseUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
   const url = `${baseUrl}${endpoint}`;
   
   const res = await fetch(url, {
