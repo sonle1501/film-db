@@ -5,6 +5,7 @@ import dev.sonle.filmdb.imdb.service.MovieQueryService;
 import dev.sonle.filmdb.shared.utils.TmdbImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,13 +61,37 @@ public class MovieController {
     }
 
     @GetMapping("/{film-id}/image")
-    public ResponseEntity<Void> getMovieImage(@PathVariable("film-id") String filmId) {
+    public ResponseEntity<?> getMovieImage(@PathVariable("film-id") String filmId) {
         String imageUrl = tmdbImageService.resolveImageUrl(filmId);
         if (imageUrl == null || imageUrl.isBlank()) {
             imageUrl = PLACEHOLDER_IMAGE_URL;
         }
+
+        // If it's a local/external placeholder (not from TMDB), redirect to it directly
+        if (!imageUrl.contains("tmdb.org") && !imageUrl.contains("themoviedb.org")) {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(imageUrl))
+                    .build();
+        }
+
+        // Stream the image bytes through the proxy to bypass SNI blocking in client browsers
+        byte[] imageBytes = tmdbImageService.fetchImageBytes(imageUrl);
+        if (imageBytes != null) {
+            MediaType contentType = MediaType.IMAGE_JPEG;
+            if (imageUrl.endsWith(".png")) {
+                contentType = MediaType.IMAGE_PNG;
+            } else if (imageUrl.endsWith(".gif")) {
+                contentType = MediaType.IMAGE_GIF;
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(contentType)
+                    .body(imageBytes);
+        }
+
+        // Fallback to placeholder redirect if proxy download fails
         return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create(imageUrl))
+                .location(URI.create(PLACEHOLDER_IMAGE_URL))
                 .build();
     }
 
