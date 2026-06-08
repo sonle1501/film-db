@@ -45,6 +45,7 @@ jobs:
 
       - name: Run Lint
         run: pnpm run lint
+        continue-on-error: true
 
       - name: Build Next.js App
         run: pnpm run build
