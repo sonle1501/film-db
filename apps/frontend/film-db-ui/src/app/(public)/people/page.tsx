@@ -46,22 +46,24 @@ export default async function PeoplePage({
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 w-full mt-4">
-              <form action="/people" method="GET" className="relative flex-grow flex items-center terminal-border">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-cyan-accent/80" />
+              <form action="/people" method="GET" className="relative flex-grow flex flex-col sm:flex-row items-stretch sm:items-center terminal-border bg-surface-dark/60">
+                <div className="relative flex-grow flex items-center w-full">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-cyan-accent/80" />
+                  </div>
+                  <input
+                    type="text"
+                    name="q"
+                    defaultValue={q || ""}
+                    className="block w-full pl-12 pr-4 sm:pr-32 py-4 bg-transparent text-white font-mono text-sm uppercase placeholder-gray-600 focus:outline-none border-none"
+                    placeholder="> ENTER PERSON ID (E.G. NM0000199)..."
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="q"
-                  defaultValue={q || ""}
-                  className="block w-full pl-12 pr-32 py-4 bg-surface-dark/60 text-white font-mono text-sm uppercase placeholder-gray-600 focus:outline-none border-none"
-                  placeholder="> ENTER PERSON ID (E.G. NM0000199)..."
-                />
                 <button
                   type="submit"
-                  className="absolute right-3 px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/40 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto sm:absolute right-3 px-5 py-3 sm:py-2 bg-cyan-accent/10 border-t sm:border border-white/10 sm:border-cyan-accent/40 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
-                  [ SEARCH ]
+                  <span className="whitespace-nowrap">[ SEARCH ]</span>
                 </button>
               </form>
               

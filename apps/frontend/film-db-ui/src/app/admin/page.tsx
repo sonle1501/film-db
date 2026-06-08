@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 export default function AdminPage() {
   return (
-    <div className="rounded-none border border-white/10 bg-surface-dark p-8 shadow-xl max-w-6xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4 font-display uppercase tracking-widest text-white">// SYSTEM_CONTROL_PANEL</h2>
+    <div className="rounded-none border border-white/10 bg-surface-dark p-4 sm:p-8 shadow-xl max-w-6xl mx-auto mt-8">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 font-display uppercase tracking-widest text-white">// SYSTEM_CONTROL_PANEL</h2>
       <p className="text-xs font-mono uppercase text-text-muted-dark mb-8 leading-relaxed">
-        AUTHORIZED ACCESS ONLY. Access administrative utilities to supervise datasets, approve credential upgrades, and manage system registries.
+        AUTHORIZED ACCESS ONLY
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link href="/admin/users" className="block">
@@ -28,7 +28,7 @@ export default function AdminPage() {
         </Link>
         <div className="h-full p-6 rounded-none bg-surface-elevated-dark border border-white/10 transition-colors">
           <h3 className="font-bold font-display uppercase tracking-wider text-sm mb-2 text-white/40">System Analytics</h3>
-          <p className="text-xs text-white/20 font-mono mt-1">[ SERVICE OFFLINE // COMING SOON ]</p>
+          <p className="text-xs text-white/20 font-mono mt-1">[ COMING SOON ]</p>
         </div>
       </div>
     </div>

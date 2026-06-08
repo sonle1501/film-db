@@ -41,7 +41,7 @@ export default function DashboardLayout({
                   : 'border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white'
               }`}
             >
-              {pathname === '/profile' ? '> PROFILE_CARD' : '  PROFILE_CARD'}
+              {pathname === '/profile' ? '> PROFILE' : '  PROFILE'}
             </Link>
             <Link 
               href="/lists" 
@@ -51,7 +51,7 @@ export default function DashboardLayout({
                   : 'border-transparent text-text-muted-dark hover:border-white/10 hover:bg-white/5 hover:text-white'
               }`}
             >
-              {pathname === '/lists' || pathname?.startsWith('/lists/') ? '> MY_WATCHLISTS' : '  MY_WATCHLISTS'}
+              {pathname === '/lists' || pathname?.startsWith('/lists/') ? '> MY_LISTS' : '  MY_LISTS'}
             </Link>
           </nav>
         </aside>

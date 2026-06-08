@@ -181,14 +181,14 @@ export function ListManager() {
               href={`/lists/${list.listId}`} 
               className="text-cyan-accent hover:underline mt-6 inline-block font-bold tracking-wider uppercase text-[11px]"
             >
-              &gt; VIEW_LIST_RECORDS
+              &gt; VIEW_LIST_DETAILS
             </Link>
           </div>
         ))}
         {lists?.length === 0 && (
           <div className="col-span-full py-12 text-center text-text-muted bg-black/20 rounded-none border border-white/10 border-dashed">
             <p className="text-sm font-bold uppercase tracking-wider">// SYSTEM_LOG: NO_LISTS_FOUND</p>
-            <p className="mt-2 text-text-muted-dark font-mono text-[11px]">INITIALIZE A CUSTOM LIST TO COMPILE CINEMATIC FILES.</p>
+            <p className="mt-2 text-text-muted-dark font-mono text-[11px]">CREATE A CUSTOM LIST</p>
           </div>
         )}
       </div>
@@ -213,7 +213,7 @@ export function ListManager() {
             {errors.nameList && <p className="text-red-accent text-[10px] mt-1">// ERROR: {errors.nameList.message}</p>}
           </div>
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">// CLASSIFICATION_TYPE</label>
+            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">// LIST_TYPE</label>
             <div className="relative border border-white/10 bg-black/30 hover:border-white/20 focus-within:border-cyan-accent focus-within:ring-1 focus-within:ring-cyan-accent transition-all duration-200">
               <select
                 {...register('type', { required: 'Type is required' })}
@@ -235,23 +235,25 @@ export function ListManager() {
               className="mr-2 h-4 w-4 rounded-none border-white/15 text-cyan-accent focus:ring-cyan-accent bg-black/30 cursor-pointer"
             />
             <label htmlFor="isPublic" className="text-[10px] uppercase tracking-widest text-text-muted-dark cursor-pointer select-none">
-              // PUBLISH_TO_FEDERATED_NET
+              PUBLIC YOUR LIST
             </label>
           </div>
-          <div className="flex justify-end space-x-3 pt-6 border-t border-white/10 mt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/10 mt-4">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              [ CANCEL ]
+              <span className="whitespace-nowrap">[ CANCEL ]</span>
             </button>
             <button
               type="submit"
               disabled={isCreating || isUpdating}
-              className="px-4 py-2 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              {isCreating || isUpdating ? (editingList ? 'UPDATING...' : 'CREATING...') : (editingList ? '[ UPDATE_LIST ]' : '[ CREATE_LIST ]')}
+              <span className="whitespace-nowrap">
+                {isCreating || isUpdating ? (editingList ? 'UPDATING...' : 'CREATING...') : (editingList ? '[ UPDATE_LIST ]' : '[ CREATE_LIST ]')}
+              </span>
             </button>
           </div>
         </form>

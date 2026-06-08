@@ -217,10 +217,12 @@ export function LiveSearchInput({
               <div className="border-t border-white/10 mt-1 pt-1">
                 <button
                   onClick={() => onSubmit({ searchQuery: query || "" })}
-                  className="flex w-full items-center justify-center gap-1.5 rounded-none py-2 text-center text-[10px] font-display uppercase tracking-widest text-primary-500 hover:text-white hover:bg-primary-500/5 transition-all"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-none py-2 text-center text-[10px] font-display uppercase tracking-widest text-primary-500 hover:text-white hover:bg-primary-500/5 transition-all min-w-0"
                 >
-                  <span>[ EXECUTE DEEPER SEARCH FOR "{query}" ]</span>
-                  <ArrowRight className="h-3 w-3" />
+                  <span className="truncate max-w-full block whitespace-nowrap">
+                    [ EXECUTE DEEPER SEARCH FOR &quot;{query}&quot; ]
+                  </span>
+                  <ArrowRight className="h-3 w-3 shrink-0" />
                 </button>
               </div>
             </div>

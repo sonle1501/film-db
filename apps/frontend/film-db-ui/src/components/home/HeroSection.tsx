@@ -90,7 +90,7 @@ export function HeroSection() {
         <div className="mt-8 w-full max-w-4xl z-30">
           <LiveSearchInput
             variant="hero"
-            placeholder="ENTER CRITERIA (MOVIE, PERSON, YEAR)..."
+            placeholder="SEARCH YOUR MOVIE"
           />
         </div>
 

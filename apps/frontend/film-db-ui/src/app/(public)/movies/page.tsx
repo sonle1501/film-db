@@ -272,25 +272,27 @@ export default function MoviesPage() {
                 </div>
               </div>
 
-              <div className="relative flex-grow flex items-center terminal-border">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-cyan-accent/80" />
+              <div className="relative flex-grow flex flex-col sm:flex-row items-stretch sm:items-center terminal-border bg-surface-dark/60">
+                <div className="relative flex-grow flex items-center w-full">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-cyan-accent/80" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="block w-full pl-12 pr-4 sm:pr-32 py-4 bg-transparent text-white font-mono text-sm uppercase placeholder-gray-600 focus:outline-none border-none"
+                    placeholder={searchType === "id" ? "> ENTER ID (E.G. TT0111161)" : "> ENTER TITLE..."}
+                  />
                 </div>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  className="block w-full pl-12 pr-32 py-4 bg-surface-dark/60 text-white font-mono text-sm uppercase placeholder-gray-600 focus:outline-none border-none"
-                  placeholder={searchType === "id" ? "> ENTER ID (E.G. TT0111161)" : "> ENTER TITLE..."}
-                />
                 <button
                   onClick={handleSearch}
                   disabled={isLoading}
-                  className="absolute right-3 px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/40 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto sm:absolute right-3 px-5 py-3 sm:py-2 bg-cyan-accent/10 border-t sm:border border-white/10 sm:border-cyan-accent/40 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors flex items-center justify-center gap-2 cursor-pointer shrink-0"
                 >
                   {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                  [ SEARCH ]
+                  <span className="whitespace-nowrap">[ SEARCH ]</span>
                 </button>
               </div>
 

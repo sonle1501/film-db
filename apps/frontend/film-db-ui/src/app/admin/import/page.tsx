@@ -158,24 +158,24 @@ export default function AdminImportPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12">
       {/* Page Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
         <div>
-          <h2 className="text-3xl font-bold font-display uppercase tracking-widest text-white">// IMDB_INGESTION_CONTROL</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-widest text-white">// IMDB_PIPELINE_CONTROL</h2>
           <p className="text-text-muted-dark mt-1 text-xs font-mono uppercase leading-relaxed">
-            Wipe staging schemas, fetch dataset chunks, index, and swap tables atomically.
+            RUN THE PIPELINE
           </p>
         </div>
         <button
           onClick={() => setIsConfirmOpen(true)}
           disabled={startImportMutation.isPending || (activeJob && (activeJob.status === 'PENDING' || activeJob.status === 'IN_PROGRESS'))}
-          className="flex items-center space-x-2 px-5 py-3 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors cursor-pointer"
+          className="w-full sm:w-auto flex items-center justify-center space-x-2 px-5 py-3 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent disabled:opacity-50 text-xs font-mono font-bold uppercase rounded-none transition-colors cursor-pointer shrink-0"
         >
           {startImportMutation.isPending || (activeJob && (activeJob.status === 'PENDING' || activeJob.status === 'IN_PROGRESS')) ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             <Play className="w-4 h-4 fill-current" />
           )}
-          <span>[ TRIGGER INGESTION ]</span>
+          <span className="whitespace-nowrap">[ TRIGGER PIPELINE ]</span>
         </button>
       </div>
 
@@ -185,12 +185,12 @@ export default function AdminImportPage() {
           {/* Main Tracker Card */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-none border border-white/10 bg-surface-dark p-6 shadow-xl space-y-6">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
                 <div className="flex items-center space-x-3">
                   <Database className="w-5 h-5 text-cyan-accent" />
-                  <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// INGESTION_STATUS_BOARD</h3>
+                  <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// PIPELINE_STATUS_BOARD</h3>
                 </div>
-                <span className={`px-3 py-1 rounded-none text-xs font-mono font-bold border flex items-center space-x-1.5 ${
+                <span className={`w-fit px-3 py-1 rounded-none text-xs font-mono font-bold border flex items-center space-x-1.5 ${
                   activeJob.status === 'SUCCESS'
                     ? 'bg-cyan-accent/10 text-cyan-accent border-cyan-accent/20'
                     : activeJob.status === 'FAILED'
@@ -223,8 +223,9 @@ export default function AdminImportPage() {
               </div>
 
               {/* Live Timeline Steps */}
-              <div className="pt-2">
-                <div className="flex items-center justify-between">
+              <div className="pt-2 pb-6 md:pb-0">
+                {/* Horizontal Timeline (Desktop/Tablet) */}
+                <div className="hidden md:flex items-center justify-between">
                   {STAGES.map((stage, idx) => {
                     const status = getStageStatus(stage.id);
                     return (
@@ -258,6 +259,44 @@ export default function AdminImportPage() {
                             status === 'completed' ? 'bg-cyan-accent/35' : 'bg-white/10'
                           }`} />
                         )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Vertical Timeline (Mobile) */}
+                <div className="flex md:hidden flex-col gap-4">
+                  {STAGES.map((stage, idx) => {
+                    const status = getStageStatus(stage.id);
+                    return (
+                      <div key={stage.id} className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-none flex items-center justify-center font-mono font-bold text-xs border transition-all shrink-0 ${
+                          status === 'completed'
+                            ? 'bg-cyan-accent/15 border-cyan-accent text-cyan-accent shadow-[0_0_8px_rgba(85,234,212,0.2)]'
+                            : status === 'active'
+                            ? 'bg-yellow-accent/15 border-yellow-accent text-yellow-accent shadow-[0_0_12px_rgba(243,230,0,0.3)] animate-pulse'
+                            : status === 'failed'
+                            ? 'bg-red-accent/15 border-red-accent text-red-accent shadow-[0_0_8px_rgba(255,0,85,0.2)]'
+                            : 'bg-white/5 border-white/10 text-white/40'
+                        }`}>
+                          {status === 'completed' ? (
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                          ) : status === 'failed' ? (
+                            <AlertCircle className="w-3.5 h-3.5" />
+                          ) : (
+                            `0${idx + 1}`
+                          )}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className={`text-[10px] font-mono uppercase tracking-widest ${
+                            status === 'active' ? 'text-yellow-accent font-bold' : 'text-white'
+                          }`}>
+                            {stage.label}
+                          </span>
+                          <span className="text-[8px] font-mono uppercase text-text-muted-dark tracking-wider">
+                            {status === 'completed' ? 'COMPLETED' : status === 'active' ? 'ACTIVE' : 'PENDING'}
+                          </span>
+                        </div>
                       </div>
                     );
                   })}
@@ -419,14 +458,14 @@ export default function AdminImportPage() {
                 <AlertCircle className="w-5 h-5 text-yellow-accent" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// RUN_INGESTION_PIPELINE</h3>
+                <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// RUN_PIPELINE_PIPELINE</h3>
                 <p className="text-xs font-mono uppercase text-text-muted-dark leading-relaxed">
                   You are about to trigger the IMDB dataset import pipeline. This will:
                 </p>
                 <ul className="text-xs font-mono uppercase text-text-muted-dark list-disc list-inside space-y-1 pl-1">
                   <li>Wipe current staging tables.</li>
                   <li>Download 7 large compressed TSV datasets.</li>
-                  <li>Perform parallel COPY ingestion.</li>
+                  <li>Perform parallel COPY PIPELINE.</li>
                   <li>Rebuild database indexes.</li>
                   <li>Perform an atomic rename database swap.</li>
                 </ul>
@@ -436,18 +475,18 @@ export default function AdminImportPage() {
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-2">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
               <button
                 onClick={() => setIsConfirmOpen(false)}
-                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono font-bold uppercase text-white transition-colors cursor-pointer rounded-none"
+                className="w-full sm:w-auto px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-mono font-bold uppercase text-white transition-colors cursor-pointer rounded-none text-center"
               >
-                [ CANCEL ]
+                <span className="whitespace-nowrap">[ CANCEL ]</span>
               </button>
               <button
                 onClick={handleConfirmRun}
-                className="px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-all cursor-pointer"
+                className="w-full sm:w-auto px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-all cursor-pointer text-center"
               >
-                [ TRIGGER INGESTION ]
+                <span className="whitespace-nowrap">[ TRIGGER PIPELINE ]</span>
               </button>
             </div>
           </div>

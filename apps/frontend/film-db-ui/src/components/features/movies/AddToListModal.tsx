@@ -104,7 +104,7 @@ export function AddToListModal({ isOpen, onClose, movieId }: AddToListModalProps
           </h2>
           <button 
             onClick={onClose} 
-            className="text-[10px] text-text-muted-dark hover:text-red-accent transition-all font-mono font-bold px-1.5 py-0.5 border border-transparent hover:border-red-accent/30 hover:bg-red-accent/15 rounded-none cursor-pointer"
+            className="text-[10px] text-text-muted-dark hover:text-red-accent transition-all font-mono font-bold px-1.5 py-0.5 border border-transparent hover:border-red-accent/30 hover:bg-red-accent/15 rounded-none cursor-pointer whitespace-nowrap"
           >
             ESC [X]
           </button>

@@ -111,9 +111,9 @@ export default function AdminUsersPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12">
       {/* Page Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6">
         <div>
-          <h2 className="text-2xl font-bold font-display uppercase tracking-widest text-white">// USER_MANAGEMENT</h2>
+          <h2 className="text-xl sm:text-2xl font-bold font-display uppercase tracking-widest text-white">// USER_MANAGEMENT</h2>
           <p className="text-text-muted-dark mt-1 text-xs font-mono uppercase leading-relaxed">
             Query user lists, scan system schemas, and monitor user configurations.
           </p>

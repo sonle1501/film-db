@@ -63,7 +63,7 @@ export default function LoginPage() {
         <div className="absolute top-0 left-0 right-0 h-9 bg-black/60 border-b border-white/10 flex items-center justify-between px-4 select-none">
           <div className="flex items-center gap-2 text-[10px] text-white/50 tracking-wider">
             <span className="w-1.5 h-1.5 bg-cyan-accent animate-pulse" />
-            <span>SECURE_AUTH_GATEWAY.EXE</span>
+            <span>Login form</span>
           </div>
           <Link 
             href="/" 
@@ -78,36 +78,36 @@ export default function LoginPage() {
             // SIGN_IN_TO_SYSTEM
           </h2>
           <p className="text-center text-xs text-text-muted-dark mb-6">
-            NO ACCOUNT REGISTERED?{' '}
+            NO ACCOUNT ?{' '}
             <Link href="/register" className="font-bold text-yellow-accent hover:underline hover:text-yellow-accent/80 transition-colors">
-              INITIALIZE_REGISTRATION
+              GO TO REGISTER
             </Link>
           </p>
         </div>
 
         {/* Toggle between User and Admin terminal tab-style */}
-        <div className="flex border border-white/10 bg-black/20 p-1 mb-6 rounded-none">
+        <div className="flex flex-col sm:flex-row border border-white/10 bg-black/20 p-1 mb-6 rounded-none gap-1 sm:gap-0">
           <button
             type="button"
             onClick={() => setIsAdminLogin(false)}
-            className={`flex-1 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer ${
+            className={`flex-1 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer text-center ${
               !isAdminLogin 
                 ? 'bg-cyan-accent text-surface-dark font-black shadow-[0_0_8px_rgba(85,234,212,0.3)]' 
                 : 'text-text-muted-dark hover:text-white hover:bg-white/5'
             }`}
           >
-            USER_ACCESS
+            <span className="whitespace-nowrap">USER</span>
           </button>
           <button
             type="button"
             onClick={() => setIsAdminLogin(true)}
-            className={`flex-1 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer ${
+            className={`flex-1 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer text-center ${
               isAdminLogin 
                 ? 'bg-cyan-accent text-surface-dark font-black shadow-[0_0_8px_rgba(85,234,212,0.3)]' 
                 : 'text-text-muted-dark hover:text-white hover:bg-white/5'
             }`}
           >
-            ADMIN_ACCESS
+            <span className="whitespace-nowrap">ADMIN</span>
           </button>
         </div>
 
@@ -164,7 +164,7 @@ export default function LoginPage() {
               disabled={currentIsLoggingIn}
               className="group relative flex w-full justify-center border border-cyan-accent bg-cyan-accent py-2 px-4 text-xs font-bold uppercase tracking-widest text-surface-dark hover:bg-transparent hover:text-cyan-accent focus:outline-none focus:ring-1 focus:ring-cyan-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-none shadow-[0_0_8px_rgba(85,234,212,0.2)] hover:shadow-[0_0_16px_rgba(85,234,212,0.5)] cursor-pointer"
             >
-              {currentIsLoggingIn ? 'EXECUTE_AUTHENTICATION...' : 'EXECUTE_AUTHENTICATION'}
+              {currentIsLoggingIn ? 'LOGIN...' : 'LOGIN'}
             </button>
           </div>
         </form>

@@ -42,12 +42,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-surface-dark text-white flex flex-col">
-      <nav className="border-b border-white/10 bg-surface-dark px-6 py-4 flex justify-between items-center rounded-none shadow-md">
-        <h1 className="text-xl font-bold font-display text-cyan-accent uppercase tracking-widest">
+      <nav className="border-b border-white/10 bg-surface-dark px-4 sm:px-6 py-4 flex flex-col sm:flex-row gap-4 justify-between sm:items-center rounded-none shadow-md">
+        <h1 className="text-lg sm:text-xl font-bold font-display text-cyan-accent uppercase tracking-widest">
           <Link href="/admin">&gt; ADMIN_DASHBOARD</Link>
         </h1>
-        <div className="flex items-center space-x-4">
-          <span className="text-xs font-mono font-bold uppercase text-text-muted-dark">Welcome, {user?.username}</span>
+        <div className="flex flex-wrap items-center gap-4 justify-between sm:justify-end">
+          <span className="text-xs font-mono font-bold uppercase text-text-muted-dark truncate max-w-[150px] sm:max-w-none">Welcome, {user?.username}</span>
           <button 
             onClick={handleLogout}
             className="text-xs font-mono font-bold uppercase text-red-accent hover:bg-red-accent/10 border border-red-accent/30 hover:border-red-accent px-3 py-1.5 rounded-none transition-all cursor-pointer"
