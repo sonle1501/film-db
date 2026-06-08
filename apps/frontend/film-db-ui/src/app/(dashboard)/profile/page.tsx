@@ -135,16 +135,16 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest text-white">// USER_PROFILE</h1>
           <p className="text-xs text-text-muted-dark font-mono">// SESSION_IDENTITY: ACTIVE</p>
         </div>
-        <div className="flex flex-wrap gap-3 text-xs font-mono px-1">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 text-xs font-mono px-1 w-full">
           <button 
             onClick={() => setIsProfileModalOpen(true)}
-            className="px-4 py-2.5 border border-white/15 text-white hover:border-cyan-accent hover:bg-cyan-accent/5 transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold"
+            className="w-full sm:w-auto px-4 py-2.5 border border-white/15 text-white hover:border-cyan-accent hover:bg-cyan-accent/5 transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold text-center"
           >
             [ EDIT_PROFILE ]
           </button>
           <button 
             onClick={() => setIsUsernameModalOpen(true)}
-            className="px-4 py-2.5 bg-cyan-accent/10 text-cyan-accent border border-cyan-accent/30 hover:bg-cyan-accent hover:text-black hover:border-cyan-accent transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold shadow-[0_0_8px_rgba(85,234,212,0.15)]"
+            className="w-full sm:w-auto px-4 py-2.5 bg-cyan-accent/10 text-cyan-accent border border-cyan-accent/30 hover:bg-cyan-accent hover:text-black hover:border-cyan-accent transition-all rounded-none cursor-pointer uppercase tracking-wider font-bold shadow-[0_0_8px_rgba(85,234,212,0.15)] text-center"
           >
             [ CHANGE_USERNAME ]
           </button>
@@ -152,7 +152,7 @@ export default function ProfilePage() {
             profile.userState === 'ADMIN_PENDING' ? (
               <button 
                 disabled
-                className="px-4 py-2.5 bg-yellow-accent/15 text-yellow-accent border border-yellow-accent/30 rounded-none flex items-center gap-2 cursor-not-allowed opacity-85 uppercase tracking-wider font-bold"
+                className="w-full sm:w-auto px-4 py-2.5 bg-yellow-accent/15 text-yellow-accent border border-yellow-accent/30 rounded-none flex items-center justify-center gap-2 cursor-not-allowed opacity-85 uppercase tracking-wider font-bold text-center"
               >
                 <span className="w-1.5 h-1.5 bg-yellow-accent animate-pulse shadow-[0_0_8px_rgba(243,230,0,0.6)]"></span>
                 [ PENDING_ADMIN_ACCESS ]
@@ -161,7 +161,7 @@ export default function ProfilePage() {
               <button 
                 onClick={handleRequestAdmin}
                 disabled={requestAdminMutation.isPending}
-                className="px-4 py-2.5 bg-yellow-accent/15 border border-yellow-accent/40 text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer uppercase tracking-wider font-bold"
+                className="w-full sm:w-auto px-4 py-2.5 bg-yellow-accent/15 border border-yellow-accent/40 text-yellow-accent hover:bg-yellow-accent hover:text-surface-dark transition-all rounded-none shadow-[0_0_8px_rgba(243,230,0,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider font-bold text-center"
               >
                 {requestAdminMutation.isPending ? (
                   <>
@@ -196,14 +196,14 @@ export default function ProfilePage() {
           // SYSTEM_ERROR: FAILED TO LOAD PROFILE INFORMATION. RETRY CONNECTION.
         </div>
       ) : profile ? (
-        <div className="bg-black/20 border border-white/10 rounded-none p-8 mb-12">
-          <div className="flex items-center gap-6 mb-6 pb-6 border-b border-white/10">
-            <div className="w-16 h-16 rounded-none border border-cyan-accent bg-cyan-accent/10 text-cyan-accent flex items-center justify-center text-2xl font-bold select-none">
+        <div className="bg-black/20 border border-white/10 rounded-none p-4 sm:p-8 mb-12">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-6 mb-6 pb-6 border-b border-white/10">
+            <div className="w-16 h-16 rounded-none border border-cyan-accent bg-cyan-accent/10 text-cyan-accent flex items-center justify-center text-2xl font-bold select-none shrink-0">
               {(profile.displayName || profile.username).charAt(0).toUpperCase()}
             </div>
-            <div>
-              <h2 className="text-2xl font-bold uppercase tracking-widest">{profile.displayName || profile.username}</h2>
-              <p className="text-text-muted-dark text-sm mt-0.5">ID: @{profile.username}</p>
+            <div className="min-w-0">
+              <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-widest break-all">{profile.displayName || profile.username}</h2>
+              <p className="text-text-muted-dark text-xs sm:text-sm mt-0.5">ID: @{profile.username}</p>
             </div>
           </div>
           
@@ -256,9 +256,9 @@ export default function ProfilePage() {
       ) : null}
 
       {/* --- User Lists Display --- */}
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-display font-bold uppercase tracking-widest">// CUSTOM_WATCHLISTS</h2>
-        <span className="bg-cyan-accent/10 border border-cyan-accent/20 text-cyan-accent px-2.5 py-0.5 rounded-none text-xs font-bold font-mono">
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h2 className="text-xl sm:text-2xl font-display font-bold uppercase tracking-widest">// CUSTOM_WATCHLISTS</h2>
+        <span className="w-fit bg-cyan-accent/10 border border-cyan-accent/20 text-cyan-accent px-2.5 py-0.5 rounded-none text-xs font-bold font-mono">
           {lists?.length || 0} TOTAL
         </span>
       </div>
@@ -361,20 +361,20 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <div className="flex gap-3 pt-4 border-t border-white/10 mt-2 font-mono text-xs">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10 mt-2 font-mono text-xs">
             <button
               type="button"
               onClick={() => setIsProfileModalOpen(false)}
-              className="flex-1 px-4 py-2.5 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:flex-1 px-4 py-2.5 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              [ CANCEL ]
+              <span className="whitespace-nowrap">[ CANCEL ]</span>
             </button>
             <button
               type="submit"
               disabled={updateProfileMutation.isPending}
-              className="flex-1 px-4 py-2.5 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:flex-1 px-4 py-2.5 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              {updateProfileMutation.isPending ? 'UPDATING...' : '[ SAVE_CHANGES ]'}
+              <span className="whitespace-nowrap">{updateProfileMutation.isPending ? 'UPDATING...' : '[ SAVE_CHANGES ]'}</span>
             </button>
           </div>
         </form>
@@ -411,20 +411,20 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <div className="flex gap-3 pt-4 border-t border-white/10 mt-2 font-mono text-xs">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10 mt-2 font-mono text-xs">
             <button
               type="button"
               onClick={() => setIsUsernameModalOpen(false)}
-              className="flex-1 px-4 py-2.5 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:flex-1 px-4 py-2.5 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              [ CANCEL ]
+              <span className="whitespace-nowrap">[ CANCEL ]</span>
             </button>
             <button
               type="submit"
               disabled={updateUsernameMutation.isPending}
-              className="flex-1 px-4 py-2.5 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:flex-1 px-4 py-2.5 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              {updateUsernameMutation.isPending ? 'CHANGING...' : '[ CONFIRM_CHANGE ]'}
+              <span className="whitespace-nowrap">{updateUsernameMutation.isPending ? 'CHANGING...' : '[ CONFIRM_CHANGE ]'}</span>
             </button>
           </div>
         </form>

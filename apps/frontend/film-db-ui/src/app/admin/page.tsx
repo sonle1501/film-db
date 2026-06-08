@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 export default function AdminPage() {
   return (
-    <div className="rounded-none border border-white/10 bg-surface-dark p-8 shadow-xl max-w-6xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4 font-display uppercase tracking-widest text-white">// SYSTEM_CONTROL_PANEL</h2>
+    <div className="rounded-none border border-white/10 bg-surface-dark p-4 sm:p-8 shadow-xl max-w-6xl mx-auto mt-8">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 font-display uppercase tracking-widest text-white">// SYSTEM_CONTROL_PANEL</h2>
       <p className="text-xs font-mono uppercase text-text-muted-dark mb-8 leading-relaxed">
         AUTHORIZED ACCESS ONLY. Access administrative utilities to supervise datasets, approve credential upgrades, and manage system registries.
       </p>

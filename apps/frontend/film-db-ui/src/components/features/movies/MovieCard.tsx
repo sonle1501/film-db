@@ -59,18 +59,18 @@ export function MovieCard({ movie, onContextMenu }: { movie: MovieProps; onConte
           </h3>
           
           {/* Row 1: Year & Genre */}
-          <div className="flex justify-between items-center mb-2.5">
-            <span className="text-xs font-mono text-text-dark font-bold tracking-wider">
+          <div className="flex flex-wrap justify-between items-center gap-1.5 mb-2.5">
+            <span className="text-xs font-mono text-text-dark font-bold tracking-wider whitespace-nowrap">
               [ {movie.year} ]
             </span>
-            <span className="px-2 py-[2px] bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent font-mono font-bold text-[10px] tracking-wider select-none uppercase">
+            <span className="px-2 py-[2px] bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent font-mono font-bold text-[10px] tracking-wider select-none uppercase truncate max-w-full">
               {movie.genre}
             </span>
           </div>
         </div>
         
         {/* Row 2: Score & Votes */}
-        <div className="flex justify-between items-center pt-2 border-t border-white/5">
+        <div className="flex flex-wrap justify-between items-center gap-1.5 pt-2 border-t border-white/5">
           <div className="flex items-center gap-1 bg-yellow-accent/10 border border-yellow-accent/30 px-2 py-0.5 font-mono text-xs font-bold text-yellow-accent select-none">
             <Star className="h-3 w-3 fill-yellow-accent text-yellow-accent" />
             <span>{(!movie.rating || movie.rating <= 0) ? "?" : movie.rating.toFixed(1)}</span>

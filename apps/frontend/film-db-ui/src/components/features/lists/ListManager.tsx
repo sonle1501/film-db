@@ -238,20 +238,22 @@ export function ListManager() {
               // PUBLISH_TO_FEDERATED_NET
             </label>
           </div>
-          <div className="flex justify-end space-x-3 pt-6 border-t border-white/10 mt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/10 mt-4">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              [ CANCEL ]
+              <span className="whitespace-nowrap">[ CANCEL ]</span>
             </button>
             <button
               type="submit"
               disabled={isCreating || isUpdating}
-              className="px-4 py-2 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2 bg-cyan-accent text-surface-dark font-black hover:bg-[#2be0c5] shadow-[0_0_8px_rgba(85,234,212,0.2)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 rounded-none uppercase cursor-pointer text-center"
             >
-              {isCreating || isUpdating ? (editingList ? 'UPDATING...' : 'CREATING...') : (editingList ? '[ UPDATE_LIST ]' : '[ CREATE_LIST ]')}
+              <span className="whitespace-nowrap">
+                {isCreating || isUpdating ? (editingList ? 'UPDATING...' : 'CREATING...') : (editingList ? '[ UPDATE_LIST ]' : '[ CREATE_LIST ]')}
+              </span>
             </button>
           </div>
         </form>

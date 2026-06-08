@@ -96,28 +96,28 @@ export default function RegisterPage() {
         </div>
 
         {/* Toggle between User and Admin registration tabs */}
-        <div className="flex border border-white/10 bg-black/20 p-1 mb-6 rounded-none">
+        <div className="flex flex-col sm:flex-row border border-white/10 bg-black/20 p-1 mb-6 rounded-none gap-1 sm:gap-0">
           <button
             type="button"
             onClick={() => setIsAdminRegister(false)}
-            className={`flex-1 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer ${
+            className={`flex-1 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer text-center ${
               !isAdminRegister 
                 ? 'bg-cyan-accent text-surface-dark font-black shadow-[0_0_8px_rgba(85,234,212,0.3)]' 
                 : 'text-text-muted-dark hover:text-white hover:bg-white/5'
             }`}
           >
-            USER_REGISTRATION
+            <span className="whitespace-nowrap">USER_REGISTRATION</span>
           </button>
           <button
             type="button"
             onClick={() => setIsAdminRegister(true)}
-            className={`flex-1 py-1.5 text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer ${
+            className={`flex-1 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider transition-all duration-200 rounded-none cursor-pointer text-center ${
               isAdminRegister 
                 ? 'bg-cyan-accent text-surface-dark font-black shadow-[0_0_8px_rgba(85,234,212,0.3)]' 
                 : 'text-text-muted-dark hover:text-white hover:bg-white/5'
             }`}
           >
-            ADMIN_REGISTRATION
+            <span className="whitespace-nowrap">ADMIN_REGISTRATION</span>
           </button>
         </div>
 

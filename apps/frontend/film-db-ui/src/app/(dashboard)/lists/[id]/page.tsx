@@ -84,7 +84,7 @@ export default function ListDetailsPage() {
   return (
     <div className="text-white font-mono">
       <div className="mb-8">
-        <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest">
+        <h1 className="text-2xl sm:text-3xl font-display font-bold mb-2 uppercase tracking-widest break-words">
           // LIST: {listDetails ? listDetails.nameList : 'DETAILS'}
         </h1>
         {listDetails && (
@@ -101,7 +101,7 @@ export default function ListDetailsPage() {
           <p className="text-sm uppercase tracking-widest">// SYSTEM_LOG: THIS_LIST_IS_EMPTY</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {listItems.map((item) => {
             const movie = movies.find(m => m.id === item.movieId);
             if (!movie) return null;
@@ -112,7 +112,7 @@ export default function ListDetailsPage() {
                 <div className="bg-black/20 p-3 rounded-none border border-white/10 text-xs mt-2 flex-grow flex flex-col group/item">
                   <div className="flex justify-between items-center mb-2 pb-1 border-b border-white/5">
                     <span className="font-mono text-cyan-accent uppercase tracking-wider text-[10px]">{item.state.replace(/_/g, ' ')}</span>
-                    <div className="flex gap-2 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                    <div className="flex gap-2 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity">
                       <button 
                         onClick={() => setEditingItem(item)}
                         className="text-gray-400 hover:text-white cursor-pointer"
