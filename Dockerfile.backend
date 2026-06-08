@@ -1,0 +1,26 @@
+# Build stage
+FROM eclipse-temurin:21-jdk-alpine AS builder
+
+# Install bash and findutils for gradle wrapper compatibility
+RUN apk add --no-cache bash findutils
+
+WORKDIR /build
+
+# Copy entire project directory (excluding things in .dockerignore)
+COPY . .
+
+# Ensure gradlew has execution permission and build the application
+RUN chmod +x gradlew && ./gradlew :apps:backend:bootJar --no-daemon
+
+# Run stage
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+
+# Copy built JAR from builder stage
+COPY --from=builder /build/apps/backend/build/libs/*.jar app.jar
+
+# Expose the API port
+EXPOSE 8080
+
+# Run the backend
+ENTRYPOINT ["java", "-jar", "app.jar"]

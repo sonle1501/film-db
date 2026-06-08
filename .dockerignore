@@ -1,0 +1,14 @@
+.git
+.gradle
+.idea
+build/
+**/build/
+**/node_modules/
+.next/
+**/tmp/
+**/temp/
+dataset/
+secret.env
+docker.env
+.env.local
+*.log

@@ -72,6 +72,18 @@ public class TmdbImageService {
         return null;
     }
 
+    public byte[] fetchImageBytes(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
+        try {
+            return restTemplate.getForObject(url, byte[].class);
+        } catch (Exception e) {
+            log.error("Failed to fetch image bytes from TMDB URL {}: {}", url, e.getMessage());
+            return null;
+        }
+    }
+
     // Helper records for mapping TMDB Find API response JSON
     public record TmdbFindResult(
             @JsonProperty("movie_results") List<TmdbMovieResult> movieResults,

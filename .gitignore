@@ -2,6 +2,7 @@
 # Secret and env
 # =========================
 secret.env
+docker.env
 
 # =========================
 # Build and Dependencies
@@ -11,6 +12,9 @@ out/
 target/
 .gradle/
 .kotlin/
+
+
+# tracking this specific file
 !gradle/wrapper/gradle-wrapper.jar
 
 # =========================
@@ -65,3 +69,5 @@ Thumbs.db
 # =========================
 temp/
 dataset/
+
+
