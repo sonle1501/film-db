@@ -133,7 +133,6 @@ export default function ProfilePage() {
         
         <div className="pt-2 px-1">
           <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-widest text-white">// USER_PROFILE</h1>
-          <p className="text-xs text-text-muted-dark font-mono">// SESSION_IDENTITY: ACTIVE</p>
         </div>
         <div className="flex flex-col sm:flex-row flex-wrap gap-3 text-xs font-mono px-1 w-full">
           <button 
@@ -351,7 +350,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">// BIO_INFORMATION</label>
+            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">BIO</label>
             <div className="relative border border-white/10 bg-black/30 hover:border-white/20 focus-within:border-cyan-accent focus-within:ring-1 focus-within:ring-cyan-accent transition-all duration-200">
               <textarea
                 {...registerProfile('bio')}

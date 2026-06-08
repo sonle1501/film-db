@@ -181,14 +181,14 @@ export function ListManager() {
               href={`/lists/${list.listId}`} 
               className="text-cyan-accent hover:underline mt-6 inline-block font-bold tracking-wider uppercase text-[11px]"
             >
-              &gt; VIEW_LIST_RECORDS
+              &gt; VIEW_LIST_DETAILS
             </Link>
           </div>
         ))}
         {lists?.length === 0 && (
           <div className="col-span-full py-12 text-center text-text-muted bg-black/20 rounded-none border border-white/10 border-dashed">
             <p className="text-sm font-bold uppercase tracking-wider">// SYSTEM_LOG: NO_LISTS_FOUND</p>
-            <p className="mt-2 text-text-muted-dark font-mono text-[11px]">INITIALIZE A CUSTOM LIST TO COMPILE CINEMATIC FILES.</p>
+            <p className="mt-2 text-text-muted-dark font-mono text-[11px]">CREATE A CUSTOM LIST</p>
           </div>
         )}
       </div>
@@ -213,7 +213,7 @@ export function ListManager() {
             {errors.nameList && <p className="text-red-accent text-[10px] mt-1">// ERROR: {errors.nameList.message}</p>}
           </div>
           <div>
-            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">// CLASSIFICATION_TYPE</label>
+            <label className="block text-[10px] uppercase tracking-widest text-text-muted-dark mb-1.5">// LIST_TYPE</label>
             <div className="relative border border-white/10 bg-black/30 hover:border-white/20 focus-within:border-cyan-accent focus-within:ring-1 focus-within:ring-cyan-accent transition-all duration-200">
               <select
                 {...register('type', { required: 'Type is required' })}
@@ -235,7 +235,7 @@ export function ListManager() {
               className="mr-2 h-4 w-4 rounded-none border-white/15 text-cyan-accent focus:ring-cyan-accent bg-black/30 cursor-pointer"
             />
             <label htmlFor="isPublic" className="text-[10px] uppercase tracking-widest text-text-muted-dark cursor-pointer select-none">
-              // PUBLISH_TO_FEDERATED_NET
+              PUBLIC YOUR LIST
             </label>
           </div>
           <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/10 mt-4">

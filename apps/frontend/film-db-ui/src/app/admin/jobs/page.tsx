@@ -55,7 +55,7 @@ export default function AdminJobsPage() {
         <div>
           <h2 className="text-xl sm:text-2xl font-bold font-display uppercase tracking-widest text-white">// PENDING_ADMIN_JOBS</h2>
           <p className="text-text-muted-dark mt-1 text-xs font-mono uppercase leading-relaxed">
-            Supervise, approve, or reject incoming administrative clearance requests.
+            Supervise, approve, or reject incoming requests.
           </p>
         </div>
       </div>

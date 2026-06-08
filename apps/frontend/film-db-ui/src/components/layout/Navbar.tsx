@@ -110,7 +110,7 @@ export function Navbar({ showSearch = true }: NavbarProps) {
                       onClick={handleLogout}
                       className="block w-full text-left px-4 py-3 text-red-accent hover:bg-red-accent/10 transition-colors duration-150 border-t border-white/5 mt-1 pt-2.5 cursor-pointer"
                     >
-                      &gt; SHUTDOWN_SESSION
+                      &gt; LOG OUT
                     </button>
                   </div>
                 </div>

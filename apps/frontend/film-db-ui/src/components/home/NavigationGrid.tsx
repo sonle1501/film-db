@@ -6,7 +6,7 @@ export function NavigationGrid() {
   const cards = [
     {
       title: "MOVIES",
-      desc: "Explore and filter over 10 million films",
+      desc: "Explore over 10 million films",
       href: "/movies",
       asciiIcon: "[▮▮]",
     },
@@ -23,6 +23,12 @@ export function NavigationGrid() {
       asciiIcon: "[#]",
     },
     {
+      title: "FILM_DB LIST",
+      desc: "Your film-db list",
+      href: "/lists",
+      asciiIcon: "[+]",
+    },
+    {
       title: "PEOPLE",
       desc: "Inspect cast, crew profiles",
       href: "/people",
@@ -31,15 +37,10 @@ export function NavigationGrid() {
     {
       title: "PROJECT",
       desc: "About my project",
-      href: "/movies",
+      href: "https://github.com/sonle1501/film-db",
       asciiIcon: "[*]",
-    },
-    {
-      title: "WATCHLISTS",
-      desc: "Curate your custom watchlist. Save films, log viewing history, rank entries, and share lists securely.",
-      href: "/lists",
-      asciiIcon: "[+]",
-    },
+    }
+,
   ];
 
   return (
@@ -97,6 +98,8 @@ export function NavigationGrid() {
                 <Link
                   key={i}
                   href={card.href}
+                  target={card.href.startsWith("http") ? "_blank" : undefined}
+                  rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="group flex flex-col bg-surface-elevated-dark/50 hover:bg-surface-elevated-dark/80 border border-primary-500/20 hover:border-primary-500/60 transition-all duration-300 backdrop-blur-sm shadow-[0_0_25px_rgba(85,234,212,0.01)] hover:shadow-[0_0_20px_rgba(85,234,212,0.12)] hover:-translate-y-1 hover:scale-[1.01] rounded-none"
                 >
                   {/* Header Compartment: Title | Icon - cyan-tinted background (like HeroSection terminal) */}

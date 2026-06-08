@@ -160,9 +160,9 @@ export default function AdminImportPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-widest text-white">// IMDB_INGESTION_CONTROL</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-widest text-white">// IMDB_PIPELINE_CONTROL</h2>
           <p className="text-text-muted-dark mt-1 text-xs font-mono uppercase leading-relaxed">
-            Wipe staging schemas, fetch dataset chunks, index, and swap tables atomically.
+            RUN THE PIPELINE
           </p>
         </div>
         <button
@@ -175,7 +175,7 @@ export default function AdminImportPage() {
           ) : (
             <Play className="w-4 h-4 fill-current" />
           )}
-          <span className="whitespace-nowrap">[ TRIGGER INGESTION ]</span>
+          <span className="whitespace-nowrap">[ TRIGGER PIPELINE ]</span>
         </button>
       </div>
 
@@ -188,7 +188,7 @@ export default function AdminImportPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
                 <div className="flex items-center space-x-3">
                   <Database className="w-5 h-5 text-cyan-accent" />
-                  <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// INGESTION_STATUS_BOARD</h3>
+                  <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// PIPELINE_STATUS_BOARD</h3>
                 </div>
                 <span className={`w-fit px-3 py-1 rounded-none text-xs font-mono font-bold border flex items-center space-x-1.5 ${
                   activeJob.status === 'SUCCESS'
@@ -458,14 +458,14 @@ export default function AdminImportPage() {
                 <AlertCircle className="w-5 h-5 text-yellow-accent" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// RUN_INGESTION_PIPELINE</h3>
+                <h3 className="text-base font-bold font-display uppercase tracking-wider text-white">// RUN_PIPELINE_PIPELINE</h3>
                 <p className="text-xs font-mono uppercase text-text-muted-dark leading-relaxed">
                   You are about to trigger the IMDB dataset import pipeline. This will:
                 </p>
                 <ul className="text-xs font-mono uppercase text-text-muted-dark list-disc list-inside space-y-1 pl-1">
                   <li>Wipe current staging tables.</li>
                   <li>Download 7 large compressed TSV datasets.</li>
-                  <li>Perform parallel COPY ingestion.</li>
+                  <li>Perform parallel COPY PIPELINE.</li>
                   <li>Rebuild database indexes.</li>
                   <li>Perform an atomic rename database swap.</li>
                 </ul>
@@ -486,7 +486,7 @@ export default function AdminImportPage() {
                 onClick={handleConfirmRun}
                 className="w-full sm:w-auto px-5 py-2 bg-cyan-accent/10 border border-cyan-accent/30 text-cyan-accent hover:bg-cyan-accent hover:text-black hover:border-cyan-accent rounded-none text-xs font-mono font-bold uppercase transition-all cursor-pointer text-center"
               >
-                <span className="whitespace-nowrap">[ TRIGGER INGESTION ]</span>
+                <span className="whitespace-nowrap">[ TRIGGER PIPELINE ]</span>
               </button>
             </div>
           </div>

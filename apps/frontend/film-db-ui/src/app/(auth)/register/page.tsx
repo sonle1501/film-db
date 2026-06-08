@@ -73,7 +73,7 @@ export default function RegisterPage() {
         <div className="absolute top-0 left-0 right-0 h-9 bg-black/60 border-b border-white/10 flex items-center justify-between px-4 select-none">
           <div className="flex items-center gap-2 text-[10px] text-white/50 tracking-wider">
             <span className="w-1.5 h-1.5 bg-cyan-accent animate-pulse" />
-            <span>SECURE_REGISTRATION_GATEWAY.EXE</span>
+            <span>Registration Form</span>
           </div>
           <Link 
             href="/" 
@@ -90,7 +90,7 @@ export default function RegisterPage() {
           <p className="text-center text-xs text-text-muted-dark mb-6">
             ACCOUNT ALREADY EXISTS?{' '}
             <Link href="/login" className="font-bold text-cyan-accent hover:underline hover:text-cyan-accent/80 transition-colors">
-              AUTHORIZE_SESSION
+              GO TO LOGIN
             </Link>
           </p>
         </div>
@@ -193,7 +193,7 @@ export default function RegisterPage() {
               disabled={currentIsRegistering}
               className="group relative flex w-full justify-center border border-cyan-accent bg-cyan-accent py-2 px-4 text-xs font-bold uppercase tracking-widest text-surface-dark hover:bg-transparent hover:text-cyan-accent focus:outline-none focus:ring-1 focus:ring-cyan-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 rounded-none shadow-[0_0_8px_rgba(85,234,212,0.2)] hover:shadow-[0_0_16px_rgba(85,234,212,0.5)] cursor-pointer"
             >
-              {currentIsRegistering ? 'EXECUTE_REGISTRATION...' : 'EXECUTE_REGISTRATION'}
+              {currentIsRegistering ? 'REGISTERING...' : 'REGISTER'}
             </button>
           </div>
         </form>
