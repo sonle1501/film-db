@@ -33,6 +33,8 @@ Here is the Home server deployment setup (Deploy on my laptop, using arch btw â–
 
 ## Documentation & Deep Dives
 
+*   **[Repository Wiki](docs/wiki.md)**: A complete entry point introducing the repository structure, code components, modules, infrastructure, and all documentation files.
+
 I have documented the design decisions and how I approach, solve the problems while building
 
 *   **Solved Challenges & Software Design**:
