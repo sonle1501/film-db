@@ -4,11 +4,11 @@ This is a web application project (Next.js frontend, Spring Boot backend, and Po
 
 ---
 
-## Architecture & Core Features
+## Core Features
 
-*   **Modular Monolith**: The backend is built using a clean modular monolith approach. The codebase is split into domain-specific modules (`users`, `imdb`, `search`, `importer`, `admin`, `shared`) to keep it simple, readable, and easy to maintain, while deploying everything together as a single application.
-*   **Basic CRUD & Role-Based Actions**: The system supports user registration/login and handles three roles:
-    *   **Guest**: Can explore movies, TV shows, cast, crew, and additional info.
+*   **Modular Monolith**: The backend is built using a modular monolith approach. The codebase is split into modules (`users`, `imdb`, `search`, `importer`, `admin`, `shared`) to keep it simple, readable, and easy to maintain, while deploying everything together as a single application.
+*   **Basic CRUD & Role-Based Actions**: Film-db supports user registration/login and handles three roles:
+    *   **Guest**: No login required, can explore movies, TV shows, cast, crew, and additional info.
     *   **User**: Can create and edit custom lists (favorites, plan to watch, etc.) and add movies to them.
     *   **Admin**: Can trigger the data import pipeline to load the latest IMDb dataset into PostgreSQL.
 *   **Custom Search Engine**: Leverages PostgreSQL's native capabilities (Full-Text Search and fuzzy matching) combined with our custom math formulas (matching score + popularity/rating boost) to create a highly accurate, smart search engine on par with IMDb's original search.
@@ -18,13 +18,13 @@ This is a web application project (Next.js frontend, Spring Boot backend, and Po
 ## Diagrams
 
 ### Software Architecture
-Here is a high-level view of our Modular Monolith package structure and module dependencies:
+Here is a high-level view of our Modular Monolith architecture:
 
 ![Software Architecture](docs/diagrams/software-architecture.png)
 *Figure 1: Monorepo Modular Monolith Package Architecture*
 
 ### Deployment
-Here is the system deployment setup, including the local home server, proxy gateways, and services:
+Here is the Home server deployment setup (Deploy on my laptop, using arch btw ▲)
 
 ![System Deployment](docs/diagrams/system-deployment.png)
 *Figure 2: Production Deployment Flow with Nginx, Cloudflare WARP, and Docker*
@@ -33,7 +33,7 @@ Here is the system deployment setup, including the local home server, proxy gate
 
 ## Documentation & Deep Dives
 
-I have documented the design decisions and how I approach, solve problems while building
+I have documented the design decisions and how I approach, solve the problems while building
 
 *   **Solved Challenges & Software Design**:
     *   **Data Pipeline (Download & Import)**: Downloads large datasets in chunked streams, and imports millions of rows to PostgreSQL.
@@ -46,31 +46,32 @@ I have documented the design decisions and how I approach, solve problems while 
     *   [Software Design Docs (English)](docs/software-design-docs-en.md)
     *   [Software Design Docs (Vietnamese)](docs/software-design-docs-vn.md)
 
-*   **Tech Stack**: See the full list of frameworks, database engines, styling tools, and libraries used across the project in [Tech Stacks](docs/tech-stacks.md).
-*   **System Requirements (SRS)**: Browse the complete list of frontend and backend functional requirements in the [SRS Document](docs/SRS.md).
+*   **Tech Stack**: See the full list of frameworks and libraries used across the project in [Tech Stacks](docs/tech-stacks.md).
+*   **System Requirements (SRS)**: List of functional requirements in the [SRS Document](docs/SRS.md).
 
 ---
 
-## Cyberpunk Visuals
-The frontend interface features a retro-futuristic terminal cyberpunk aesthetic, using deep charcoal backgrounds, glowing borders, sharp geometric corners, and monospaced terminal styling.
+## Frontend UI
+The UI design is inspired by cyberpunk style, heavily reliant on grids, HUD, and terminal.
 
-Here are some screenshots of the application:
+The color palette: Cyberpunk Cyan (#55ead4), Cyberpunk Yellow (#f3e600) and Cyberpunk Red (#ff0055)
+
+## Here are some screenshots: 
 
 ### Homepage
 ![Homepage](docs/screenshots/homepage.png)
-*Figure 3: Cyberpunk Homepage with movie rankings and catalog*
+*Figure 3: HOMEPAGE*
 
-### Movies Search & Catalog
+### Movies
 ![Movies Catalog](docs/screenshots/movies.png)
-*Figure 4: Movie listing and interactive search terminal*
+*Figure 4: MOVIE page*
 
-### Admin Data Ingestion Pipeline
+### Admin DASHBOARD
 ![Admin Ingestion Pipeline](docs/screenshots/admin-pipeline.png)
-*Figure 5: Live progress feedback of the IMDb import pipeline*
+*Figure 5: PIPELINE HUD*
 
 ---
 
 ## Agentic Coding & AI Workflows
 This repository is developed in collaboration with **Antigravity**, an agentic AI coding assistant:
 *   **AI Custom Workflows**: Leveraging custom slash commands (like `/plan` for design discussions, `/code` for implementation, `/ui` for styling tweaks, and `/analyze` for review).
-*   **Structured Planning**: Complex features undergo a research and design phase, yielding an `implementation_plan.md` and `task.md` tracking artifact to ensure stable, incremental progress before any code is modified.
