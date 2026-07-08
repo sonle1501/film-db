@@ -13,6 +13,7 @@ on:
       - 'gradle.properties'
       - 'gradlew'
       - 'Dockerfile.backend'
+      - 'nginx/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [ main ]
@@ -26,6 +27,7 @@ on:
       - 'gradle.properties'
       - 'gradlew'
       - 'Dockerfile.backend'
+      - 'nginx/**'
       - '.github/workflows/backend-ci.yml'
 
 jobs:
