@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum AppExceptionCode {
     IMPORT_TASK_ERROR("imported pipeline", "IMPORT_TASK_ERROR", HttpStatus.INTERNAL_SERVER_ERROR),
     TRUNCATE_DB_ERROR("imported pipeline", "TRUNCATE_DB_ERROR", HttpStatus.INTERNAL_SERVER_ERROR),
+    CREATE_DIRECTORY_ERROR("imported pipeline", "CREATE_DIRECTORY_ERROR", HttpStatus.INTERNAL_SERVER_ERROR),
     DATABASE_ERROR("DB", "DATABASE_ERROR", HttpStatus.INTERNAL_SERVER_ERROR),
 
     UNAUTHORIZED("AUTH", "UNAUTHORIZED", HttpStatus.UNAUTHORIZED),

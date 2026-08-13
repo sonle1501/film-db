@@ -36,6 +36,17 @@ public class ImdbDownloadService {
     public void downloadDataset(Path location, String fileName, BiConsumer<Long, Long> progressCallback) {
         String url = baseImdbDatasetUrl + fileName;
 
+        // Ensure parent directory exists before creating files
+        Path parentDir = location.getParent();
+        if (parentDir != null) {
+            try {
+                Files.createDirectories(parentDir);
+            } catch (IOException e) {
+                log.error("Failed to create directory: {}", parentDir, e);
+                throw new AppException(AppExceptionCode.CREATE_DIRECTORY_ERROR, "Cannot create dataset directory: " + parentDir);
+            }
+        }
+
         // temp file to prevent corruption
         Path tempLocation = location.resolveSibling(fileName + ".tmp");
 
@@ -68,12 +79,17 @@ public class ImdbDownloadService {
                 if (progressCallback != null) {
                     progressCallback.accept(totalBytesRead, contentLength);
                 }
-
-                outputStream.close();
-                Files.move(tempLocation, location, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
-
-                log.info("Successfully saved {} at {}", convertSize(totalBytesRead), location);
             }
+
+            // Move file after stream is closed to avoid file-locking on Windows
+            try {
+                Files.move(tempLocation, location, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                // Fallback if ATOMIC_MOVE fails on Windows file system
+                Files.move(tempLocation, location, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            log.info("Successfully saved {} at {}", fileName, location);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             cleanUpTempFile(tempLocation);
@@ -88,6 +104,7 @@ public class ImdbDownloadService {
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .GET()
                 .timeout(Duration.ofMinutes(10))
+                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
                 .header("Accept", "application/x-gzip") //content type for .gz files
                 .build();
 

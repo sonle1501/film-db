@@ -42,13 +42,13 @@ public class ImdbImportPipeline {
     private void executeImportedTasks(String baseDir, UUID jobId, ConcurrentHashMap<String, Double> progressMap) {
         log.info("Starting parallel import tasks...");
 
-        String moviePath = baseDir + DatasetInfo.MOVIE.getFileName();
-        String personPath = baseDir + DatasetInfo.PERSON.getFileName();
-        String alternativePath = baseDir + DatasetInfo.ALTERNATIVE.getFileName();
-        String crewPath = baseDir + DatasetInfo.CREW.getFileName();
-        String episodePath = baseDir + DatasetInfo.EPISODE.getFileName();
-        String principalPath = baseDir + DatasetInfo.PRINCIPAL.getFileName();
-        String ratingPath = baseDir + DatasetInfo.RATING.getFileName();
+        String moviePath = DatasetInfo.MOVIE.getFilePath(baseDir).toString();
+        String personPath = DatasetInfo.PERSON.getFilePath(baseDir).toString();
+        String alternativePath = DatasetInfo.ALTERNATIVE.getFilePath(baseDir).toString();
+        String crewPath = DatasetInfo.CREW.getFilePath(baseDir).toString();
+        String episodePath = DatasetInfo.EPISODE.getFilePath(baseDir).toString();
+        String principalPath = DatasetInfo.PRINCIPAL.getFilePath(baseDir).toString();
+        String ratingPath = DatasetInfo.RATING.getFilePath(baseDir).toString();
 
         int nTasks = 7;
         ExecutorService executor = Executors.newFixedThreadPool(nTasks);
